@@ -4,28 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JO PALLO' DE NA 'OTA</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .accent-gradient {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button { opacity: 1; }
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .accent-gradient { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-12">
@@ -34,18 +19,18 @@
     <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl accent-gradient flex items-center justify-center text-white shadow-lg shadow-emerald-900/40">
+                <div class="w-10 h-10 rounded-xl accent-gradient flex items-center justify-center text-white shadow-lg">
                     <i class="fa-solid fa-football text-xl"></i>
                 </div>
                 <div>
                     <h1 class="font-bold text-xl tracking-tight text-white uppercase">JO PALLO' DE NA 'OTA</h1>
-                    <p class="text-xs text-slate-400">Torneo a Gironi - Partecipanti, Rose &amp; Voti</p>
+                    <p class="text-xs text-slate-400" id="badge-mode">Modalità Live</p>
                 </div>
             </div>
 
             <!-- Tabs Navigazione -->
             <nav class="flex flex-wrap bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
-                <button onclick="switchTab('form')" id="tab-form" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
+                <button onclick="switchTab('form')" id="tab-form" class="admin-only flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
                     <i class="fa-solid fa-pen-to-square"></i> Voto
                 </button>
                 <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
@@ -54,7 +39,7 @@
                 <button onclick="switchTab('participants')" id="tab-participants" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-id-card"></i> Partecipanti (<span id="part-count">0</span>)
                 </button>
-                <button onclick="switchTab('teams')" id="tab-teams" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('teams')" id="tab-teams" class="admin-only flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-people-group"></i> Modifica Rose & Loghi
                 </button>
                 <button onclick="switchTab('log')" id="tab-log" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
@@ -66,159 +51,91 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full">
 
-        <!-- TAB 1: FORM INSERIMENTO VOTO -->
-        <section id="section-form" class="space-y-6">
+        <!-- TAB 1: FORM VOTO (ADMIN ONLY) -->
+        <section id="section-form" class="admin-only space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
                 <div class="lg:col-span-8 glass-card rounded-2xl p-6 sm:p-8 space-y-6">
                     <div class="border-b border-slate-700/60 pb-4 flex justify-between items-center">
-                        <div>
-                            <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-user-plus text-emerald-400"></i> Scheda Voto Giocatore
-                            </h2>
-                            <p class="text-xs text-slate-400 mt-1">Seleziona squadra, giocatore e relative azioni</p>
-                        </div>
-                        <button type="button" onclick="resetForm()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-left"></i> Pulisci
-                        </button>
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-user-plus text-emerald-400"></i> Scheda Voto Giocatore
+                        </h2>
                     </div>
 
                     <form id="voto-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Squadra *</label>
-                                <select id="input-squadra" onchange="onTeamSelect()" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Squadra *</label>
+                                <select id="input-squadra" onchange="onTeamSelect()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                                     <option value="" disabled selected>Seleziona Squadra...</option>
                                 </select>
-                                <p id="allenatore-label" class="text-xs text-emerald-400 mt-1 font-medium flex items-center gap-2"></p>
                             </div>
-
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Giornata / Turno</label>
-                                <input type="number" id="input-giornata" min="1" value="1" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Giornata / Turno</label>
+                                <input type="number" id="input-giornata" min="1" value="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Giocatore in Campo *</label>
-                                <select id="input-giocatore" required onchange="onPlayerSelect()" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Giocatore in Campo *</label>
+                                <select id="input-giocatore" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                                     <option value="" disabled selected>Prima seleziona la squadra...</option>
                                 </select>
                             </div>
-
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Sostituisce (Opzionale)</label>
-                                <select id="input-sostituito" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <label class="block text-xs font-semibold text-slate-300 uppercase mb-2">Sostituisce (Opzionale)</label>
+                                <select id="input-sostituito" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                                     <option value="">Nessuna sostituzione</option>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Bonus / Malus -->
-                        <div class="space-y-4 pt-2">
-                            <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider border-b border-slate-800 pb-2">Eventi Partita</h3>
-                            
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                <label class="flex items-center justify-between p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer">
-                                    <span class="text-xs font-medium text-slate-200"><i class="fa-solid fa-shirt text-slate-400 mr-1"></i> Presenza (+1)</span>
-                                    <input type="checkbox" id="check-presenza" checked onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded">
-                                </label>
+                        <!-- Eventi -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                            <label class="flex items-center justify-between p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs">Presenza (+1) <input type="checkbox" id="check-presenza" checked class="accent-emerald-500"></label>
+                            <label class="flex items-center justify-between p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs">Vittoria (+1) <input type="checkbox" id="check-vittoria" class="accent-emerald-500"></label>
+                            <label class="flex items-center justify-between p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs">Giallo (-1) <input type="checkbox" id="check-ammonizione" class="accent-yellow-500"></label>
+                            <label class="flex items-center justify-between p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs">Rosso (-3) <input type="checkbox" id="check-espulsione" class="accent-rose-500"></label>
+                        </div>
 
-                                <label class="flex items-center justify-between p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer">
-                                    <span class="text-xs font-medium text-slate-200"><i class="fa-solid fa-award text-amber-400 mr-1"></i> Vittoria (+1)</span>
-                                    <input type="checkbox" id="check-vittoria" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded">
-                                </label>
-
-                                <label class="flex items-center justify-between p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer">
-                                    <span class="text-xs font-medium text-slate-200"><div class="inline-block w-2.5 h-3.5 bg-yellow-400 rounded-sm mr-1"></div> Giallo (-1)</span>
-                                    <input type="checkbox" id="check-ammonizione" onchange="calculateLive()" class="w-4 h-4 accent-yellow-500 rounded">
-                                </label>
-
-                                <label class="flex items-center justify-between p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer">
-                                    <span class="text-xs font-medium text-slate-200"><div class="inline-block w-2.5 h-3.5 bg-rose-500 rounded-sm mr-1"></div> Rosso (-3)</span>
-                                    <input type="checkbox" id="check-espulsione" onchange="calculateLive()" class="w-4 h-4 accent-rose-500 rounded">
-                                </label>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center">
+                                <label class="block text-xs text-emerald-400 mb-1">Gol (+3)</label>
+                                <input type="number" id="num-gol" min="0" value="0" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white font-bold">
                             </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                                    <label class="block text-xs font-semibold text-emerald-400 mb-2"><i class="fa-solid fa-futbol mr-1"></i> Gol (+3)</label>
-                                    <div class="flex items-center gap-2">
-                                        <button type="button" onclick="adjustCount('num-gol', -1)" class="w-9 h-9 bg-slate-800 text-white rounded-lg font-bold border border-slate-700">-</button>
-                                        <input type="number" id="num-gol" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold">
-                                        <button type="button" onclick="adjustCount('num-gol', 1)" class="w-9 h-9 bg-slate-800 text-white rounded-lg font-bold border border-slate-700">+</button>
-                                    </div>
-                                </div>
-
-                                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                                    <label class="block text-xs font-semibold text-blue-400 mb-2"><i class="fa-solid fa-hands-holding mr-1"></i> Assist (+2)</label>
-                                    <div class="flex items-center gap-2">
-                                        <button type="button" onclick="adjustCount('num-assist', -1)" class="w-9 h-9 bg-slate-800 text-white rounded-lg font-bold border border-slate-700">-</button>
-                                        <input type="number" id="num-assist" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold">
-                                        <button type="button" onclick="adjustCount('num-assist', 1)" class="w-9 h-9 bg-slate-800 text-white rounded-lg font-bold border border-slate-700">+</button>
-                                    </div>
-                                </div>
-
-                                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                                    <label class="block text-xs font-semibold text-rose-400 mb-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Autogol (-2)</label>
-                                    <div class="flex items-center gap-2">
-                                        <button type="button" onclick="adjustCount('num-autogol', -1)" class="w-9 h-9 bg-slate-800 text-white rounded-lg font-bold border border-slate-700">-</button>
-                                        <input type="number" id="num-autogol" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold">
-                                        <button type="button" onclick="adjustCount('num-autogol', 1)" class="w-9 h-9 bg-slate-800 text-white rounded-lg font-bold border border-slate-700">+</button>
-                                    </div>
-                                </div>
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center">
+                                <label class="block text-xs text-blue-400 mb-1">Assist (+2)</label>
+                                <input type="number" id="num-assist" min="0" value="0" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white font-bold">
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-center">
+                                <label class="block text-xs text-rose-400 mb-1">Autogol (-2)</label>
+                                <input type="number" id="num-autogol" min="0" value="0" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white font-bold">
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-floppy-disk"></i> Salva Voto
+                        <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg hover:opacity-95">
+                            Salva Voto su Cloud
                         </button>
                     </form>
                 </div>
-
-                <!-- Anteprima Live -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 sticky top-24">
-                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Punteggio Calcolato</span>
-                        
-                        <div class="mt-4 mb-6 text-center py-6 bg-slate-900/80 rounded-xl border border-slate-800">
-                            <span id="live-total-display" class="text-6xl font-black text-white">+1</span>
-                            <span class="block text-xs text-slate-400 mt-1 uppercase tracking-widest">Punti Voto</span>
-                        </div>
-
-                        <div class="space-y-2 text-xs border-t border-slate-800 pt-4">
-                            <div class="flex justify-between text-slate-400"><span>Presenza:</span><span id="breakdown-presenza" class="text-emerald-400 font-semibold">+1 pt</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Gol (<span id="breakdown-gol-count">0</span>):</span><span id="breakdown-gol" class="text-emerald-400 font-semibold">+0 pt</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Assist (<span id="breakdown-assist-count">0</span>):</span><span id="breakdown-assist" class="text-emerald-400 font-semibold">+0 pt</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Vittoria:</span><span id="breakdown-vittoria" class="text-slate-500 font-semibold">+0 pt</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Cartellini:</span><span id="breakdown-cartellini" class="text-slate-500 font-semibold">0 pt</span></div>
-                            <div class="flex justify-between text-slate-400"><span>Autogol (<span id="breakdown-autogol-count">0</span>):</span><span id="breakdown-autogol" class="text-slate-500 font-semibold">0 pt</span></div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
         <!-- TAB 2: CLASSIFICHE -->
-        <section id="section-standings" class="hidden space-y-10">
+        <section id="section-standings" class="space-y-10">
             <div>
                 <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
                     <i class="fa-solid fa-trophy text-amber-400"></i> Classifiche Ufficiali Torneo
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Gironi, Classifica Generale Complessiva e Singoli Giocatori</p>
             </div>
 
-            <!-- CLASSIFICA GENERALE UNIFICATA (TUTTI I GIRONI) -->
+            <!-- Classifica Generale -->
             <div class="space-y-3">
-                <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
-                    <i class="fa-solid fa-globe"></i> CLASSIFICA GENERALE UNIFICATA (GIRONE A + B)
-                </h3>
+                <h3 class="text-lg font-bold text-amber-400 border-b border-amber-500/30 pb-2">CLASSIFICA GENERALE UNIFICATA</h3>
                 <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/20">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm text-slate-300">
-                            <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                            <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase">
                                 <tr>
                                     <th class="px-6 py-4">Pos</th>
                                     <th class="px-6 py-4">Squadra</th>
@@ -235,341 +152,160 @@
                 </div>
             </div>
 
-            <!-- CLASSIFICHE PER GIRONE -->
+            <!-- Gironi A & B -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- GIRONE A -->
                 <div class="space-y-3">
-                    <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/30 pb-2">
-                        <i class="fa-solid fa-shield-halved"></i> GIRONE A
-                    </h3>
+                    <h3 class="text-lg font-bold text-emerald-400 border-b border-emerald-500/30 pb-2">GIRONE A</h3>
                     <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                    <tr>
-                                        <th class="px-4 py-3">Pos</th>
-                                        <th class="px-4 py-3">Squadra</th>
-                                        <th class="px-4 py-3 text-center">B/M</th>
-                                        <th class="px-4 py-3 text-center">Gol</th>
-                                        <th class="px-4 py-3 text-right">Punti</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="standings-girone-a" class="divide-y divide-slate-800/60"></tbody>
-                            </table>
-                        </div>
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase">
+                                <tr><th class="px-4 py-3">Pos</th><th class="px-4 py-3">Squadra</th><th class="px-4 py-3 text-center">B/M</th><th class="px-4 py-3 text-center">Gol</th><th class="px-4 py-3 text-right">Punti</th></tr>
+                            </thead>
+                            <tbody id="standings-girone-a" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
                     </div>
                 </div>
-
-                <!-- GIRONE B -->
                 <div class="space-y-3">
-                    <h3 class="text-lg font-bold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
-                        <i class="fa-solid fa-shield-halved"></i> GIRONE B
-                    </h3>
+                    <h3 class="text-lg font-bold text-blue-400 border-b border-blue-500/30 pb-2">GIRONE B</h3>
                     <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                    <tr>
-                                        <th class="px-4 py-3">Pos</th>
-                                        <th class="px-4 py-3">Squadra</th>
-                                        <th class="px-4 py-3 text-center">B/M</th>
-                                        <th class="px-4 py-3 text-center">Gol</th>
-                                        <th class="px-4 py-3 text-right">Punti</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="standings-girone-b" class="divide-y divide-slate-800/60"></tbody>
-                            </table>
-                        </div>
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase">
+                                <tr><th class="px-4 py-3">Pos</th><th class="px-4 py-3">Squadra</th><th class="px-4 py-3 text-center">B/M</th><th class="px-4 py-3 text-center">Gol</th><th class="px-4 py-3 text-right">Punti</th></tr>
+                            </thead>
+                            <tbody id="standings-girone-b" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
-            <!-- CLASSIFICA SINGOLI GIOCATORI PER GIRONE -->
-            <div class="pt-6 space-y-6">
-                <div>
-                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-star text-amber-400"></i> Classifica Rendimento Singoli Giocatori
-                    </h3>
-                    <p class="text-xs text-slate-400">I migliori giocatori di ogni girone ordinati per punti totali ottenuti sul campo</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- GIOCATORI GIRONE A -->
-                    <div class="space-y-3">
-                        <h4 class="text-md font-bold text-emerald-400 flex items-center gap-2">
-                            <i class="fa-solid fa-user"></i> Giocatori Girone A
-                        </h4>
-                        <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-sm text-slate-300">
-                                    <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                        <tr>
-                                            <th class="px-4 py-3">Pos</th>
-                                            <th class="px-4 py-3">Giocatore</th>
-                                            <th class="px-4 py-3">Squadra</th>
-                                            <th class="px-4 py-3 text-center">Pres</th>
-                                            <th class="px-4 py-3 text-center">Gol</th>
-                                            <th class="px-4 py-3 text-right">Punti Tot</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="players-girone-a" class="divide-y divide-slate-800/60 text-xs"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- GIOCATORI GIRONE B -->
-                    <div class="space-y-3">
-                        <h4 class="text-md font-bold text-blue-400 flex items-center gap-2">
-                            <i class="fa-solid fa-user"></i> Giocatori Girone B
-                        </h4>
-                        <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-sm text-slate-300">
-                                    <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                        <tr>
-                                            <th class="px-4 py-3">Pos</th>
-                                            <th class="px-4 py-3">Giocatore</th>
-                                            <th class="px-4 py-3">Squadra</th>
-                                            <th class="px-4 py-3 text-center">Pres</th>
-                                            <th class="px-4 py-3 text-center">Gol</th>
-                                            <th class="px-4 py-3 text-right">Punti Tot</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="players-girone-b" class="divide-y divide-slate-800/60 text-xs"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </section>
 
-        <!-- TAB 3: REGISTRAZIONE PARTECIPANTI -->
+        <!-- TAB 3: PARTECIPANTI -->
         <section id="section-participants" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-4 glass-card rounded-2xl p-6 space-y-4 h-fit">
-                    <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
-                        <i class="fa-solid fa-user-plus text-emerald-400"></i> Iscrivi Fanta-Allenatore
-                    </h2>
-                    
-                    <form id="participant-form" onsubmit="handleParticipantSubmit(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Nome e Cognome *</label>
-                            <input type="text" id="part-name" required placeholder="Es. Mario Rossi" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Squadra *</label>
-                            <select id="part-team" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
-                                <option value="" disabled selected>Assegna ad una squadra...</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Ruolo nella Lega</label>
-                            <select id="part-role" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
-                                <option value="Allenatore">Allenatore Principale</option>
-                                <option value="Vice-Allenatore">Vice-Allenatore</option>
-                                <option value="Presidente">Presidente / Manager</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Bonus / Malus Classifica Direct (pt)</label>
-                            <input type="number" id="part-bonus" value="0" step="0.5" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" placeholder="Es. 2 o -1">
-                            <span class="text-[10px] text-slate-400">Si sommano/sottraggono direttamente al totale in classifica</span>
-                        </div>
-
-                        <button type="submit" class="w-full py-3 rounded-xl accent-gradient font-bold text-white shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-2 text-sm">
-                            <i class="fa-solid fa-plus"></i> Registra Partecipante
-                        </button>
+                <div class="lg:col-span-4 glass-card rounded-2xl p-6 space-y-4 admin-only">
+                    <h2 class="text-xl font-bold text-white border-b border-slate-800 pb-3">Iscrivi Fanta-Allenatore</h2>
+                    <form onsubmit="handleParticipantSubmit(event)" class="space-y-4">
+                        <input type="text" id="part-name" required placeholder="Nome e Cognome" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm">
+                        <select id="part-team" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm"></select>
+                        <input type="number" id="part-bonus" value="0" step="0.5" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm" placeholder="Bonus / Malus Direct">
+                        <button type="submit" class="w-full py-3 rounded-xl accent-gradient font-bold text-white text-sm">Registra Partecipante</button>
                     </form>
                 </div>
 
                 <div class="lg:col-span-8 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-users text-blue-400"></i> Elenco Iscritti &amp; Rosa Squadre
-                        </h2>
-                    </div>
-
+                    <h2 class="text-xl font-bold text-white">Elenco Iscritti</h2>
                     <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                    <tr>
-                                        <th class="px-5 py-3">Partecipante</th>
-                                        <th class="px-5 py-3">Squadra</th>
-                                        <th class="px-5 py-3">Giocatori in Rosa</th>
-                                        <th class="px-5 py-3 text-center">Bonus/Malus</th>
-                                        <th class="px-5 py-3 text-right">Azione</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="participants-table-body" class="divide-y divide-slate-800/60"></tbody>
-                            </table>
-                        </div>
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase">
+                                <tr>
+                                    <th class="px-5 py-3">Partecipante</th>
+                                    <th class="px-5 py-3">Squadra</th>
+                                    <th class="px-5 py-3 text-center">Bonus/Malus</th>
+                                    <th class="px-5 py-3 text-right admin-only">Azione</th>
+                                </tr>
+                            </thead>
+                            <tbody id="participants-table-body" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 4: PERSONALIZZAZIONE SQUADRE, LOGHI & ROSE -->
-        <section id="section-teams" class="hidden space-y-6">
-            <div class="flex justify-between items-center flex-wrap gap-4 border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-users-gear text-emerald-400"></i> Gestione Rose, Loghi e Squadre
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">Personalizza nomi delle squadre, carica i loghi e gestisci le rose dei giocatori</p>
-                </div>
-            </div>
-
+        <!-- TAB 4: MODIFICA ROSE & LOGHI (ADMIN ONLY) -->
+        <section id="section-teams" class="admin-only hidden space-y-6">
+            <h2 class="text-2xl font-bold text-white">Gestione Rose & Loghi</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="teams-grid-container"></div>
         </section>
 
         <!-- TAB 5: REGISTRO VOTI -->
         <section id="section-log" class="hidden space-y-6">
-            <div class="flex justify-between items-center flex-wrap gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-receipt text-blue-400"></i> Registro Voti
-                    </h2>
-                    <p class="text-xs text-slate-400 mt-1">Storico completo di tutte le schede salvate</p>
-                </div>
-                
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button onclick="exportJSONData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-download text-blue-400"></i> Backup JSON
-                    </button>
-                    <label class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 cursor-pointer flex items-center gap-1.5">
-                        <i class="fa-solid fa-upload text-amber-400"></i> Ripristina
-                        <input type="file" id="import-file" accept=".json" onchange="importJSONData(event)" class="hidden">
-                    </label>
-                    <button onclick="exportToCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-csv text-emerald-400"></i> Esporta CSV
-                    </button>
-                    <button onclick="clearAllData()" class="px-3 py-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl text-xs font-medium border border-rose-800/40 flex items-center gap-1.5">
-                        <i class="fa-solid fa-trash-can"></i> Reset
-                    </button>
-                </div>
-            </div>
-
+            <h2 class="text-2xl font-bold text-white">Registro Voti</h2>
             <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                <div class="p-4 border-b border-slate-800 flex flex-wrap gap-4 justify-between items-center">
-                    <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
-                        <input type="text" id="log-search" oninput="renderLogTable()" placeholder="Cerca giocatore o squadra..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <select id="log-filter-team" onchange="renderLogTable()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        <option value="ALL">Tutte le Squadre</option>
-                    </select>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                            <tr>
-                                <th class="px-4 py-3">G.ta</th>
-                                <th class="px-4 py-3">Squadra</th>
-                                <th class="px-4 py-3">Giocatore</th>
-                                <th class="px-4 py-3">Sostituisce</th>
-                                <th class="px-4 py-3 text-center">Bonus/Malus</th>
-                                <th class="px-4 py-3 text-center">Totale</th>
-                                <th class="px-4 py-3 text-right">Azione</th>
-                            </tr>
-                        </thead>
-                        <tbody id="log-table-body" class="divide-y divide-slate-800/60"></tbody>
-                    </table>
-                </div>
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase">
+                        <tr>
+                            <th class="px-4 py-3">G.ta</th>
+                            <th class="px-4 py-3">Squadra</th>
+                            <th class="px-4 py-3">Giocatore</th>
+                            <th class="px-4 py-3">Sostituisce</th>
+                            <th class="px-4 py-3 text-center">Totale</th>
+                            <th class="px-4 py-3 text-right admin-only">Azione</th>
+                        </tr>
+                    </thead>
+                    <tbody id="log-table-body" class="divide-y divide-slate-800/60"></tbody>
+                </table>
             </div>
         </section>
 
     </main>
 
-    <script>
-        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v8';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v8';
-        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v8';
+    <!-- FIREBASE SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-        const defaultTeams = [
-            { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', logo: null, coach: 'Mister Riello', players: [{ id: 101, name: 'Giocatore 1', role: 'POR' }, { id: 102, name: 'Giocatore 2', role: 'DIF' }] },
-            { 
-                id: 'team_a2', 
-                group: 'A', 
-                name: 'MALEDETTI ANZIANI', 
-                logo: null,
-                coach: 'Mister Anziani', 
-                players: [
-                    { id: 103, name: 'Alfonso Bono', role: 'CEN' },
-                    { id: 104, name: 'Orlando Latini', role: 'CEN' },
-                    { id: 105, name: 'Graziano Romagnoli', role: 'DIF' },
-                    { id: 106, name: 'Giancarlo Romagnoli', role: 'DIF' },
-                    { id: 107, name: 'Antonello Marcotulli', role: 'POR' },
-                    { id: 108, name: 'Valter Franciosi', role: 'DIF' },
-                    { id: 109, name: 'Daniele Bonomo', role: 'ATT' },
-                    { id: 110, name: 'Marco Gandolfo', role: 'CEN' },
-                    { id: 111, name: 'Stefano Lanna', role: 'CEN' },
-                    { id: 112, name: 'Roberto Petrucci', role: 'ATT' },
-                    { id: 113, name: 'Alessandro Caporossi', role: 'DIF' },
-                    { id: 114, name: 'Daniele d’eramo', role: 'ATT' },
-                    { id: 115, name: 'Vincenzo Labate', role: 'CEN' }
-                ] 
-            },
-            { id: 'team_a3', group: 'A', name: 'I SENATORI', logo: null, coach: 'Mister Senatori', players: [{ id: 116, name: 'Giocatore 1', role: 'POR' }, { id: 117, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_a4', group: 'A', name: '84 TEAM', logo: null, coach: 'Mister 84', players: [{ id: 118, name: 'Giocatore 1', role: 'POR' }, { id: 119, name: 'Giocatore 2', role: 'DIF' }] },
-            
-            { id: 'team_b1', group: 'B', name: 'ATLETICO VALMONTONE', logo: null, coach: 'Mister Valmontone', players: [{ id: 201, name: 'Giocatore 1', role: 'POR' }, { id: 202, name: 'Giocatore 2', role: 'DIF' }] },
-            { 
-                id: 'team_b2', 
-                group: 'B', 
-                name: 'FC QUADRELLE', 
-                logo: null,
-                coach: 'Mister Quadrelle', 
-                players: [
-                    { id: 203, name: 'Mirko Fiacchi', role: 'ATT' },
-                    { id: 204, name: 'Ivano Polce', role: 'POR' },
-                    { id: 205, name: 'Alessandro Simeoni', role: 'DIF' },
-                    { id: 206, name: 'Riccardo Zaccagnini', role: 'CEN' },
-                    { id: 207, name: 'Lorenzo Ciucci', role: 'CEN' },
-                    { id: 208, name: 'Francesco Petrucci', role: 'ATT' },
-                    { id: 209, name: 'Stefano Margiotti', role: 'DIF' },
-                    { id: 210, name: 'Vincenzo Labate', role: 'CEN' }
-                ] 
-            },
-            { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', logo: null, coach: 'Mister Avanti', players: [{ id: 211, name: 'Giocatore 1', role: 'POR' }, { id: 212, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', logo: null, coach: 'Mister Tavernello', players: [{ id: 213, name: 'Giocatore 1', role: 'POR' }, { id: 214, name: 'Giocatore 2', role: 'DIF' }] }
-        ];
+    <script>
+        // CONFIGURAZIONE FIREBASE (Sostituisci con i dati della tua console Firebase)
+        const firebaseConfig = {
+            apiKey: "INSERISCI_LA_TUA_API_KEY",
+            authDomain: "tuo-progetto.firebaseapp.com",
+            databaseURL: "https://tuo-progetto-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "tuo-progetto",
+            storageBucket: "tuo-progetto.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Controllo Modalità Admin / Spettatore via URL parameter (?mode=admin)
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get('mode') === 'admin';
 
         let teamsList = [];
         let votiList = [];
         let participantsList = [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadFromStorage();
-            populateTeamDropdowns();
-            renderTeamsConfig();
-            calculateLive();
-            renderStandings();
-            renderParticipantsTable();
-            renderLogTable();
+            setupPermissions();
+            initFirebaseSync();
         });
 
-        function loadFromStorage() {
-            const storedTeams = localStorage.getItem(STORAGE_KEY_TEAMS);
-            const storedVotes = localStorage.getItem(STORAGE_KEY_VOTES);
-            const storedParts = localStorage.getItem(STORAGE_KEY_PARTS);
-
-            teamsList = storedTeams ? JSON.parse(storedTeams) : defaultTeams;
-            votiList = storedVotes ? JSON.parse(storedVotes) : [];
-            participantsList = storedParts ? JSON.parse(storedParts) : [];
+        function setupPermissions() {
+            const badge = document.getElementById('badge-mode');
+            if (isAdmin) {
+                badge.innerText = "Modalità Amministratore";
+                badge.className = "text-xs text-emerald-400 font-bold";
+            } else {
+                badge.innerText = "Modalità Spettatore (Sola Lettura)";
+                badge.className = "text-xs text-amber-400 font-bold";
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+                switchTab('standings');
+            }
         }
 
-        function saveToStorage() {
-            localStorage.setItem(STORAGE_KEY_TEAMS, JSON.stringify(teamsList));
-            localStorage.setItem(STORAGE_KEY_VOTES, JSON.stringify(votiList));
-            localStorage.setItem(STORAGE_KEY_PARTS, JSON.stringify(participantsList));
+        // Sincronizzazione Realtime Firebase
+        function initFirebaseSync() {
+            db.ref('teams').on('value', snapshot => {
+                teamsList = snapshot.val() || [];
+                populateTeamDropdowns();
+                if(isAdmin) renderTeamsConfig();
+                renderStandings();
+            });
+
+            db.ref('votes').on('value', snapshot => {
+                const data = snapshot.val();
+                votiList = data ? Object.values(data) : [];
+                renderStandings();
+                renderLogTable();
+            });
+
+            db.ref('participants').on('value', snapshot => {
+                const data = snapshot.val();
+                participantsList = data ? Object.values(data) : [];
+                renderParticipantsTable();
+                renderStandings();
+            });
         }
 
         function getTeamLogoHTML(team, sizeClass = "w-6 h-6") {
@@ -581,14 +317,11 @@
 
         function populateTeamDropdowns() {
             const selectForm = document.getElementById('input-squadra');
-            const selectFilter = document.getElementById('log-filter-team');
             const selectPartTeam = document.getElementById('part-team');
             
-            const currentSelected = selectForm.value;
-            
+            if(!selectForm) return;
             selectForm.innerHTML = '<option value="" disabled selected>Seleziona Squadra...</option>';
-            selectFilter.innerHTML = '<option value="ALL">Tutte le Squadre</option>';
-            selectPartTeam.innerHTML = '<option value="" disabled selected>Assegna ad una squadra...</option>';
+            if(selectPartTeam) selectPartTeam.innerHTML = '<option value="" disabled selected>Assegna ad una squadra...</option>';
 
             ['A', 'B'].forEach(group => {
                 const groupTeams = teamsList.filter(t => t.group === group);
@@ -596,382 +329,117 @@
                     let optGroup = `<optgroup label="GIRONE ${group}">`;
                     groupTeams.forEach(t => {
                         optGroup += `<option value="${t.id}">${t.name}</option>`;
-                        selectFilter.innerHTML += `<option value="${t.id}">${t.name} (Gir. ${group})</option>`;
                     });
                     optGroup += `</optgroup>`;
                     selectForm.innerHTML += optGroup;
-                    selectPartTeam.innerHTML += optGroup;
+                    if(selectPartTeam) selectPartTeam.innerHTML += optGroup;
                 }
             });
-
-            if(currentSelected) {
-                selectForm.value = currentSelected;
-            }
-        }
-
-        function handleParticipantSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('part-name').value.trim();
-            const teamId = document.getElementById('part-team').value;
-            const role = document.getElementById('part-role').value;
-            const bonus = parseFloat(document.getElementById('part-bonus').value) || 0;
-
-            const team = teamsList.find(t => t.id === teamId);
-            if (!name || !team) return;
-
-            const newPart = {
-                id: Date.now(),
-                name,
-                teamId: team.id,
-                teamName: team.name,
-                role,
-                bonus
-            };
-
-            participantsList.push(newPart);
-            saveToStorage();
-            
-            document.getElementById('participant-form').reset();
-            renderParticipantsTable();
-            renderStandings();
-        }
-
-        function updateParticipantBonus(id, bonusVal) {
-            const part = participantsList.find(p => p.id === id);
-            if (part) {
-                part.bonus = parseFloat(bonusVal) || 0;
-                saveToStorage();
-                renderStandings();
-            }
-        }
-
-        function renderParticipantsTable() {
-            const tbody = document.getElementById('participants-table-body');
-            document.getElementById('part-count').innerText = participantsList.length;
-
-            if (participantsList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-6 text-center text-slate-500 text-xs">Nessun fanta-allenatore ancora iscritto.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = participantsList.map(p => {
-                const team = teamsList.find(t => t.id === p.teamId);
-                const playersListStr = team ? team.players.map(pl => pl.name).join(', ') : 'Nessun giocatore';
-
-                return `
-                <tr class="hover:bg-slate-800/40 transition-colors">
-                    <td class="px-5 py-3">
-                        <div class="font-semibold text-white">${p.name}</div>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">${p.role}</span>
-                    </td>
-                    <td class="px-5 py-3 text-slate-300 font-medium">
-                        <div class="flex items-center gap-2">
-                            ${getTeamLogoHTML(team, "w-5 h-5")}
-                            <span>${p.teamName}</span>
-                        </div>
-                    </td>
-                    <td class="px-5 py-3 text-xs text-slate-400 max-w-xs truncate" title="${playersListStr}">
-                        <i class="fa-solid fa-shirt text-slate-500 mr-1"></i>${playersListStr}
-                    </td>
-                    <td class="px-5 py-3 text-center">
-                        <input type="number" step="0.5" value="${p.bonus || 0}" onchange="updateParticipantBonus(${p.id}, this.value)" class="w-16 text-center bg-slate-900 border border-slate-700 rounded py-1 text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-500">
-                    </td>
-                    <td class="px-5 py-3 text-right">
-                        <button onclick="deleteParticipant(${p.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr>
-            `}).join('');
-        }
-
-        function deleteParticipant(id) {
-            if (confirm("Rimuovere questo iscritto?")) {
-                participantsList = participantsList.filter(p => p.id !== id);
-                saveToStorage();
-                renderParticipantsTable();
-                renderStandings();
-            }
         }
 
         function onTeamSelect() {
             const teamId = document.getElementById('input-squadra').value;
             const team = teamsList.find(t => t.id === teamId);
-            
             const playerSelect = document.getElementById('input-giocatore');
             const subSelect = document.getElementById('input-sostituito');
-            const coachLabel = document.getElementById('allenatore-label');
 
             if (!team) return;
 
-            const assignedParts = participantsList.filter(p => p.teamId === team.id).map(p => p.name).join(', ');
-            coachLabel.innerHTML = `${getTeamLogoHTML(team, "w-5 h-5")} <span>Girone ${team.group} | Iscritti: ${assignedParts || team.coach || 'Nessuno'}</span>`;
-            
             playerSelect.innerHTML = '<option value="" disabled selected>Seleziona Giocatore...</option>';
             subSelect.innerHTML = '<option value="">Nessuna sostituzione</option>';
 
             team.players.forEach(p => {
-                const optText = `[${p.role}] ${p.name}`;
-                playerSelect.innerHTML += `<option value="${p.name}">${optText}</option>`;
-                subSelect.innerHTML += `<option value="${p.name}">${optText}</option>`;
+                playerSelect.innerHTML += `<option value="${p.name}">[${p.role}] ${p.name}</option>`;
+                subSelect.innerHTML += `<option value="${p.name}">[${p.role}] ${p.name}</option>`;
             });
-        }
-
-        function onPlayerSelect() {
-            const currentPlayer = document.getElementById('input-giocatore').value;
-            const subSelect = document.getElementById('input-sostituito');
-            
-            Array.from(subSelect.options).forEach(opt => {
-                opt.disabled = (opt.value === currentPlayer && opt.value !== "");
-            });
-        }
-
-        function renderTeamsConfig() {
-            const container = document.getElementById('teams-grid-container');
-            container.innerHTML = teamsList.map(t => `
-                <div class="glass-card rounded-2xl p-5 space-y-4 border border-slate-700/60 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${t.group === 'A' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-blue-950 text-blue-400 border border-blue-800'}">GIRONE ${t.group}</span>
-                            
-                            <!-- Logo Upload Preview & Control -->
-                            <div class="flex items-center gap-2">
-                                ${t.logo ? `<img src="${t.logo}" class="w-8 h-8 rounded-full object-cover border border-emerald-500 shadow" alt="Logo">` : '<div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500"><i class="fa-solid fa-shield-halved text-xs"></i></div>'}
-                                <label class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700 flex items-center gap-1" title="Carica Logo">
-                                    <i class="fa-solid fa-camera"></i>
-                                    <input type="file" accept="image/*" class="hidden" onchange="uploadTeamLogo('${t.id}', event)">
-                                </label>
-                                ${t.logo ? `<button onclick="removeTeamLogo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase">Nome Squadra</label>
-                            <input type="text" value="${t.name}" onchange="updateTeamInfo('${t.id}', 'name', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500">
-                        </div>
-                        
-                        <div class="pt-2">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-xs font-bold text-emerald-400 uppercase">Rosa Giocatori (${t.players.length})</label>
-                                <button type="button" onclick="addPlayerToTeam('${t.id}')" class="text-[11px] bg-emerald-950 text-emerald-300 hover:bg-emerald-900 px-2 py-0.5 rounded border border-emerald-700">
-                                    + Giocatore
-                                </button>
-                            </div>
-                            <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                                ${t.players.map(p => `
-                                    <div class="flex items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-800 text-xs">
-                                        <select onchange="updatePlayer('${t.id}', ${p.id}, 'role', this.value)" class="bg-slate-950 text-slate-300 rounded border border-slate-700 px-1 py-0.5 text-[10px]">
-                                            <option value="POR" ${p.role === 'POR' ? 'selected' : ''}>POR</option>
-                                            <option value="DIF" ${p.role === 'DIF' ? 'selected' : ''}>DIF</option>
-                                            <option value="CEN" ${p.role === 'CEN' ? 'selected' : ''}>CEN</option>
-                                            <option value="ATT" ${p.role === 'ATT' ? 'selected' : ''}>ATT</option>
-                                        </select>
-                                        <input type="text" value="${p.name}" onchange="updatePlayer('${t.id}', ${p.id}, 'name', this.value)" class="w-full bg-transparent text-white px-1 focus:outline-none font-medium">
-                                        <button onclick="removePlayer('${t.id}', ${p.id})" class="text-slate-500 hover:text-rose-400 px-1"><i class="fa-solid fa-xmark"></i></button>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function uploadTeamLogo(teamId, event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const team = teamsList.find(t => t.id === teamId);
-                if (team) {
-                    team.logo = e.target.result;
-                    saveToStorage();
-                    renderTeamsConfig();
-                    renderStandings();
-                    renderParticipantsTable();
-                    renderLogTable();
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function removeTeamLogo(teamId) {
-            const team = teamsList.find(t => t.id === teamId);
-            if (team) {
-                team.logo = null;
-                saveToStorage();
-                renderTeamsConfig();
-                renderStandings();
-                renderParticipantsTable();
-                renderLogTable();
-            }
-        }
-
-        function updateTeamInfo(teamId, field, val) {
-            const team = teamsList.find(t => t.id === teamId);
-            if (team) {
-                team[field] = val;
-                saveToStorage();
-                populateTeamDropdowns();
-                renderStandings();
-                renderParticipantsTable();
-            }
-        }
-
-        function addPlayerToTeam(teamId) {
-            const team = teamsList.find(t => t.id === teamId);
-            if (team) {
-                team.players.push({ id: Date.now(), name: 'Nuovo Giocatore', role: 'CEN' });
-                saveToStorage();
-                renderTeamsConfig();
-                renderParticipantsTable();
-                onTeamSelect();
-            }
-        }
-
-        function updatePlayer(teamId, playerId, field, val) {
-            const team = teamsList.find(t => t.id === teamId);
-            if (team) {
-                const player = team.players.find(p => p.id === playerId);
-                if (player) {
-                    player[field] = val;
-                    saveToStorage();
-                    renderParticipantsTable();
-                    onTeamSelect();
-                }
-            }
-        }
-
-        function removePlayer(teamId, playerId) {
-            const team = teamsList.find(t => t.id === teamId);
-            if (team) {
-                team.players = team.players.filter(p => p.id !== playerId);
-                saveToStorage();
-                renderTeamsConfig();
-                renderParticipantsTable();
-                onTeamSelect();
-            }
-        }
-
-        function adjustCount(id, delta) {
-            const input = document.getElementById(id);
-            let val = parseInt(input.value) || 0;
-            input.value = Math.max(0, val + delta);
-            calculateLive();
-        }
-
-        function calculateLive() {
-            const presenza = document.getElementById('check-presenza').checked ? 1 : 0;
-            const vittoria = document.getElementById('check-vittoria').checked ? 1 : 0;
-            const ammonizione = document.getElementById('check-ammonizione').checked ? 1 : 0;
-            const espulsione = document.getElementById('check-espulsione').checked ? 1 : 0;
-            
-            const gol = parseInt(document.getElementById('num-gol').value) || 0;
-            const assist = parseInt(document.getElementById('num-assist').value) || 0;
-            const autogol = parseInt(document.getElementById('num-autogol').value) || 0;
-
-            const total = (presenza * 1) + (gol * 3) + (assist * 2) + (vittoria * 1) - (ammonizione * 1) - (espulsione * 3) - (autogol * 2);
-
-            const displayEl = document.getElementById('live-total-display');
-            displayEl.innerText = total >= 0 ? `+${total}` : total;
-            displayEl.className = total >= 0 ? 'text-6xl font-black text-emerald-400 tracking-tight' : 'text-6xl font-black text-rose-500 tracking-tight';
-
-            document.getElementById('breakdown-presenza').innerText = `+${presenza * 1} pt`;
-            document.getElementById('breakdown-gol-count').innerText = gol;
-            document.getElementById('breakdown-gol').innerText = `+${gol * 3} pt`;
-            document.getElementById('breakdown-assist-count').innerText = assist;
-            document.getElementById('breakdown-assist').innerText = `+${assist * 2} pt`;
-            document.getElementById('breakdown-vittoria').innerText = `+${vittoria * 1} pt`;
-            document.getElementById('breakdown-cartellini').innerText = `${-(ammonizione * 1 + espulsione * 3)} pt`;
-            document.getElementById('breakdown-autogol-count').innerText = autogol;
-            document.getElementById('breakdown-autogol').innerText = `${-(autogol * 2)} pt`;
-
-            return total;
         }
 
         function handleFormSubmit(e) {
             e.preventDefault();
-            
+            if (!isAdmin) return;
+
             const teamId = document.getElementById('input-squadra').value;
             const giocatore = document.getElementById('input-giocatore').value;
             const sostituito = document.getElementById('input-sostituito').value;
             const giornata = parseInt(document.getElementById('input-giornata').value) || 1;
 
             const team = teamsList.find(t => t.id === teamId);
+            if (!team || !giocatore) return;
 
-            if (!team || !giocatore) {
-                alert("Seleziona una squadra e un giocatore.");
-                return;
-            }
+            const presenza = document.getElementById('check-presenza').checked ? 1 : 0;
+            const vittoria = document.getElementById('check-vittoria').checked ? 1 : 0;
+            const ammonizione = document.getElementById('check-ammonizione').checked ? 1 : 0;
+            const espulsione = document.getElementById('check-espulsione').checked ? 1 : 0;
+            const gol = parseInt(document.getElementById('num-gol').value) || 0;
+            const assist = parseInt(document.getElementById('num-assist').value) || 0;
+            const autogol = parseInt(document.getElementById('num-autogol').value) || 0;
 
+            const totaleVoto = (presenza * 1) + (gol * 3) + (assist * 2) + (vittoria * 1) - (ammonizione * 1) - (espulsione * 3) - (autogol * 2);
+
+            const recordId = Date.now();
             const record = {
-                id: Date.now(),
+                id: recordId,
                 squadraId: teamId,
                 squadraNome: team.name,
                 group: team.group,
                 giocatore,
                 sostituito: sostituito || '-',
                 giornata,
-                presenza: document.getElementById('check-presenza').checked,
-                vittoria: document.getElementById('check-vittoria').checked,
-                ammonizione: document.getElementById('check-ammonizione').checked,
-                espulsione: document.getElementById('check-espulsione').checked,
-                gol: parseInt(document.getElementById('num-gol').value) || 0,
-                assist: parseInt(document.getElementById('num-assist').value) || 0,
-                autogol: parseInt(document.getElementById('num-autogol').value) || 0,
-                totaleVoto: calculateLive()
+                gol,
+                totaleVoto
             };
 
-            votiList.unshift(record);
-            saveToStorage();
-            resetForm();
-            renderStandings();
-            renderLogTable();
-
-            alert(`Voto registrato per ${giocatore}! (${record.totaleVoto} pt)`);
+            db.ref('votes/' + recordId).set(record);
+            document.getElementById('voto-form').reset();
+            alert("Voto registrato su Cloud con successo!");
         }
 
-        function resetForm() {
-            document.getElementById('voto-form').reset();
-            document.getElementById('check-presenza').checked = true;
-            document.getElementById('num-gol').value = 0;
-            document.getElementById('num-assist').value = 0;
-            document.getElementById('num-autogol').value = 0;
-            document.getElementById('allenatore-label').innerHTML = '';
-            calculateLive();
+        function handleParticipantSubmit(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const name = document.getElementById('part-name').value.trim();
+            const teamId = document.getElementById('part-team').value;
+            const bonus = parseFloat(document.getElementById('part-bonus').value) || 0;
+            const team = teamsList.find(t => t.id === teamId);
+
+            if (!name || !team) return;
+
+            const partId = Date.now();
+            db.ref('participants/' + partId).set({
+                id: partId,
+                name,
+                teamId: team.id,
+                teamName: team.name,
+                bonus
+            });
+
+            document.getElementById('part-name').value = '';
         }
 
         function renderStandings() {
-            const getTeamStats = (filterGroup = null) => {
-                const targetTeams = filterGroup ? teamsList.filter(t => t.group === filterGroup) : teamsList;
-                const stats = targetTeams.map(t => {
-                    const teamVotes = votiList.filter(v => v.squadraId === t.id);
-                    const puntiVoti = teamVotes.reduce((sum, v) => sum + v.totaleVoto, 0);
-                    const golTotali = teamVotes.reduce((sum, v) => sum + v.gol, 0);
-                    
-                    const teamParts = participantsList.filter(p => p.teamId === t.id);
-                    const teamPartsNames = teamParts.map(p => p.name).join(', ');
-                    const bonusExtra = teamParts.reduce((sum, p) => sum + (p.bonus || 0), 0);
+            const stats = teamsList.map(t => {
+                const teamVotes = votiList.filter(v => v.squadraId === t.id);
+                const puntiVoti = teamVotes.reduce((sum, v) => sum + v.totaleVoto, 0);
+                const golTotali = teamVotes.reduce((sum, v) => sum + v.gol, 0);
+                
+                const teamParts = participantsList.filter(p => p.teamId === t.id);
+                const teamPartsNames = teamParts.map(p => p.name).join(', ');
+                const bonusExtra = teamParts.reduce((sum, p) => sum + (p.bonus || 0), 0);
 
-                    const puntiTotali = puntiVoti + bonusExtra;
+                return {
+                    squadraObj: t,
+                    squadra: t.name,
+                    group: t.group,
+                    allenatore: teamPartsNames || t.coach || '-',
+                    bonusExtra,
+                    golTotali,
+                    puntiTotali: puntiVoti + bonusExtra
+                };
+            }).sort((a, b) => b.puntiTotali - a.puntiTotali || b.golTotali - a.golTotali);
 
-                    return {
-                        id: t.id,
-                        squadraObj: t,
-                        squadra: t.name,
-                        group: t.group,
-                        allenatore: teamPartsNames || t.coach || '-',
-                        bonusExtra,
-                        golTotali,
-                        puntiTotali
-                    };
-                });
-
-                return stats.sort((a, b) => b.puntiTotali - a.puntiTotali || b.golTotali - a.golTotali);
-            };
-
-            const allStats = getTeamStats(null);
-            document.getElementById('standings-general-all').innerHTML = allStats.map((item, idx) => `
-                <tr class="hover:bg-slate-800/40 transition-colors">
+            document.getElementById('standings-general-all').innerHTML = stats.map((item, idx) => `
+                <tr class="hover:bg-slate-800/40">
                     <td class="px-6 py-4 font-bold text-slate-400">#${idx + 1}</td>
                     <td class="px-6 py-4 font-semibold text-white">
                         <div class="flex items-center gap-2">
@@ -981,212 +449,95 @@
                     </td>
                     <td class="px-6 py-4"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${item.group === 'A' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-blue-950 text-blue-400 border border-blue-800'}">GIRONE ${item.group}</span></td>
                     <td class="px-6 py-4 text-slate-400 text-xs">${item.allenatore}</td>
-                    <td class="px-6 py-4 text-center font-bold ${item.bonusExtra >= 0 ? 'text-amber-400' : 'text-rose-400'}">
-                        ${item.bonusExtra > 0 ? `+${item.bonusExtra}` : item.bonusExtra} pt
-                    </td>
-                    <td class="px-6 py-4 text-center font-medium text-emerald-400">${item.golTotali}</td>
-                    <td class="px-6 py-4 text-right font-black text-base text-white">${item.puntiTotali} pt</td>
+                    <td class="px-6 py-4 text-center font-bold ${item.bonusExtra >= 0 ? 'text-amber-400' : 'text-rose-400'}">${item.bonusExtra} pt</td>
+                    <td class="px-6 py-4 text-center text-emerald-400 font-medium">${item.golTotali}</td>
+                    <td class="px-6 py-4 text-right font-black text-white">${item.puntiTotali} pt</td>
                 </tr>
             `).join('');
 
-            const renderGroupTable = (group) => {
-                const stats = getTeamStats(group);
-                return stats.map((item, idx) => `
-                    <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="px-4 py-3 font-bold text-slate-400">#${idx + 1}</td>
-                        <td class="px-4 py-3 font-semibold text-white">
-                            <div class="flex items-center gap-2">
-                                ${getTeamLogoHTML(item.squadraObj, "w-5 h-5")}
-                                <span>${item.squadra}</span>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-center font-bold text-xs ${item.bonusExtra >= 0 ? 'text-amber-400' : 'text-rose-400'}">
-                            ${item.bonusExtra > 0 ? `+${item.bonusExtra}` : item.bonusExtra}
-                        </td>
-                        <td class="px-4 py-3 text-center font-medium text-emerald-400 text-xs">${item.golTotali}</td>
-                        <td class="px-4 py-3 text-right font-bold text-white text-sm">${item.puntiTotali} pt</td>
-                    </tr>
-                `).join('');
-            };
+            const renderGroup = (grp) => stats.filter(s => s.group === grp).map((item, idx) => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="px-4 py-3 font-bold text-slate-400">#${idx + 1}</td>
+                    <td class="px-4 py-3 font-semibold text-white">${getTeamLogoHTML(item.squadraObj, "w-5 h-5")} ${item.squadra}</td>
+                    <td class="px-4 py-3 text-center text-amber-400 font-bold text-xs">${item.bonusExtra}</td>
+                    <td class="px-4 py-3 text-center text-emerald-400 text-xs">${item.golTotali}</td>
+                    <td class="px-4 py-3 text-right font-bold text-white text-sm">${item.puntiTotali} pt</td>
+                </tr>
+            `).join('');
 
-            document.getElementById('standings-girone-a').innerHTML = renderGroupTable('A');
-            document.getElementById('standings-girone-b').innerHTML = renderGroupTable('B');
+            document.getElementById('standings-girone-a').innerHTML = renderGroup('A');
+            document.getElementById('standings-girone-b').innerHTML = renderGroup('B');
+        }
 
-            const renderPlayersTable = (group) => {
-                const groupVotes = votiList.filter(v => v.group === group);
-                const playerMap = {};
-
-                groupVotes.forEach(v => {
-                    if (!playerMap[v.giocatore]) {
-                        playerMap[v.giocatore] = {
-                            nome: v.giocatore,
-                            squadraId: v.squadraId,
-                            squadra: v.squadraNome,
-                            presenze: 0,
-                            gol: 0,
-                            puntiTotali: 0
-                        };
-                    }
-                    playerMap[v.giocatore].presenze += v.presenza ? 1 : 0;
-                    playerMap[v.giocatore].gol += v.gol;
-                    playerMap[v.giocatore].puntiTotali += v.totaleVoto;
-                });
-
-                const sortedPlayers = Object.values(playerMap).sort((a, b) => b.puntiTotali - a.puntiTotali || b.gol - a.gol);
-
-                if (sortedPlayers.length === 0) {
-                    return `<tr><td colspan="6" class="px-4 py-4 text-center text-slate-500">Nessun voto registrato in questo girone</td></tr>`;
-                }
-
-                return sortedPlayers.map((p, idx) => {
-                    const teamObj = teamsList.find(t => t.id === p.squadraId);
-                    return `
-                    <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="px-4 py-2.5 font-bold text-slate-400">#${idx + 1}</td>
-                        <td class="px-4 py-2.5 font-semibold text-white">${p.nome}</td>
-                        <td class="px-4 py-2.5 text-slate-400">
-                            <div class="flex items-center gap-1.5">
-                                ${getTeamLogoHTML(teamObj, "w-4 h-4")}
-                                <span>${p.squadra}</span>
-                            </div>
-                        </td>
-                        <td class="px-4 py-2.5 text-center text-slate-300">${p.presenze}</td>
-                        <td class="px-4 py-2.5 text-center font-bold text-emerald-400">${p.gol}</td>
-                        <td class="px-4 py-2.5 text-right font-bold text-amber-400">${p.puntiTotali} pt</td>
-                    </tr>
-                `}).join('');
-            };
-
-            document.getElementById('players-girone-a').innerHTML = renderPlayersTable('A');
-            document.getElementById('players-girone-b').innerHTML = renderPlayersTable('B');
+        function renderParticipantsTable() {
+            document.getElementById('part-count').innerText = participantsList.length;
+            document.getElementById('participants-table-body').innerHTML = participantsList.map(p => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="px-5 py-3 font-semibold text-white">${p.name}</td>
+                    <td class="px-5 py-3 text-slate-300">${p.teamName}</td>
+                    <td class="px-5 py-3 text-center font-bold text-amber-400">${p.bonus} pt</td>
+                    <td class="px-5 py-3 text-right admin-only">
+                        <button onclick="db.ref('participants/${p.id}').remove()" class="text-rose-400"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            setupPermissions();
         }
 
         function renderLogTable() {
-            const tbody = document.getElementById('log-table-body');
-            const searchVal = document.getElementById('log-search').value.toLowerCase();
-            const filterTeam = document.getElementById('log-filter-team').value;
-
             document.getElementById('log-count').innerText = votiList.length;
-
-            const filtered = votiList.filter(item => {
-                const matchesTeam = filterTeam === 'ALL' || item.squadraId === filterTeam;
-                const matchesSearch = item.giocatore.toLowerCase().includes(searchVal) || item.squadraNome.toLowerCase().includes(searchVal);
-                return matchesTeam && matchesSearch;
-            });
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-500 text-xs">Nessun voto registrato.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = filtered.map(item => {
+            document.getElementById('log-table-body').innerHTML = votiList.map(item => {
                 const teamObj = teamsList.find(t => t.id === item.squadraId);
                 return `
-                <tr class="hover:bg-slate-800/40 transition-colors text-xs">
+                <tr class="hover:bg-slate-800/40 text-xs">
                     <td class="px-4 py-3 text-slate-400">G${item.giornata}</td>
-                    <td class="px-4 py-3 font-medium text-white">
-                        <div class="flex items-center gap-1.5">
-                            ${getTeamLogoHTML(teamObj, "w-4 h-4")}
-                            <span>${item.squadraNome}</span> 
-                            <span class="text-[10px] text-slate-500">(Gir. ${item.group})</span>
-                        </div>
-                    </td>
+                    <td class="px-4 py-3 font-medium text-white">${getTeamLogoHTML(teamObj, "w-4 h-4")} ${item.squadraNome}</td>
                     <td class="px-4 py-3 font-semibold text-slate-200">${item.giocatore}</td>
-                    <td class="px-4 py-3 text-slate-400 italic">${item.sostituito !== '-' ? `<i class="fa-solid fa-arrow-right-arrow-left text-emerald-400 mr-1"></i>${item.sostituito}` : '-'}</td>
-                    <td class="px-4 py-3 text-center space-x-1">
-                        ${item.gol > 0 ? `<span class="bg-emerald-950 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800">${item.gol} Gol</span>` : ''}
-                        ${item.assist > 0 ? `<span class="bg-blue-950 text-blue-400 px-1.5 py-0.5 rounded border border-blue-800">${item.assist} Ass</span>` : ''}
-                        ${item.vittoria ? `<span class="bg-amber-950 text-amber-400 px-1.5 py-0.5 rounded border border-amber-800">Vit</span>` : ''}
-                        ${item.ammonizione ? `<span class="bg-yellow-950 text-yellow-400 px-1.5 py-0.5 rounded border border-yellow-800">Giallo</span>` : ''}
-                        ${item.espulsione ? `<span class="bg-rose-950 text-rose-400 px-1.5 py-0.5 rounded border border-rose-800">Rosso</span>` : ''}
-                        ${item.autogol > 0 ? `<span class="bg-rose-950 text-rose-400 px-1.5 py-0.5 rounded border border-rose-800">${item.autogol} Ag</span>` : ''}
-                    </td>
-                    <td class="px-4 py-3 text-center font-bold ${item.totaleVoto >= 0 ? 'text-emerald-400' : 'text-rose-500'}">
-                        ${item.totaleVoto >= 0 ? `+${item.totaleVoto}` : item.totaleVoto}
-                    </td>
-                    <td class="px-4 py-3 text-right">
-                        <button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="px-4 py-3 text-slate-400 italic">${item.sostituito}</td>
+                    <td class="px-4 py-3 text-center font-bold text-emerald-400">${item.totaleVoto} pt</td>
+                    <td class="px-4 py-3 text-right admin-only">
+                        <button onclick="db.ref('votes/${item.id}').remove()" class="text-rose-400"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `}).join('');
+            setupPermissions();
         }
 
-        function deleteRecord(id) {
-            if (confirm("Sei sicuro di voler eliminare questo voto?")) {
-                votiList = votiList.filter(item => item.id !== id);
-                saveToStorage();
-                renderStandings();
-                renderLogTable();
-            }
+        function renderTeamsConfig() {
+            const container = document.getElementById('teams-grid-container');
+            container.innerHTML = teamsList.map(t => `
+                <div class="glass-card rounded-2xl p-4 space-y-3 border border-slate-700">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-emerald-400">${t.name}</span>
+                        <label class="cursor-pointer text-xs bg-slate-800 px-2 py-1 rounded border border-slate-700">
+                            <i class="fa-solid fa-camera"></i> Logo
+                            <input type="file" accept="image/*" class="hidden" onchange="uploadLogo('${t.id}', event)">
+                        </label>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function clearAllData() {
-            if (confirm("Vuoi ripristinare la configurazione iniziale? Tutti i voti e i partecipanti verranno eliminati.")) {
-                localStorage.clear();
-                loadFromStorage();
-                populateTeamDropdowns();
-                renderTeamsConfig();
-                renderStandings();
-                renderParticipantsTable();
-                renderLogTable();
-            }
-        }
-
-        function exportJSONData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ teams: teamsList, votes: votiList, participants: participantsList }));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `jopallo_backup_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        function importJSONData(event) {
-            const fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    if (parsed.teams && parsed.votes) {
-                        teamsList = parsed.teams;
-                        votiList = parsed.votes;
-                        participantsList = parsed.participants || [];
-                        saveToStorage();
-                        populateTeamDropdowns();
-                        renderTeamsConfig();
-                        renderStandings();
-                        renderParticipantsTable();
-                        renderLogTable();
-                        alert("Dati importati con successo!");
-                    }
-                } catch (err) {
-                    alert("Errore nell'importazione dei dati.");
+        function uploadLogo(teamId, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const index = teamsList.findIndex(t => t.id === teamId);
+                if (index !== -1) {
+                    teamsList[index].logo = e.target.result;
+                    db.ref('teams').set(teamsList);
                 }
             };
-            fileReader.readAsText(event.target.files[0]);
-        }
-
-        function exportToCSV() {
-            if (votiList.length === 0) return alert("Nessun dato da esportare!");
-
-            let csv = "ID,Giornata,Girone,Squadra,Giocatore,Sostituisce,Presenza,Vittoria,Ammonizione,Espulsione,Gol,Assist,Autogol,TotaleVoto\n";
-            votiList.forEach(r => {
-                csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.giocatore}","${r.sostituito}",${r.presenza},${r.vittoria},${r.ammonizione},${r.espulsione},${r.gol},${r.assist},${r.autogol},${r.totaleVoto}\n`;
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'jopallo_voti.csv';
-            a.click();
-            URL.revokeObjectURL(url);
+            reader.readAsDataURL(file);
         }
 
         function switchTab(tab) {
             ['form', 'teams', 'participants', 'standings', 'log'].forEach(t => {
-                document.getElementById(`section-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = 'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white';
+                const sec = document.getElementById(`section-${t}`);
+                const tabBtn = document.getElementById(`tab-${t}`);
+                if(sec) sec.classList.add('hidden');
+                if(tabBtn) tabBtn.className = 'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white';
             });
 
             document.getElementById(`section-${tab}`).classList.remove('hidden');
