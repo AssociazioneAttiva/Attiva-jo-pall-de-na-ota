@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -210,7 +207,7 @@
                 <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
                     <i class="fa-solid fa-trophy text-amber-400"></i> Classifiche Ufficiali Torneo
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Calcolate in tempo reale sulla somma dei punti ottenuti dai giocatori</p>
+                <p class="text-xs text-slate-400 mt-1">Calcolate in tempo reale su Voti Giocatori + Bonus/Malus Classifica</p>
             </div>
 
             <!-- GIRONE A -->
@@ -226,7 +223,7 @@
                                     <th class="px-6 py-4">Pos</th>
                                     <th class="px-6 py-4">Squadra</th>
                                     <th class="px-6 py-4">Allenatore/Iscritti</th>
-                                    <th class="px-6 py-4 text-center">Voti</th>
+                                    <th class="px-6 py-4 text-center">Bonus/Malus</th>
                                     <th class="px-6 py-4 text-center">Gol</th>
                                     <th class="px-6 py-4 text-right">Punti Totali</th>
                                 </tr>
@@ -250,7 +247,7 @@
                                     <th class="px-6 py-4">Pos</th>
                                     <th class="px-6 py-4">Squadra</th>
                                     <th class="px-6 py-4">Allenatore/Iscritti</th>
-                                    <th class="px-6 py-4 text-center">Voti</th>
+                                    <th class="px-6 py-4 text-center">Bonus/Malus</th>
                                     <th class="px-6 py-4 text-center">Gol</th>
                                     <th class="px-6 py-4 text-right">Punti Totali</th>
                                 </tr>
@@ -266,7 +263,7 @@
         <section id="section-participants" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <!-- Form Aggiunta Partecipante -->
-                <div class="lg:col-span-5 glass-card rounded-2xl p-6 space-y-4 h-fit">
+                <div class="lg:col-span-4 glass-card rounded-2xl p-6 space-y-4 h-fit">
                     <h2 class="text-xl font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
                         <i class="fa-solid fa-user-plus text-emerald-400"></i> Iscrivi Fanta-Allenatore
                     </h2>
@@ -293,17 +290,23 @@
                             </select>
                         </div>
 
+                        <div>
+                            <label class="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">Bonus / Malus Classifica Direct (pt)</label>
+                            <input type="number" id="part-bonus" value="0" step="0.5" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" placeholder="Es. 2 o -1">
+                            <span class="text-[10px] text-slate-400">Si sommano/sottraggono direttamente al totale in classifica</span>
+                        </div>
+
                         <button type="submit" class="w-full py-3 rounded-xl accent-gradient font-bold text-white shadow-md hover:opacity-95 transition-all flex items-center justify-center gap-2 text-sm">
                             <i class="fa-solid fa-plus"></i> Registra Partecipante
                         </button>
                     </form>
                 </div>
 
-                <!-- Lista Partecipanti -->
-                <div class="lg:col-span-7 space-y-4">
+                <!-- Lista Partecipanti & Rose -->
+                <div class="lg:col-span-8 space-y-4">
                     <div class="flex justify-between items-center">
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-users text-blue-400"></i> Elenco Iscritti
+                            <i class="fa-solid fa-users text-blue-400"></i> Elenco Iscritti &amp; Rosa Squadre
                         </h2>
                     </div>
 
@@ -314,7 +317,8 @@
                                     <tr>
                                         <th class="px-5 py-3">Partecipante</th>
                                         <th class="px-5 py-3">Squadra</th>
-                                        <th class="px-5 py-3">Ruolo</th>
+                                        <th class="px-5 py-3">Giocatori in Rosa</th>
+                                        <th class="px-5 py-3 text-center">Bonus/Malus</th>
                                         <th class="px-5 py-3 text-right">Azione</th>
                                     </tr>
                                 </thead>
@@ -402,11 +406,10 @@
     </main>
 
     <script>
-        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v5';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v5';
-        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v5';
+        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v6';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v6';
+        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v6';
 
-        // Configurazione predefinita delle Squadre
         const defaultTeams = [
             { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', coach: 'Mister Riello', players: [{ id: 101, name: 'Giocatore 1', role: 'POR' }, { id: 102, name: 'Giocatore 2', role: 'DIF' }] },
             { id: 'team_a2', group: 'A', name: 'MALEDETTI ANZIANI', coach: 'Mister Anziani', players: [{ id: 103, name: 'Giocatore 1', role: 'POR' }, { id: 104, name: 'Giocatore 2', role: 'DIF' }] },
@@ -484,6 +487,7 @@
             const name = document.getElementById('part-name').value.trim();
             const teamId = document.getElementById('part-team').value;
             const role = document.getElementById('part-role').value;
+            const bonus = parseFloat(document.getElementById('part-bonus').value) || 0;
 
             const team = teamsList.find(t => t.id === teamId);
             if (!name || !team) return;
@@ -493,7 +497,8 @@
                 name,
                 teamId: team.id,
                 teamName: team.name,
-                role
+                role,
+                bonus
             };
 
             participantsList.push(newPart);
@@ -504,25 +509,46 @@
             renderStandings();
         }
 
+        function updateParticipantBonus(id, bonusVal) {
+            const part = participantsList.find(p => p.id === id);
+            if (part) {
+                part.bonus = parseFloat(bonusVal) || 0;
+                saveToStorage();
+                renderStandings();
+            }
+        }
+
         function renderParticipantsTable() {
             const tbody = document.getElementById('participants-table-body');
             document.getElementById('part-count').innerText = participantsList.length;
 
             if (participantsList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-5 py-6 text-center text-slate-500 text-xs">Nessun fanta-allenatore ancora iscritto.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="px-5 py-6 text-center text-slate-500 text-xs">Nessun fanta-allenatore ancora iscritto.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = participantsList.map(p => `
+            tbody.innerHTML = participantsList.map(p => {
+                const team = teamsList.find(t => t.id === p.teamId);
+                const playersListStr = team ? team.players.map(pl => pl.name).join(', ') : 'Nessun giocatore';
+
+                return `
                 <tr class="hover:bg-slate-800/40 transition-colors">
-                    <td class="px-5 py-3 font-semibold text-white">${p.name}</td>
-                    <td class="px-5 py-3 text-slate-300">${p.teamName}</td>
-                    <td class="px-5 py-3"><span class="text-[11px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">${p.role}</span></td>
+                    <td class="px-5 py-3">
+                        <div class="font-semibold text-white">${p.name}</div>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">${p.role}</span>
+                    </td>
+                    <td class="px-5 py-3 text-slate-300 font-medium">${p.teamName}</td>
+                    <td class="px-5 py-3 text-xs text-slate-400 max-w-xs truncate" title="${playersListStr}">
+                        <i class="fa-solid fa-shirt text-slate-500 mr-1"></i>${playersListStr}
+                    </td>
+                    <td class="px-5 py-3 text-center">
+                        <input type="number" step="0.5" value="${p.bonus || 0}" onchange="updateParticipantBonus(${p.id}, this.value)" class="w-16 text-center bg-slate-900 border border-slate-700 rounded py-1 text-xs text-amber-400 font-bold focus:outline-none focus:border-amber-500">
+                    </td>
                     <td class="px-5 py-3 text-right">
                         <button onclick="deleteParticipant(${p.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         function deleteParticipant(id) {
@@ -544,7 +570,6 @@
 
             if (!team) return;
 
-            // Trova gli iscritti assegnati a questa squadra
             const assignedParts = participantsList.filter(p => p.teamId === team.id).map(p => p.name).join(', ');
             coachLabel.innerText = `Girone ${team.group} | Iscritti: ${assignedParts || team.coach || 'Nessuno'}`;
             
@@ -614,6 +639,7 @@
                 saveToStorage();
                 populateTeamDropdowns();
                 renderStandings();
+                renderParticipantsTable();
             }
         }
 
@@ -623,6 +649,7 @@
                 team.players.push({ id: Date.now(), name: 'Nuovo Giocatore', role: 'CEN' });
                 saveToStorage();
                 renderTeamsConfig();
+                renderParticipantsTable();
                 onTeamSelect();
             }
         }
@@ -634,6 +661,7 @@
                 if (player) {
                     player[field] = val;
                     saveToStorage();
+                    renderParticipantsTable();
                     onTeamSelect();
                 }
             }
@@ -645,6 +673,7 @@
                 team.players = team.players.filter(p => p.id !== playerId);
                 saveToStorage();
                 renderTeamsConfig();
+                renderParticipantsTable();
                 onTeamSelect();
             }
         }
@@ -742,16 +771,20 @@
                 const groupTeams = teamsList.filter(t => t.group === group);
                 const stats = groupTeams.map(t => {
                     const teamVotes = votiList.filter(v => v.squadraId === t.id);
-                    const puntiTotali = teamVotes.reduce((sum, v) => sum + v.totaleVoto, 0);
+                    const puntiVoti = teamVotes.reduce((sum, v) => sum + v.totaleVoto, 0);
                     const golTotali = teamVotes.reduce((sum, v) => sum + v.gol, 0);
                     
-                    const teamParts = participantsList.filter(p => p.teamId === t.id).map(p => p.name).join(', ');
+                    const teamParts = participantsList.filter(p => p.teamId === t.id);
+                    const teamPartsNames = teamParts.map(p => p.name).join(', ');
+                    const bonusExtra = teamParts.reduce((sum, p) => sum + (p.bonus || 0), 0);
+
+                    const puntiTotali = puntiVoti + bonusExtra;
 
                     return {
                         id: t.id,
                         squadra: t.name,
-                        allenatore: teamParts || t.coach || '-',
-                        votiInseriti: teamVotes.length,
+                        allenatore: teamPartsNames || t.coach || '-',
+                        bonusExtra,
                         golTotali,
                         puntiTotali
                     };
@@ -764,7 +797,9 @@
                         <td class="px-6 py-4 font-bold text-slate-400">#${idx + 1}</td>
                         <td class="px-6 py-4 font-semibold text-white">${item.squadra}</td>
                         <td class="px-6 py-4 text-slate-400 text-xs">${item.allenatore}</td>
-                        <td class="px-6 py-4 text-center">${item.votiInseriti}</td>
+                        <td class="px-6 py-4 text-center font-bold ${item.bonusExtra >= 0 ? 'text-amber-400' : 'text-rose-400'}">
+                            ${item.bonusExtra > 0 ? `+${item.bonusExtra}` : item.bonusExtra} pt
+                        </td>
                         <td class="px-6 py-4 text-center font-medium text-emerald-400">${item.golTotali}</td>
                         <td class="px-6 py-4 text-right font-black text-base text-white">${item.puntiTotali} pt</td>
                     </tr>
@@ -901,5 +936,3 @@
     </script>
 </body>
 </html>
-
-```
