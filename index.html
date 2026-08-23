@@ -30,8 +30,45 @@
 </head>
 <body class="min-h-screen flex flex-col pb-12">
 
+    <!-- MODALE DI AUTENTICAZIONE (LOGIN) -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4">
+        <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-slate-700 shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl accent-gradient flex items-center justify-center text-white text-2xl mx-auto shadow-lg shadow-emerald-900/40">
+                    <i class="fa-solid fa-football"></i>
+                </div>
+                <h2 class="text-2xl font-black text-white uppercase tracking-tight">JO PALLO' DE NA 'OTA</h2>
+                <p class="text-xs text-slate-400">Seleziona il tipo di accesso al portale</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Username Admin</label>
+                    <input type="text" id="admin-user" placeholder="Es. admin" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Password</label>
+                    <input type="password" id="admin-pass" placeholder="••••••••" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <p id="login-error" class="text-xs text-rose-400 text-center hidden font-semibold">Credenziali non valide!</p>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock-open"></i> Accedi come Amministratore
+                </button>
+            </form>
+
+            <div class="border-t border-slate-800 pt-4 text-center">
+                <button type="button" onclick="loginAsGuest()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-medium text-xs transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-eye"></i> Entra come Visitatore (Sola Lettura)
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
-    <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
+    <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-40 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl accent-gradient flex items-center justify-center text-white shadow-lg shadow-emerald-900/40">
@@ -39,12 +76,14 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-xl tracking-tight text-white uppercase">JO PALLO' DE NA 'OTA</h1>
-                    <p class="text-xs text-slate-400">Torneo Calcetto - 5 Giornate Precaricate</p>
+                    <div class="flex items-center gap-2">
+                        <span id="badge-role" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Accesso Visitatore</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Tabs Navigazione -->
-            <nav class="flex flex-wrap bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
+            <nav class="flex flex-wrap items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/50 gap-1">
                 <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
                     <i class="fa-solid fa-trophy"></i> Classifiche
                 </button>
@@ -56,6 +95,9 @@
                 </button>
                 <button onclick="switchTab('log')" id="tab-log" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-list-check"></i> Registro Partite (<span id="log-count">0</span>)
+                </button>
+                <button onclick="logout()" class="flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-950/40 transition-colors ml-1" title="Disconnetti">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
             </nav>
         </div>
@@ -150,6 +192,10 @@
 
         <!-- TAB 2: FORM INSERIMENTO PUNTEGGIO PARTITA SQUADRA -->
         <section id="section-form" class="hidden space-y-6">
+            <div id="admin-lock-warning-form" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Modalità Visitatore attiva: l'inserimento voti è riservato all'Amministratore.
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 <div class="lg:col-span-8 glass-card rounded-2xl p-6 sm:p-8 space-y-6">
@@ -273,7 +319,7 @@
                             </label>
                         </div>
 
-                        <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2">
+                        <button type="submit" id="btn-submit-match" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2">
                             <i class="fa-solid fa-floppy-disk"></i> Salva Punti Partita
                         </button>
                     </form>
@@ -304,6 +350,10 @@
 
         <!-- TAB 3: GESTIONE SQUADRE & LOGHI -->
         <section id="section-teams" class="hidden space-y-6">
+            <div id="admin-lock-warning-teams" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Modalità Visitatore attiva: la modifica delle squadre è riservata all'Amministratore.
+            </div>
+
             <div class="flex justify-between items-center flex-wrap gap-4 border-b border-slate-800 pb-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3">
@@ -323,21 +373,21 @@
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3">
                         <i class="fa-solid fa-receipt text-blue-400"></i> Registro Partite Inserite
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Storico completo di tutte le 40 partite salvate</p>
+                    <p class="text-xs text-slate-400 mt-1">Storico completo di tutte le partite salvate</p>
                 </div>
                 
                 <div class="flex items-center gap-2 flex-wrap">
                     <button onclick="exportJSONData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
                         <i class="fa-solid fa-download text-blue-400"></i> Backup JSON
                     </button>
-                    <label class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 cursor-pointer flex items-center gap-1.5">
+                    <label id="btn-import-wrapper" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 cursor-pointer flex items-center gap-1.5">
                         <i class="fa-solid fa-upload text-amber-400"></i> Ripristina
                         <input type="file" id="import-file" accept=".json" onchange="importJSONData(event)" class="hidden">
                     </label>
                     <button onclick="exportToCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
                         <i class="fa-solid fa-file-csv text-emerald-400"></i> Esporta CSV
                     </button>
-                    <button onclick="clearAllData()" class="px-3 py-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl text-xs font-medium border border-rose-800/40 flex items-center gap-1.5">
+                    <button id="btn-reset-all" onclick="clearAllData()" class="px-3 py-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl text-xs font-medium border border-rose-800/40 flex items-center gap-1.5">
                         <i class="fa-solid fa-trash-can"></i> Reset Dati
                     </button>
                 </div>
@@ -376,8 +426,15 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v2';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v2';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v3';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v3';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role';
+
+        // Credenziali Admin di Default
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "admin123";
+
+        let currentRole = null; // 'admin' o 'guest'
 
         const defaultTeams = [
             { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', logo: null },
@@ -391,63 +448,56 @@
             { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', logo: null }
         ];
 
-        // 5 PARTITE PRECARICATE PER CIASCUNA DELLE 8 SQUADRE (40 PARTITE TOTALI)
         function calcPoints(esito, gf, gs, amm, esp, rp, rs, sch) {
             let ptsEsito = esito === 'vittoria' ? 3 : (esito === 'pareggio' ? 1 : 0);
             return ptsEsito + (gf * 1) - (gs * 1) - (amm * 0.5) - (esp * 1) + (rp * 2) - (rs * 1) + (sch ? 3 : 0);
         }
 
         const rawMatches = [
-            // GIRONE A - RIELLO TEAM
+            // GIRONE A
             { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 1, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 2, esito: 'pareggio', gf: 3, gs: 3, amm: 2, esp: 0, rp: 1, rs: 0, sch: true },
             { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 5, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 1, gs: 3, amm: 2, esp: 1, rp: 0, rs: 1, sch: false },
             { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 5, esito: 'vittoria', gf: 6, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
 
-            // GIRONE A - MALEDETTI ANZIANI
             { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 1, esito: 'vittoria', gf: 3, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 3, esito: 'pareggio', gf: 2, gs: 2, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 4, esito: 'vittoria', gf: 5, gs: 3, amm: 1, esp: 0, rp: 1, rs: 0, sch: true },
             { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
 
-            // GIRONE A - I SENATORI
             { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 1, esito: 'sconfitta', gf: 2, gs: 4, amm: 2, esp: 0, rp: 0, rs: 1, sch: true },
             { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 2, esito: 'pareggio', gf: 2, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 3, esito: 'sconfitta', gf: 1, gs: 5, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
             { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 4, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 1, rs: 0, sch: true },
             { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 5, esito: 'pareggio', gf: 3, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
 
-            // GIRONE A - 84 TEAM
             { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 1, esito: 'sconfitta', gf: 1, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: false },
             { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 2, esp: 1, rp: 0, rs: 1, sch: true },
             { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 3, gs: 5, amm: 1, esp: 0, rp: 0, rs: 0, sch: false },
             { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 6, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
 
-            // GIRONE B - ATLETICO VALMONTONE
+            // GIRONE B
             { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 1, esito: 'vittoria', gf: 5, gs: 2, amm: 1, esp: 0, rp: 1, rs: 0, sch: true },
             { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 4, esito: 'vittoria', gf: 6, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 5, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
 
-            // GIRONE B - FC QUADRELLE
             { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 1, esito: 'vittoria', gf: 3, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 2, esito: 'sconfitta', gf: 1, gs: 4, amm: 2, esp: 0, rp: 0, rs: 1, sch: false },
             { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 3, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 1, rs: 0, sch: true },
             { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 5, esito: 'vittoria', gf: 5, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
 
-            // GIRONE B - AVANTI TUTTA
             { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 5, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 2, esp: 0, rp: 0, rs: 0, sch: false },
             { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 1, esp: 1, rp: 0, rs: 0, sch: true },
 
-            // GIRONE B - HELLAS TAVERNELLO
             { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
             { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
             { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 3, esito: 'sconfitta', gf: 1, gs: 4, amm: 1, esp: 0, rp: 0, rs: 1, sch: true },
@@ -478,12 +528,88 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadFromStorage();
+            checkAuth();
             populateTeamDropdowns();
             renderTeamsConfig();
             calculateLive();
             renderStandings();
             renderLogTable();
         });
+
+        // GESTIONE AUTENTICAZIONE
+        function checkAuth() {
+            const savedRole = sessionStorage.getItem(STORAGE_KEY_AUTH);
+            if (savedRole === 'admin' || savedRole === 'guest') {
+                setRole(savedRole);
+                document.getElementById('login-modal').classList.add('hidden');
+            } else {
+                document.getElementById('login-modal').classList.remove('hidden');
+            }
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('admin-user').value.trim();
+            const p = document.getElementById('admin-pass').value.trim();
+
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                setRole('admin');
+                document.getElementById('login-modal').classList.add('hidden');
+                document.getElementById('login-error').classList.add('hidden');
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        function loginAsGuest() {
+            setRole('guest');
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function setRole(role) {
+            currentRole = role;
+            sessionStorage.setItem(STORAGE_KEY_AUTH, role);
+            
+            const badge = document.getElementById('badge-role');
+            const submitMatchBtn = document.getElementById('btn-submit-match');
+            const resetBtn = document.getElementById('btn-reset-all');
+            const importBtn = document.getElementById('btn-import-wrapper');
+
+            const warnForm = document.getElementById('admin-lock-warning-form');
+            const warnTeams = document.getElementById('admin-lock-warning-teams');
+
+            if (role === 'admin') {
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700";
+                badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Amministratore';
+                
+                if (submitMatchBtn) submitMatchBtn.disabled = false;
+                if (resetBtn) resetBtn.classList.remove('hidden');
+                if (importBtn) importBtn.classList.remove('hidden');
+
+                warnForm.classList.add('hidden');
+                warnTeams.classList.add('hidden');
+            } else {
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
+                badge.innerHTML = '<i class="fa-solid fa-eye mr-1"></i> Visitatore (Sola Lettura)';
+                
+                if (submitMatchBtn) submitMatchBtn.disabled = true;
+                if (resetBtn) resetBtn.classList.add('hidden');
+                if (importBtn) importBtn.classList.add('hidden');
+
+                warnForm.classList.remove('hidden');
+                warnTeams.classList.remove('hidden');
+            }
+
+            renderTeamsConfig();
+            renderLogTable();
+        }
+
+        function logout() {
+            sessionStorage.removeItem(STORAGE_KEY_AUTH);
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('login-form').reset();
+            document.getElementById('login-error').classList.add('hidden');
+        }
 
         function loadFromStorage() {
             const storedTeams = localStorage.getItem(STORAGE_KEY_TEAMS);
@@ -534,6 +660,8 @@
 
         function renderTeamsConfig() {
             const container = document.getElementById('teams-grid-container');
+            const isAdmin = (currentRole === 'admin');
+
             container.innerHTML = teamsList.map(t => `
                 <div class="glass-card rounded-2xl p-5 space-y-4 border border-slate-700/60 flex flex-col justify-between">
                     <div class="space-y-3">
@@ -542,17 +670,20 @@
                             
                             <div class="flex items-center gap-2">
                                 ${t.logo ? `<img src="${t.logo}" class="w-8 h-8 rounded-full object-cover border border-emerald-500 shadow" alt="Logo">` : '<div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500"><i class="fa-solid fa-shield-halved text-xs"></i></div>'}
+                                
+                                ${isAdmin ? `
                                 <label class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700 flex items-center gap-1" title="Carica Logo">
                                     <i class="fa-solid fa-camera"></i>
                                     <input type="file" accept="image/*" class="hidden" onchange="uploadTeamLogo('${t.id}', event)">
                                 </label>
                                 ${t.logo ? `<button onclick="removeTeamLogo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                                ` : ''}
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase">Nome Squadra</label>
-                            <input type="text" value="${t.name}" onchange="updateTeamInfo('${t.id}', 'name', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500">
+                            <input type="text" value="${t.name}" ${isAdmin ? `onchange="updateTeamInfo('${t.id}', 'name', this.value)"` : 'disabled'} class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500 disabled:opacity-60">
                         </div>
                     </div>
                 </div>
@@ -560,6 +691,7 @@
         }
 
         function uploadTeamLogo(teamId, event) {
+            if (currentRole !== 'admin') return;
             const file = event.target.files[0];
             if (!file) return;
 
@@ -578,6 +710,7 @@
         }
 
         function removeTeamLogo(teamId) {
+            if (currentRole !== 'admin') return;
             const team = teamsList.find(t => t.id === teamId);
             if (team) {
                 team.logo = null;
@@ -589,6 +722,7 @@
         }
 
         function updateTeamInfo(teamId, field, val) {
+            if (currentRole !== 'admin') return;
             const team = teamsList.find(t => t.id === teamId);
             if (team) {
                 team[field] = val;
@@ -656,6 +790,10 @@
 
         function handleFormSubmit(e) {
             e.preventDefault();
+            if (currentRole !== 'admin') {
+                alert("Azione bloccata: solo l'amministratore può salvare o modificare le partite!");
+                return;
+            }
             
             const teamId = document.getElementById('input-squadra').value;
             const giornata = parseInt(document.getElementById('input-giornata').value) || 1;
@@ -803,6 +941,7 @@
             const tbody = document.getElementById('log-table-body');
             const searchVal = document.getElementById('log-search').value.toLowerCase();
             const filterTeam = document.getElementById('log-filter-team').value;
+            const isAdmin = (currentRole === 'admin');
 
             document.getElementById('log-count').innerText = matchesList.length;
 
@@ -847,13 +986,19 @@
                         ${item.totalePunti >= 0 ? `+${item.totalePunti}` : item.totalePunti} pt
                     </td>
                     <td class="px-4 py-3 text-right">
+                        ${isAdmin ? `
                         <button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
+                        ` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}
                     </td>
                 </tr>
             `}).join('');
         }
 
         function deleteRecord(id) {
+            if (currentRole !== 'admin') {
+                alert("Azione bloccata: solo l'amministratore può eliminare le partite!");
+                return;
+            }
             if (confirm("Sei sicuro di voler eliminare questa partita dal registro?")) {
                 matchesList = matchesList.filter(item => item.id !== id);
                 saveToStorage();
@@ -863,6 +1008,10 @@
         }
 
         function clearAllData() {
+            if (currentRole !== 'admin') {
+                alert("Azione bloccata: solo l'amministratore può resettare i dati!");
+                return;
+            }
             if (confirm("Vuoi ripristinare le 5 giornate predefinite del torneo?")) {
                 localStorage.clear();
                 loadFromStorage();
@@ -884,6 +1033,10 @@
         }
 
         function importJSONData(event) {
+            if (currentRole !== 'admin') {
+                alert("Azione bloccata: solo l'amministratore può ripristinare backup!");
+                return;
+            }
             const fileReader = new FileReader();
             fileReader.onload = function(e) {
                 try {
