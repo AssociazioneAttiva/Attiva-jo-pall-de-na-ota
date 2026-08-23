@@ -39,17 +39,17 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-xl tracking-tight text-white uppercase">JO PALLO' DE NA 'OTA</h1>
-                    <p class="text-xs text-slate-400">Torneo Calcetto - Punteggio &amp; Classifica Squadre</p>
+                    <p class="text-xs text-slate-400">Torneo Calcetto - 5 Giornate Precaricate</p>
                 </div>
             </div>
 
             <!-- Tabs Navigazione -->
             <nav class="flex flex-wrap bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
-                <button onclick="switchTab('form')" id="tab-form" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
-                    <i class="fa-solid fa-pen-to-square"></i> Inserisci Partita
-                </button>
-                <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
                     <i class="fa-solid fa-trophy"></i> Classifiche
+                </button>
+                <button onclick="switchTab('form')" id="tab-form" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-pen-to-square"></i> Inserisci Partita
                 </button>
                 <button onclick="switchTab('teams')" id="tab-teams" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-shield-halved"></i> Squadre &amp; Loghi
@@ -63,17 +63,102 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full">
 
-        <!-- TAB 1: FORM INSERIMENTO PUNTEGGIO PARTITA SQUADRA -->
-        <section id="section-form" class="space-y-6">
+        <!-- TAB 1: CLASSIFICHE -->
+        <section id="section-standings" class="space-y-10">
+            <div>
+                <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
+                    <i class="fa-solid fa-trophy text-amber-400"></i> Classifiche Ufficiali Squadre
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Classifica Generale e Gironi calcolati su 5 giornate di campionato</p>
+            </div>
+
+            <!-- CLASSIFICA GENERALE UNIFICATA -->
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
+                    <i class="fa-solid fa-globe"></i> CLASSIFICA GENERALE (GIRONE A + B)
+                </h3>
+                <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/20">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="px-6 py-4">Pos</th>
+                                    <th class="px-6 py-4">Squadra</th>
+                                    <th class="px-6 py-4">Girone</th>
+                                    <th class="px-6 py-4 text-center">Partite</th>
+                                    <th class="px-6 py-4 text-center">V / P / S</th>
+                                    <th class="px-6 py-4 text-center">GF / GS</th>
+                                    <th class="px-6 py-4 text-center">Bonus/Malus</th>
+                                    <th class="px-6 py-4 text-right">Punti Totali</th>
+                                </tr>
+                            </thead>
+                            <tbody id="standings-general-all" class="divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CLASSIFICHE PER GIRONE -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- GIRONE A -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/30 pb-2">
+                        <i class="fa-solid fa-shield-halved"></i> GIRONE A
+                    </h3>
+                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-slate-300">
+                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                    <tr>
+                                        <th class="px-4 py-3">Pos</th>
+                                        <th class="px-4 py-3">Squadra</th>
+                                        <th class="px-4 py-3 text-center">Partite</th>
+                                        <th class="px-4 py-3 text-center">GF / GS</th>
+                                        <th class="px-4 py-3 text-right">Punti</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="standings-girone-a" class="divide-y divide-slate-800/60"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GIRONE B -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-bold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
+                        <i class="fa-solid fa-shield-halved"></i> GIRONE B
+                    </h3>
+                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-slate-300">
+                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                    <tr>
+                                        <th class="px-4 py-3">Pos</th>
+                                        <th class="px-4 py-3">Squadra</th>
+                                        <th class="px-4 py-3 text-center">Partite</th>
+                                        <th class="px-4 py-3 text-center">GF / GS</th>
+                                        <th class="px-4 py-3 text-right">Punti</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="standings-girone-b" class="divide-y divide-slate-800/60"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: FORM INSERIMENTO PUNTEGGIO PARTITA SQUADRA -->
+        <section id="section-form" class="hidden space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
                 <div class="lg:col-span-8 glass-card rounded-2xl p-6 sm:p-8 space-y-6">
                     <div class="border-b border-slate-700/60 pb-4 flex justify-between items-center">
                         <div>
                             <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-file-signature text-emerald-400"></i> Scheda Partita Squadra
+                                <i class="fa-solid fa-file-signature text-emerald-400"></i> Inserimento Nuova Partita
                             </h2>
-                            <p class="text-xs text-slate-400 mt-1">Registra le statistiche della squadra per la giornata</p>
+                            <p class="text-xs text-slate-400 mt-1">Registra i punti e i bonus/malus di una giornata</p>
                         </div>
                         <button type="button" onclick="resetForm()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1">
                             <i class="fa-solid fa-rotate-left"></i> Pulisci
@@ -93,7 +178,7 @@
 
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Giornata / Turno</label>
-                                <input type="number" id="input-giornata" min="1" value="1" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <input type="number" id="input-giornata" min="1" value="6" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                             </div>
                         </div>
 
@@ -217,92 +302,6 @@
             </div>
         </section>
 
-        <!-- TAB 2: CLASSIFICHE -->
-        <section id="section-standings" class="hidden space-y-10">
-            <div>
-                <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
-                    <i class="fa-solid fa-trophy text-amber-400"></i> Classifiche Ufficiali Squadre
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">Classifica Generale e Gironi calcolati sul totale punti squadra</p>
-            </div>
-
-            <!-- CLASSIFICA GENERALE UNIFICATA -->
-            <div class="space-y-3">
-                <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
-                    <i class="fa-solid fa-globe"></i> CLASSIFICA GENERALE (GIRONE A + B)
-                </h3>
-                <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/20">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-slate-300">
-                            <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                <tr>
-                                    <th class="px-6 py-4">Pos</th>
-                                    <th class="px-6 py-4">Squadra</th>
-                                    <th class="px-6 py-4">Girone</th>
-                                    <th class="px-6 py-4 text-center">Partite</th>
-                                    <th class="px-6 py-4 text-center">V / P / S</th>
-                                    <th class="px-6 py-4 text-center">GF / GS</th>
-                                    <th class="px-6 py-4 text-center">Bonus/Malus</th>
-                                    <th class="px-6 py-4 text-right">Punti Totali</th>
-                                </tr>
-                            </thead>
-                            <tbody id="standings-general-all" class="divide-y divide-slate-800/60"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- CLASSIFICHE PER GIRONE -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- GIRONE A -->
-                <div class="space-y-3">
-                    <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/30 pb-2">
-                        <i class="fa-solid fa-shield-halved"></i> GIRONE A
-                    </h3>
-                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                    <tr>
-                                        <th class="px-4 py-3">Pos</th>
-                                        <th class="px-4 py-3">Squadra</th>
-                                        <th class="px-4 py-3 text-center">Partite</th>
-                                        <th class="px-4 py-3 text-center">GF / GS</th>
-                                        <th class="px-4 py-3 text-right">Punti</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="standings-girone-a" class="divide-y divide-slate-800/60"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- GIRONE B -->
-                <div class="space-y-3">
-                    <h3 class="text-lg font-bold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
-                        <i class="fa-solid fa-shield-halved"></i> GIRONE B
-                    </h3>
-                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
-                                    <tr>
-                                        <th class="px-4 py-3">Pos</th>
-                                        <th class="px-4 py-3">Squadra</th>
-                                        <th class="px-4 py-3 text-center">Partite</th>
-                                        <th class="px-4 py-3 text-center">GF / GS</th>
-                                        <th class="px-4 py-3 text-right">Punti</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="standings-girone-b" class="divide-y divide-slate-800/60"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
         <!-- TAB 3: GESTIONE SQUADRE & LOGHI -->
         <section id="section-teams" class="hidden space-y-6">
             <div class="flex justify-between items-center flex-wrap gap-4 border-b border-slate-800 pb-4">
@@ -324,7 +323,7 @@
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3">
                         <i class="fa-solid fa-receipt text-blue-400"></i> Registro Partite Inserite
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Storico completo delle schede squadra salvate</p>
+                    <p class="text-xs text-slate-400 mt-1">Storico completo di tutte le 40 partite salvate</p>
                 </div>
                 
                 <div class="flex items-center gap-2 flex-wrap">
@@ -339,7 +338,7 @@
                         <i class="fa-solid fa-file-csv text-emerald-400"></i> Esporta CSV
                     </button>
                     <button onclick="clearAllData()" class="px-3 py-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 rounded-xl text-xs font-medium border border-rose-800/40 flex items-center gap-1.5">
-                        <i class="fa-solid fa-trash-can"></i> Reset
+                        <i class="fa-solid fa-trash-can"></i> Reset Dati
                     </button>
                 </div>
             </div>
@@ -377,8 +376,8 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v1';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v1';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v2';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v2';
 
         const defaultTeams = [
             { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', logo: null },
@@ -391,6 +390,88 @@
             { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', logo: null },
             { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', logo: null }
         ];
+
+        // 5 PARTITE PRECARICATE PER CIASCUNA DELLE 8 SQUADRE (40 PARTITE TOTALI)
+        function calcPoints(esito, gf, gs, amm, esp, rp, rs, sch) {
+            let ptsEsito = esito === 'vittoria' ? 3 : (esito === 'pareggio' ? 1 : 0);
+            return ptsEsito + (gf * 1) - (gs * 1) - (amm * 0.5) - (esp * 1) + (rp * 2) - (rs * 1) + (sch ? 3 : 0);
+        }
+
+        const rawMatches = [
+            // GIRONE A - RIELLO TEAM
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 1, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 2, esito: 'pareggio', gf: 3, gs: 3, amm: 2, esp: 0, rp: 1, rs: 0, sch: true },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 5, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 1, gs: 3, amm: 2, esp: 1, rp: 0, rs: 1, sch: false },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 5, esito: 'vittoria', gf: 6, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+
+            // GIRONE A - MALEDETTI ANZIANI
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 1, esito: 'vittoria', gf: 3, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 3, esito: 'pareggio', gf: 2, gs: 2, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 4, esito: 'vittoria', gf: 5, gs: 3, amm: 1, esp: 0, rp: 1, rs: 0, sch: true },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
+
+            // GIRONE A - I SENATORI
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 1, esito: 'sconfitta', gf: 2, gs: 4, amm: 2, esp: 0, rp: 0, rs: 1, sch: true },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 2, esito: 'pareggio', gf: 2, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 3, esito: 'sconfitta', gf: 1, gs: 5, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 4, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 1, rs: 0, sch: true },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 5, esito: 'pareggio', gf: 3, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+
+            // GIRONE A - 84 TEAM
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 1, esito: 'sconfitta', gf: 1, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 2, esp: 1, rp: 0, rs: 1, sch: true },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 3, gs: 5, amm: 1, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 6, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
+
+            // GIRONE B - ATLETICO VALMONTONE
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 1, esito: 'vittoria', gf: 5, gs: 2, amm: 1, esp: 0, rp: 1, rs: 0, sch: true },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 4, esito: 'vittoria', gf: 6, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 5, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+
+            // GIRONE B - FC QUADRELLE
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 1, esito: 'vittoria', gf: 3, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 2, esito: 'sconfitta', gf: 1, gs: 4, amm: 2, esp: 0, rp: 0, rs: 1, sch: false },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 3, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 1, rs: 0, sch: true },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 5, esito: 'vittoria', gf: 5, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+
+            // GIRONE B - AVANTI TUTTA
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 5, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 2, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 1, esp: 1, rp: 0, rs: 0, sch: true },
+
+            // GIRONE B - HELLAS TAVERNELLO
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 3, esito: 'sconfitta', gf: 1, gs: 4, amm: 1, esp: 0, rp: 0, rs: 1, sch: true },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 4, esito: 'sconfitta', gf: 2, gs: 6, amm: 2, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 5, esito: 'sconfitta', gf: 3, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: true }
+        ];
+
+        const defaultMatches = rawMatches.map((m, idx) => ({
+            id: Date.now() - (idx * 1000),
+            squadraId: m.squadraId,
+            squadraNome: m.squadraNome,
+            group: m.group,
+            giornata: m.giornata,
+            esito: m.esito,
+            ptsEsito: m.esito === 'vittoria' ? 3 : (m.esito === 'pareggio' ? 1 : 0),
+            golFatti: m.gf,
+            golSubiti: m.gs,
+            ammonizioni: m.amm,
+            espulsioni: m.esp,
+            rigoriParati: m.rp,
+            rigoriSbagliati: m.rs,
+            schieramento: m.sch,
+            totalePunti: calcPoints(m.esito, m.gf, m.gs, m.amm, m.esp, m.rp, m.rs, m.sch)
+        }));
 
         let teamsList = [];
         let matchesList = [];
@@ -409,7 +490,7 @@
             const storedMatches = localStorage.getItem(STORAGE_KEY_MATCHES);
 
             teamsList = storedTeams ? JSON.parse(storedTeams) : defaultTeams;
-            matchesList = storedMatches ? JSON.parse(storedMatches) : [];
+            matchesList = storedMatches ? JSON.parse(storedMatches) : defaultMatches;
         }
 
         function saveToStorage() {
@@ -649,7 +730,6 @@
                         gf += m.golFatti;
                         gs += m.golSubiti;
                         
-                        // Bonus/Malus = cartellini + rigori + schieramento 100%
                         const bm = (m.ammonizioni * -0.5) + (m.espulsioni * -1) + (m.rigoriParati * 2) + (m.rigoriSbagliati * -1) + (m.schieramento ? 3 : 0);
                         bonusMalusTot += bm;
                         puntiTotali += m.totalePunti;
@@ -783,7 +863,7 @@
         }
 
         function clearAllData() {
-            if (confirm("Vuoi ripristinare la configurazione iniziale? Tutti i punteggi inseriti verranno eliminati.")) {
+            if (confirm("Vuoi ripristinare le 5 giornate predefinite del torneo?")) {
                 localStorage.clear();
                 loadFromStorage();
                 populateTeamDropdowns();
