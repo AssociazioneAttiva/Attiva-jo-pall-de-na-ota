@@ -489,20 +489,55 @@
     </main>
 
     <script>
-        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v6';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v6';
-        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v6';
+        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v7';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v7';
+        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v7';
 
         const defaultTeams = [
             { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', coach: 'Mister Riello', players: [{ id: 101, name: 'Giocatore 1', role: 'POR' }, { id: 102, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_a2', group: 'A', name: 'MALEDETTI ANZIANI', coach: 'Mister Anziani', players: [{ id: 103, name: 'Giocatore 1', role: 'POR' }, { id: 104, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_a3', group: 'A', name: 'I SENATORI', coach: 'Mister Senatori', players: [{ id: 105, name: 'Giocatore 1', role: 'POR' }, { id: 106, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_a4', group: 'A', name: '84 TEAM', coach: 'Mister 84', players: [{ id: 107, name: 'Giocatore 1', role: 'POR' }, { id: 108, name: 'Giocatore 2', role: 'DIF' }] },
+            { 
+                id: 'team_a2', 
+                group: 'A', 
+                name: 'MALEDETTI ANZIANI', 
+                coach: 'Mister Anziani', 
+                players: [
+                    { id: 103, name: 'Alfonso Bono', role: 'CEN' },
+                    { id: 104, name: 'Orlando Latini', role: 'CEN' },
+                    { id: 105, name: 'Graziano Romagnoli', role: 'DIF' },
+                    { id: 106, name: 'Giancarlo Romagnoli', role: 'DIF' },
+                    { id: 107, name: 'Antonello Marcotulli', role: 'POR' },
+                    { id: 108, name: 'Valter Franciosi', role: 'DIF' },
+                    { id: 109, name: 'Daniele Bonomo', role: 'ATT' },
+                    { id: 110, name: 'Marco Gandolfo', role: 'CEN' },
+                    { id: 111, name: 'Stefano Lanna', role: 'CEN' },
+                    { id: 112, name: 'Roberto Petrucci', role: 'ATT' },
+                    { id: 113, name: 'Alessandro Caporossi', role: 'DIF' },
+                    { id: 114, name: 'Daniele d’eramo', role: 'ATT' },
+                    { id: 115, name: 'Vincenzo Labate', role: 'CEN' }
+                ] 
+            },
+            { id: 'team_a3', group: 'A', name: 'I SENATORI', coach: 'Mister Senatori', players: [{ id: 116, name: 'Giocatore 1', role: 'POR' }, { id: 117, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_a4', group: 'A', name: '84 TEAM', coach: 'Mister 84', players: [{ id: 118, name: 'Giocatore 1', role: 'POR' }, { id: 119, name: 'Giocatore 2', role: 'DIF' }] },
             
             { id: 'team_b1', group: 'B', name: 'ATLETICO VALMONTONE', coach: 'Mister Valmontone', players: [{ id: 201, name: 'Giocatore 1', role: 'POR' }, { id: 202, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_b2', group: 'B', name: 'FC QUADRELLE', coach: 'Mister Quadrelle', players: [{ id: 203, name: 'Giocatore 1', role: 'POR' }, { id: 204, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', coach: 'Mister Avanti', players: [{ id: 205, name: 'Giocatore 1', role: 'POR' }, { id: 206, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', coach: 'Mister Tavernello', players: [{ id: 207, name: 'Giocatore 1', role: 'POR' }, { id: 208, name: 'Giocatore 2', role: 'DIF' }] }
+            { 
+                id: 'team_b2', 
+                group: 'B', 
+                name: 'FC QUADRELLE', 
+                coach: 'Mister Quadrelle', 
+                players: [
+                    { id: 203, name: 'Mirko Fiacchi', role: 'ATT' },
+                    { id: 204, name: 'Ivano Polce', role: 'POR' },
+                    { id: 205, name: 'Alessandro Simeoni', role: 'DIF' },
+                    { id: 206, name: 'Riccardo Zaccagnini', role: 'CEN' },
+                    { id: 207, name: 'Lorenzo Ciucci', role: 'CEN' },
+                    { id: 208, name: 'Francesco Petrucci', role: 'ATT' },
+                    { id: 209, name: 'Stefano Margiotti', role: 'DIF' },
+                    { id: 210, name: 'Vincenzo Labate', role: 'CEN' }
+                ] 
+            },
+            { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', coach: 'Mister Avanti', players: [{ id: 211, name: 'Giocatore 1', role: 'POR' }, { id: 212, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', coach: 'Mister Tavernello', players: [{ id: 213, name: 'Giocatore 1', role: 'POR' }, { id: 214, name: 'Giocatore 2', role: 'DIF' }] }
         ];
 
         let teamsList = [];
@@ -690,7 +725,7 @@
                         
                         <div class="pt-2">
                             <div class="flex justify-between items-center mb-2">
-                                <label class="text-xs font-bold text-emerald-400 uppercase">Rosa Giocatori</label>
+                                <label class="text-xs font-bold text-emerald-400 uppercase">Rosa Giocatori (${t.players.length})</label>
                                 <button type="button" onclick="addPlayerToTeam('${t.id}')" class="text-[11px] bg-emerald-950 text-emerald-300 hover:bg-emerald-900 px-2 py-0.5 rounded border border-emerald-700">
                                     + Giocatore
                                 </button>
@@ -850,7 +885,6 @@
         }
 
         function renderStandings() {
-            // Calcolo Statistiche Squadre
             const getTeamStats = (filterGroup = null) => {
                 const targetTeams = filterGroup ? teamsList.filter(t => t.group === filterGroup) : teamsList;
                 const stats = targetTeams.map(t => {
@@ -878,7 +912,6 @@
                 return stats.sort((a, b) => b.puntiTotali - a.puntiTotali || b.golTotali - a.golTotali);
             };
 
-            // 1. Classifica Generale Unificata
             const allStats = getTeamStats(null);
             document.getElementById('standings-general-all').innerHTML = allStats.map((item, idx) => `
                 <tr class="hover:bg-slate-800/40 transition-colors">
@@ -894,7 +927,6 @@
                 </tr>
             `).join('');
 
-            // 2. Classifiche Singoli Gironi (Squadre)
             const renderGroupTable = (group) => {
                 const stats = getTeamStats(group);
                 return stats.map((item, idx) => `
@@ -913,7 +945,6 @@
             document.getElementById('standings-girone-a').innerHTML = renderGroupTable('A');
             document.getElementById('standings-girone-b').innerHTML = renderGroupTable('B');
 
-            // 3. Classifica Singoli Giocatori per Girone
             const renderPlayersTable = (group) => {
                 const groupVotes = votiList.filter(v => v.group === group);
                 const playerMap = {};
