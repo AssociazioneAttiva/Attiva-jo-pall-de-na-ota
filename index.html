@@ -55,7 +55,7 @@
                     <i class="fa-solid fa-id-card"></i> Partecipanti (<span id="part-count">0</span>)
                 </button>
                 <button onclick="switchTab('teams')" id="tab-teams" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-people-group"></i> Modifica Rose
+                    <i class="fa-solid fa-people-group"></i> Modifica Rose & Loghi
                 </button>
                 <button onclick="switchTab('log')" id="tab-log" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-list-check"></i> Registro (<span id="log-count">0</span>)
@@ -90,7 +90,7 @@
                                 <select id="input-squadra" onchange="onTeamSelect()" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                                     <option value="" disabled selected>Seleziona Squadra...</option>
                                 </select>
-                                <p id="allenatore-label" class="text-xs text-emerald-400 mt-1 font-medium"></p>
+                                <p id="allenatore-label" class="text-xs text-emerald-400 mt-1 font-medium flex items-center gap-2"></p>
                             </div>
 
                             <div>
@@ -415,14 +415,14 @@
             </div>
         </section>
 
-        <!-- TAB 4: PERSONALIZZAZIONE SQUADRE & ROSE -->
+        <!-- TAB 4: PERSONALIZZAZIONE SQUADRE, LOGHI & ROSE -->
         <section id="section-teams" class="hidden space-y-6">
             <div class="flex justify-between items-center flex-wrap gap-4 border-b border-slate-800 pb-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                        <i class="fa-solid fa-users-gear text-emerald-400"></i> Gestione Rose e Squadre
+                        <i class="fa-solid fa-users-gear text-emerald-400"></i> Gestione Rose, Loghi e Squadre
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Personalizza i nomi dei giocatori appartenenti a ogni rosa</p>
+                    <p class="text-xs text-slate-400 mt-1">Personalizza nomi delle squadre, carica i loghi e gestisci le rose dei giocatori</p>
                 </div>
             </div>
 
@@ -489,16 +489,17 @@
     </main>
 
     <script>
-        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v7';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v7';
-        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v7';
+        const STORAGE_KEY_VOTES = 'jopallo_voti_db_v8';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_db_v8';
+        const STORAGE_KEY_PARTS = 'jopallo_parts_db_v8';
 
         const defaultTeams = [
-            { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', coach: 'Mister Riello', players: [{ id: 101, name: 'Giocatore 1', role: 'POR' }, { id: 102, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', logo: null, coach: 'Mister Riello', players: [{ id: 101, name: 'Giocatore 1', role: 'POR' }, { id: 102, name: 'Giocatore 2', role: 'DIF' }] },
             { 
                 id: 'team_a2', 
                 group: 'A', 
                 name: 'MALEDETTI ANZIANI', 
+                logo: null,
                 coach: 'Mister Anziani', 
                 players: [
                     { id: 103, name: 'Alfonso Bono', role: 'CEN' },
@@ -516,14 +517,15 @@
                     { id: 115, name: 'Vincenzo Labate', role: 'CEN' }
                 ] 
             },
-            { id: 'team_a3', group: 'A', name: 'I SENATORI', coach: 'Mister Senatori', players: [{ id: 116, name: 'Giocatore 1', role: 'POR' }, { id: 117, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_a4', group: 'A', name: '84 TEAM', coach: 'Mister 84', players: [{ id: 118, name: 'Giocatore 1', role: 'POR' }, { id: 119, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_a3', group: 'A', name: 'I SENATORI', logo: null, coach: 'Mister Senatori', players: [{ id: 116, name: 'Giocatore 1', role: 'POR' }, { id: 117, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_a4', group: 'A', name: '84 TEAM', logo: null, coach: 'Mister 84', players: [{ id: 118, name: 'Giocatore 1', role: 'POR' }, { id: 119, name: 'Giocatore 2', role: 'DIF' }] },
             
-            { id: 'team_b1', group: 'B', name: 'ATLETICO VALMONTONE', coach: 'Mister Valmontone', players: [{ id: 201, name: 'Giocatore 1', role: 'POR' }, { id: 202, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_b1', group: 'B', name: 'ATLETICO VALMONTONE', logo: null, coach: 'Mister Valmontone', players: [{ id: 201, name: 'Giocatore 1', role: 'POR' }, { id: 202, name: 'Giocatore 2', role: 'DIF' }] },
             { 
                 id: 'team_b2', 
                 group: 'B', 
                 name: 'FC QUADRELLE', 
+                logo: null,
                 coach: 'Mister Quadrelle', 
                 players: [
                     { id: 203, name: 'Mirko Fiacchi', role: 'ATT' },
@@ -536,8 +538,8 @@
                     { id: 210, name: 'Vincenzo Labate', role: 'CEN' }
                 ] 
             },
-            { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', coach: 'Mister Avanti', players: [{ id: 211, name: 'Giocatore 1', role: 'POR' }, { id: 212, name: 'Giocatore 2', role: 'DIF' }] },
-            { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', coach: 'Mister Tavernello', players: [{ id: 213, name: 'Giocatore 1', role: 'POR' }, { id: 214, name: 'Giocatore 2', role: 'DIF' }] }
+            { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', logo: null, coach: 'Mister Avanti', players: [{ id: 211, name: 'Giocatore 1', role: 'POR' }, { id: 212, name: 'Giocatore 2', role: 'DIF' }] },
+            { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', logo: null, coach: 'Mister Tavernello', players: [{ id: 213, name: 'Giocatore 1', role: 'POR' }, { id: 214, name: 'Giocatore 2', role: 'DIF' }] }
         ];
 
         let teamsList = [];
@@ -568,6 +570,13 @@
             localStorage.setItem(STORAGE_KEY_TEAMS, JSON.stringify(teamsList));
             localStorage.setItem(STORAGE_KEY_VOTES, JSON.stringify(votiList));
             localStorage.setItem(STORAGE_KEY_PARTS, JSON.stringify(participantsList));
+        }
+
+        function getTeamLogoHTML(team, sizeClass = "w-6 h-6") {
+            if (team && team.logo) {
+                return `<img src="${team.logo}" class="${sizeClass} rounded-full object-cover border border-slate-700 shadow-sm inline-block" alt="${team.name}">`;
+            }
+            return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
         function populateTeamDropdowns() {
@@ -655,7 +664,12 @@
                         <div class="font-semibold text-white">${p.name}</div>
                         <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">${p.role}</span>
                     </td>
-                    <td class="px-5 py-3 text-slate-300 font-medium">${p.teamName}</td>
+                    <td class="px-5 py-3 text-slate-300 font-medium">
+                        <div class="flex items-center gap-2">
+                            ${getTeamLogoHTML(team, "w-5 h-5")}
+                            <span>${p.teamName}</span>
+                        </div>
+                    </td>
                     <td class="px-5 py-3 text-xs text-slate-400 max-w-xs truncate" title="${playersListStr}">
                         <i class="fa-solid fa-shirt text-slate-500 mr-1"></i>${playersListStr}
                     </td>
@@ -689,7 +703,7 @@
             if (!team) return;
 
             const assignedParts = participantsList.filter(p => p.teamId === team.id).map(p => p.name).join(', ');
-            coachLabel.innerText = `Girone ${team.group} | Iscritti: ${assignedParts || team.coach || 'Nessuno'}`;
+            coachLabel.innerHTML = `${getTeamLogoHTML(team, "w-5 h-5")} <span>Girone ${team.group} | Iscritti: ${assignedParts || team.coach || 'Nessuno'}</span>`;
             
             playerSelect.innerHTML = '<option value="" disabled selected>Seleziona Giocatore...</option>';
             subSelect.innerHTML = '<option value="">Nessuna sostituzione</option>';
@@ -717,7 +731,18 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded ${t.group === 'A' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-blue-950 text-blue-400 border border-blue-800'}">GIRONE ${t.group}</span>
+                            
+                            <!-- Logo Upload Preview & Control -->
+                            <div class="flex items-center gap-2">
+                                ${t.logo ? `<img src="${t.logo}" class="w-8 h-8 rounded-full object-cover border border-emerald-500 shadow" alt="Logo">` : '<div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500"><i class="fa-solid fa-shield-halved text-xs"></i></div>'}
+                                <label class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700 flex items-center gap-1" title="Carica Logo">
+                                    <i class="fa-solid fa-camera"></i>
+                                    <input type="file" accept="image/*" class="hidden" onchange="uploadTeamLogo('${t.id}', event)">
+                                </label>
+                                ${t.logo ? `<button onclick="removeTeamLogo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            </div>
                         </div>
+
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase">Nome Squadra</label>
                             <input type="text" value="${t.name}" onchange="updateTeamInfo('${t.id}', 'name', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500">
@@ -748,6 +773,37 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function uploadTeamLogo(teamId, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const team = teamsList.find(t => t.id === teamId);
+                if (team) {
+                    team.logo = e.target.result;
+                    saveToStorage();
+                    renderTeamsConfig();
+                    renderStandings();
+                    renderParticipantsTable();
+                    renderLogTable();
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeTeamLogo(teamId) {
+            const team = teamsList.find(t => t.id === teamId);
+            if (team) {
+                team.logo = null;
+                saveToStorage();
+                renderTeamsConfig();
+                renderStandings();
+                renderParticipantsTable();
+                renderLogTable();
+            }
         }
 
         function updateTeamInfo(teamId, field, val) {
@@ -880,7 +936,7 @@
             document.getElementById('num-gol').value = 0;
             document.getElementById('num-assist').value = 0;
             document.getElementById('num-autogol').value = 0;
-            document.getElementById('allenatore-label').innerText = '';
+            document.getElementById('allenatore-label').innerHTML = '';
             calculateLive();
         }
 
@@ -900,6 +956,7 @@
 
                     return {
                         id: t.id,
+                        squadraObj: t,
                         squadra: t.name,
                         group: t.group,
                         allenatore: teamPartsNames || t.coach || '-',
@@ -916,7 +973,12 @@
             document.getElementById('standings-general-all').innerHTML = allStats.map((item, idx) => `
                 <tr class="hover:bg-slate-800/40 transition-colors">
                     <td class="px-6 py-4 font-bold text-slate-400">#${idx + 1}</td>
-                    <td class="px-6 py-4 font-semibold text-white">${item.squadra}</td>
+                    <td class="px-6 py-4 font-semibold text-white">
+                        <div class="flex items-center gap-2">
+                            ${getTeamLogoHTML(item.squadraObj, "w-6 h-6")}
+                            <span>${item.squadra}</span>
+                        </div>
+                    </td>
                     <td class="px-6 py-4"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${item.group === 'A' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-blue-950 text-blue-400 border border-blue-800'}">GIRONE ${item.group}</span></td>
                     <td class="px-6 py-4 text-slate-400 text-xs">${item.allenatore}</td>
                     <td class="px-6 py-4 text-center font-bold ${item.bonusExtra >= 0 ? 'text-amber-400' : 'text-rose-400'}">
@@ -932,7 +994,12 @@
                 return stats.map((item, idx) => `
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="px-4 py-3 font-bold text-slate-400">#${idx + 1}</td>
-                        <td class="px-4 py-3 font-semibold text-white">${item.squadra}</td>
+                        <td class="px-4 py-3 font-semibold text-white">
+                            <div class="flex items-center gap-2">
+                                ${getTeamLogoHTML(item.squadraObj, "w-5 h-5")}
+                                <span>${item.squadra}</span>
+                            </div>
+                        </td>
                         <td class="px-4 py-3 text-center font-bold text-xs ${item.bonusExtra >= 0 ? 'text-amber-400' : 'text-rose-400'}">
                             ${item.bonusExtra > 0 ? `+${item.bonusExtra}` : item.bonusExtra}
                         </td>
@@ -953,6 +1020,7 @@
                     if (!playerMap[v.giocatore]) {
                         playerMap[v.giocatore] = {
                             nome: v.giocatore,
+                            squadraId: v.squadraId,
                             squadra: v.squadraNome,
                             presenze: 0,
                             gol: 0,
@@ -970,16 +1038,23 @@
                     return `<tr><td colspan="6" class="px-4 py-4 text-center text-slate-500">Nessun voto registrato in questo girone</td></tr>`;
                 }
 
-                return sortedPlayers.map((p, idx) => `
+                return sortedPlayers.map((p, idx) => {
+                    const teamObj = teamsList.find(t => t.id === p.squadraId);
+                    return `
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="px-4 py-2.5 font-bold text-slate-400">#${idx + 1}</td>
                         <td class="px-4 py-2.5 font-semibold text-white">${p.nome}</td>
-                        <td class="px-4 py-2.5 text-slate-400">${p.squadra}</td>
+                        <td class="px-4 py-2.5 text-slate-400">
+                            <div class="flex items-center gap-1.5">
+                                ${getTeamLogoHTML(teamObj, "w-4 h-4")}
+                                <span>${p.squadra}</span>
+                            </div>
+                        </td>
                         <td class="px-4 py-2.5 text-center text-slate-300">${p.presenze}</td>
                         <td class="px-4 py-2.5 text-center font-bold text-emerald-400">${p.gol}</td>
                         <td class="px-4 py-2.5 text-right font-bold text-amber-400">${p.puntiTotali} pt</td>
                     </tr>
-                `).join('');
+                `}).join('');
             };
 
             document.getElementById('players-girone-a').innerHTML = renderPlayersTable('A');
@@ -1004,10 +1079,18 @@
                 return;
             }
 
-            tbody.innerHTML = filtered.map(item => `
+            tbody.innerHTML = filtered.map(item => {
+                const teamObj = teamsList.find(t => t.id === item.squadraId);
+                return `
                 <tr class="hover:bg-slate-800/40 transition-colors text-xs">
                     <td class="px-4 py-3 text-slate-400">G${item.giornata}</td>
-                    <td class="px-4 py-3 font-medium text-white">${item.squadraNome} <span class="text-[10px] text-slate-500">(Gir. ${item.group})</span></td>
+                    <td class="px-4 py-3 font-medium text-white">
+                        <div class="flex items-center gap-1.5">
+                            ${getTeamLogoHTML(teamObj, "w-4 h-4")}
+                            <span>${item.squadraNome}</span> 
+                            <span class="text-[10px] text-slate-500">(Gir. ${item.group})</span>
+                        </div>
+                    </td>
                     <td class="px-4 py-3 font-semibold text-slate-200">${item.giocatore}</td>
                     <td class="px-4 py-3 text-slate-400 italic">${item.sostituito !== '-' ? `<i class="fa-solid fa-arrow-right-arrow-left text-emerald-400 mr-1"></i>${item.sostituito}` : '-'}</td>
                     <td class="px-4 py-3 text-center space-x-1">
@@ -1025,7 +1108,7 @@
                         <button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         function deleteRecord(id) {
