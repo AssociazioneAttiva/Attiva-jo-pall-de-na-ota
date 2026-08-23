@@ -29,8 +29,8 @@
         }
         .team-select-card.selected {
             border-color: #10b981;
-            background: rgba(16, 185, 129, 0.15);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            background: rgba(16, 185, 129, 0.18);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
         }
     </style>
 </head>
@@ -67,7 +67,7 @@
 
             <div class="border-t border-slate-800 pt-4 text-center">
                 <button type="button" onclick="loginAsGuest()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-medium text-xs transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cart-shopping text-emerald-400"></i> Entra come Visitatore &amp; Fanta-Mercato
+                    <i class="fa-solid fa-cart-shopping text-emerald-400"></i> Entra come Visitatore (Scegli 3 Squadre)
                 </button>
             </div>
         </div>
@@ -91,13 +91,13 @@
             <!-- Tabs Navigazione -->
             <nav class="flex flex-wrap items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/50 gap-1">
                 <button onclick="switchTab('fanta')" id="tab-fanta" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
-                    <i class="fa-solid fa-cart-shopping"></i> Acquista 3 Squadre
+                    <i class="fa-solid fa-cart-shopping"></i> Scegli 3 Squadre
                 </button>
                 <button onclick="switchTab('fanta-standings')" id="tab-fanta-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifica Visitatori (<span id="user-count">0</span>)
                 </button>
                 <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-trophy"></i> Tabellone Squadre
+                    <i class="fa-solid fa-trophy"></i> Tabellone Reale
                 </button>
                 <button onclick="switchTab('form')" id="tab-form" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-pen-to-square"></i> Inserisci Partita
@@ -117,14 +117,14 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full">
 
-        <!-- TAB 1: ACQUISTO 3 SQUADRE (FANTA-VISITATORE) -->
+        <!-- TAB 1: ACQUISTO 3 SQUADRE SU 8 -->
         <section id="section-fanta" class="space-y-6">
             <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-coins text-amber-400"></i> Fanta-Mercato Squadre
+                        <i class="fa-solid fa-coins text-amber-400"></i> Fanta-Mercato: Scegli 3 Squadre
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Registra il tuo nome e acquista <strong>3 squadre</strong> (Costo: <strong>3 crediti</strong> ciascuna, budget <strong>10 crediti</strong>).</p>
+                    <p class="text-xs text-slate-400 mt-1">Scegli <strong>3 squadre tra le 8 disponibili</strong> (Costo: <strong>3 crediti</strong> ciascuna dal tuo budget di <strong>10 crediti</strong>).</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
@@ -138,22 +138,30 @@
                 </div>
             </div>
 
-            <!-- Form Registrazione Visitatore e Selezione Squadre -->
             <form id="fanta-user-form" onsubmit="handleFantaSubmit(event)" class="space-y-6">
                 <div class="glass-card rounded-2xl p-6 border border-slate-700/60">
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Il Tuo Nome e Cognome *</label>
-                    <input type="text" id="fanta-username" required placeholder="Es. Marco Bianchi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                    <input type="text" id="fanta-username" required placeholder="Es. Marco Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                 </div>
 
+                <!-- GIRONE A -->
                 <div class="space-y-3">
-                    <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider">Seleziona 3 Squadre (Costo: 3 crediti cad.)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="team-selection-grid">
-                        <!-- Popolato dinamicamente da JS -->
-                    </div>
+                    <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> Squadre Girone A (Costo: 3 crediti cad.)
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-girone-a"></div>
+                </div>
+
+                <!-- GIRONE B -->
+                <div class="space-y-3 pt-2">
+                    <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> Squadre Girone B (Costo: 3 crediti cad.)
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-girone-b"></div>
                 </div>
 
                 <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2 text-base">
-                    <i class="fa-solid fa-check"></i> Conferma &amp; Salva Formazione
+                    <i class="fa-solid fa-check"></i> Salva la Mia Scelta (3 Squadre)
                 </button>
             </form>
         </section>
@@ -165,7 +173,7 @@
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
                         <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifica Finale Fanta-Visitatori
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Classifica basata sulla somma totale dei punti reali ottenuti dalle 3 squadre acquistate</p>
+                    <p class="text-xs text-slate-400 mt-1">Somma dei punti reali ottenuti nel torneo dalle 3 squadre acquistate da ciascun visitatore</p>
                 </div>
             </div>
 
@@ -188,13 +196,13 @@
             </div>
         </section>
 
-        <!-- TAB 3: CLASSIFICHE REALI SQUADRE -->
+        <!-- TAB 3: TABELLONE REALE SQUADRE -->
         <section id="section-standings" class="hidden space-y-10">
             <div>
                 <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
                     <i class="fa-solid fa-trophy text-amber-400"></i> Tabellone Punti Squadre Reali
                 </h2>
-                <p class="text-xs text-slate-400 mt-1">Punteggio ottenuto sul campo da ciascuna squadra nel torneo</p>
+                <p class="text-xs text-slate-400 mt-1">Punteggi ottenuti sul campo dalle 8 squadre</p>
             </div>
 
             <div class="space-y-3">
@@ -271,10 +279,10 @@
             </div>
         </section>
 
-        <!-- TAB 4: FORM INSERIMENTO PUNTEGGIO PARTITA SQUADRA -->
+        <!-- TAB 4: INSERIMENTO PARTITA -->
         <section id="section-form" class="hidden space-y-6">
             <div id="admin-lock-warning-form" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Modalità Visitatore attiva: l'inserimento voti è riservato all'Amministratore.
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Modalità Visitatore attiva: l'inserimento partite è riservato all'Amministratore.
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -429,20 +437,20 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v4';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v4';
-        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v4';
-        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v4';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v5';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v5';
+        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v5';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v5';
 
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
 
-        const TEAM_COST = 3; // 3 crediti a squadra
-        const TOTAL_BUDGET = 10; // 10 crediti iniziali
-        const MAX_TEAMS_ALLOWED = 3; // 3 squadre obbligatorie
+        const TEAM_COST = 3; 
+        const TOTAL_BUDGET = 10; 
+        const MAX_TEAMS_ALLOWED = 3;
 
         let currentRole = null;
-        let selectedTeams = []; // array di teamId per l'acquisto corrente
+        let selectedTeams = []; 
 
         const defaultTeams = [
             { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', logo: null },
@@ -547,7 +555,6 @@
             renderLogTable();
         });
 
-        // AUTENTICAZIONE
         function checkAuth() {
             const savedRole = sessionStorage.getItem(STORAGE_KEY_AUTH);
             if (savedRole === 'admin' || savedRole === 'guest') {
@@ -631,10 +638,12 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        // SELEZIONE E ACQUISTO 3 SQUADRE
+        // RENDER DELLE 8 SQUADRE DIVISE NEI GIRONI A E B
         function renderTeamSelectionCards() {
-            const container = document.getElementById('team-selection-grid');
-            container.innerHTML = teamsList.map(t => {
+            const containerA = document.getElementById('grid-girone-a');
+            const containerB = document.getElementById('grid-girone-b');
+
+            const renderCard = (t) => {
                 const isSelected = selectedTeams.includes(t.id);
                 return `
                     <div onclick="toggleTeamSelection('${t.id}')" id="team-card-${t.id}" class="team-select-card glass-card rounded-2xl p-4 border border-slate-700 cursor-pointer flex items-center justify-between ${isSelected ? 'selected' : ''}">
@@ -647,11 +656,14 @@
                         </div>
                         <div class="text-right">
                             <span class="text-xs font-black text-amber-400 block">3 pt</span>
-                            <span class="text-[10px] ${isSelected ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isSelected ? 'Scelta' : 'Acquista'}</span>
+                            <span class="text-[10px] ${isSelected ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isSelected ? '<i class="fa-solid fa-check"></i> Scelta' : '+ Acquista'}</span>
                         </div>
                     </div>
                 `;
-            }).join('');
+            };
+
+            containerA.innerHTML = teamsList.filter(t => t.group === 'A').map(renderCard).join('');
+            containerB.innerHTML = teamsList.filter(t => t.group === 'B').map(renderCard).join('');
         }
 
         function toggleTeamSelection(teamId) {
@@ -660,7 +672,7 @@
                 selectedTeams.splice(index, 1);
             } else {
                 if (selectedTeams.length >= MAX_TEAMS_ALLOWED) {
-                    alert("Hai già selezionato il massimo consentito di 3 squadre!");
+                    alert("Hai già selezionato il limite di 3 squadre!");
                     return;
                 }
                 selectedTeams.push(teamId);
@@ -689,7 +701,7 @@
             }
 
             if (selectedTeams.length !== MAX_TEAMS_ALLOWED) {
-                alert("Devi selezionare esattamente 3 squadre per completare l'acquisto!");
+                alert("Devi selezionare esattamente 3 squadre tra le 8 disponibili per completare la tua rosa!");
                 return;
             }
 
@@ -708,18 +720,16 @@
             fantaUsersList.unshift(newFantaUser);
             saveToStorage();
 
-            // Reset Form
             document.getElementById('fanta-username').value = '';
             selectedTeams = [];
             updateFantaSummary();
             renderTeamSelectionCards();
             renderFantaStandings();
 
-            alert(`Formazione salvata con successo per ${username}! Vai alla Classifica Visitatori per vedere il tuo punteggio.`);
+            alert(`Selezione completata con successo per ${username}! Le tue 3 squadre sono state salvate.`);
             switchTab('fanta-standings');
         }
 
-        // CALCOLO PUNTI E CLASSIFICA FANTA-VISITATORI
         function getTeamTotalPoints(teamId) {
             const teamMatches = matchesList.filter(m => m.squadraId === teamId);
             return teamMatches.reduce((sum, m) => sum + m.totalePunti, 0);
@@ -730,11 +740,10 @@
             document.getElementById('user-count').innerText = fantaUsersList.length;
 
             if (fantaUsersList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessun fanta-visitatore ancora registrato. Vai alla scheda "Acquista 3 Squadre" per registrarti!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessun fanta-visitatore registrato finora.</td></tr>`;
                 return;
             }
 
-            // Calcola il punteggio sommando i punti reali ottenuti dalle 3 squadre
             const standings = fantaUsersList.map(user => {
                 let totalScore = 0;
                 const teamsWithScores = user.teams.map(t => {
@@ -790,14 +799,13 @@
 
         function deleteFantaUser(id) {
             if (currentRole !== 'admin') return;
-            if (confirm("Sei sicuro di voler eliminare questo fanta-utente?")) {
+            if (confirm("Eliminare questa registrazione?")) {
                 fantaUsersList = fantaUsersList.filter(u => u.id !== id);
                 saveToStorage();
                 renderFantaStandings();
             }
         }
 
-        // CLASSIFICHE REALI SQUADRE
         function renderStandings() {
             const getTeamStats = (filterGroup = null) => {
                 const targetTeams = filterGroup ? teamsList.filter(t => t.group === filterGroup) : teamsList;
@@ -875,7 +883,6 @@
             document.getElementById('standings-girone-b').innerHTML = renderGroupTable('B');
         }
 
-        // ALTRE FUNZIONALITÀ GESTIONALI
         function populateTeamDropdowns() {
             const selectForm = document.getElementById('input-squadra');
             const selectFilter = document.getElementById('log-filter-team');
