@@ -67,7 +67,7 @@
 
             <div class="border-t border-slate-800 pt-4 text-center">
                 <button type="button" onclick="loginAsGuest()" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-medium text-xs transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cart-shopping text-emerald-400"></i> Entra come Visitatore (Scegli 3 Squadre)
+                    <i class="fa-solid fa-cart-shopping text-emerald-400"></i> Entra come Giocatore Fanta-Mercato
                 </button>
             </div>
         </div>
@@ -81,7 +81,7 @@
                     <i class="fa-solid fa-football text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-xl tracking-tight text-white uppercase">JO PALLO' DE NA 'OTA</h1>
+                    <h1 class="font-bold text-xl tracking-tight text-white uppercase">FANTA-JO PALLO' DE NA 'OTA</h1>
                     <div class="flex items-center gap-2">
                         <span id="badge-role" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Accesso Visitatore</span>
                     </div>
@@ -91,10 +91,10 @@
             <!-- Tabs Navigazione -->
             <nav class="flex flex-wrap items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/50 gap-1">
                 <button onclick="switchTab('fanta')" id="tab-fanta" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
-                    <i class="fa-solid fa-cart-shopping"></i> Scegli 3 Squadre
+                    <i class="fa-solid fa-cart-shopping"></i> Acquista 3 Squadre
                 </button>
                 <button onclick="switchTab('fanta-standings')" id="tab-fanta-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
-                    <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifica Visitatori (<span id="user-count">0</span>)
+                    <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifica Fanta (<span id="user-count">0</span>)
                 </button>
                 <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
                     <i class="fa-solid fa-trophy"></i> Tabellone Reale
@@ -117,19 +117,21 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full">
 
-        <!-- TAB 1: ACQUISTO 3 SQUADRE SU 8 -->
+        <!-- TAB 1: ACQUISTO 3 SQUADRE SU 8 CON FASCE DI PREZZO -->
         <section id="section-fanta" class="space-y-6">
             <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-coins text-amber-400"></i> Fanta-Mercato: Scegli 3 Squadre
+                        <i class="fa-solid fa-coins text-amber-400"></i> Fanta-Mercato: 100 Crediti
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Registra il tuo nome e seleziona <strong>3 squadre diverse</strong> (Costo: <strong>3 crediti</strong> ciascuna dal tuo budget di <strong>10 crediti</strong>).</p>
+                    <p class="text-xs text-slate-400 mt-1">
+                        Obbligo di acquistare <strong>1 squadra per fascia</strong>: Fascia 1 (55 cr), Fascia 2 (30 cr), Fascia 3 (15 cr).
+                    </p>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
-                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Crediti Residui</span>
-                        <span id="live-credits" class="text-xl font-black text-amber-400">10 / 10</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Crediti Spesi</span>
+                        <span id="live-credits-spent" class="text-xl font-black text-amber-400">0 / 100</span>
                     </div>
                     <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Squadre Scelte</span>
@@ -141,58 +143,72 @@
             <form id="fanta-user-form" onsubmit="handleFantaSubmit(event)" class="space-y-6">
                 <!-- Nome Visitatore -->
                 <div class="glass-card rounded-2xl p-6 border border-slate-700/60">
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Nome e Cognome Visitatore *</label>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Nome e Cognome Fanta-Giocatore *</label>
                     <input type="text" id="fanta-username" required placeholder="Es. Mario Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                 </div>
 
-                <!-- SELEZIONE GUIDATA DROP-DOWN -->
+                <!-- SELEZIONE GUIDATA TRAMITE DROP-DOWN -->
                 <div class="glass-card rounded-2xl p-6 border border-slate-700/60 space-y-4">
                     <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
-                        <i class="fa-solid fa-list-check"></i> Selezione Guidata delle 3 Squadre
+                        <i class="fa-solid fa-list-check"></i> Selezione Guidata per Fasce di Prezzo
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">1ª Squadra *</label>
-                            <select id="select-team-1" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
-                                <option value="" disabled selected>Seleziona 1ª squadra...</option>
+                            <label class="block text-xs font-semibold text-amber-400 mb-1">Fascia 1 (55 Crediti) *</label>
+                            <select id="select-tier-1" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                                <option value="" disabled selected>Scegli da Fascia 1...</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">2ª Squadra *</label>
-                            <select id="select-team-2" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
-                                <option value="" disabled selected>Seleziona 2ª squadra...</option>
+                            <label class="block text-xs font-semibold text-blue-400 mb-1">Fascia 2 (30 Crediti) *</label>
+                            <select id="select-tier-2" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+                                <option value="" disabled selected>Scegli da Fascia 2...</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">3ª Squadra *</label>
-                            <select id="select-team-3" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
-                                <option value="" disabled selected>Seleziona 3ª squadra...</option>
+                            <label class="block text-xs font-semibold text-emerald-400 mb-1">Fascia 3 (15 Crediti) *</label>
+                            <select id="select-tier-3" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <option value="" disabled selected>Scegli da Fascia 3...</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- SELEZIONE VISIVA A SCHEDE -->
-                <div class="space-y-4">
-                    <div>
-                        <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
-                            <i class="fa-solid fa-shield-halved"></i> Oppure Seleziona Cliccando Direttamente sulle Squadre
-                        </h3>
-                    </div>
-
+                <!-- SELEZIONE VISIVA A SCHEDE SUDDIVISA PER FASCIA -->
+                <div class="space-y-6">
+                    <!-- FASCIA 1 -->
                     <div class="space-y-3">
-                        <span class="text-xs font-bold text-slate-400 uppercase">GIRONE A (Costo: 3 crediti cad.)</span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-girone-a"></div>
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-amber-400 uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-crown"></i> FASCIA 1 (Valore: 55 Crediti) - Scegli 1 Squadra
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="grid-tier-1"></div>
                     </div>
 
-                    <div class="space-y-3 pt-2">
-                        <span class="text-xs font-bold text-slate-400 uppercase">GIRONE B (Costo: 3 crediti cad.)</span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-girone-b"></div>
+                    <!-- FASCIA 2 -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-blue-400 uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-shield"></i> FASCIA 2 (Valore: 30 Crediti) - Scegli 1 Squadra
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="grid-tier-2"></div>
+                    </div>
+
+                    <!-- FASCIA 3 -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-emerald-400 uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-star"></i> FASCIA 3 (Valore: 15 Crediti) - Scegli 1 Squadra
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="grid-tier-3"></div>
                     </div>
                 </div>
 
                 <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2 text-base">
-                    <i class="fa-solid fa-check"></i> Conferma &amp; Salva le 3 Squadre Scelte
+                    <i class="fa-solid fa-check"></i> Conferma Acquisto &amp; Salva Formazione
                 </button>
             </form>
         </section>
@@ -202,11 +218,11 @@
             <div class="flex justify-between items-center flex-wrap gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
-                        <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifiche Fanta-Visitatori
+                        <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifiche Fanta-Giocatori
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Classifica generale e dettaglio del punteggio accumulato da ciascun visitatore</p>
+                    <p class="text-xs text-slate-400 mt-1">Classifica generale e dettaglio del punteggio accumulato da ciascun fanta-allenatore</p>
                 </div>
-                <!-- BOX CONDIVISIONE SOCIAL/WHATSAPP/EMAIL -->
+                <!-- CONDIVISIONE SOCIAL/WHATSAPP/EMAIL -->
                 <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl">
                     <span class="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1.5 pl-2">
                         <i class="fa-solid fa-share-nodes text-emerald-400"></i> Condividi:
@@ -229,7 +245,7 @@
             <!-- Tabella Generale -->
             <div class="space-y-3">
                 <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/30 pb-2">
-                    <i class="fa-solid fa-list-ol"></i> Classifica Generale Visitatori
+                    <i class="fa-solid fa-list-ol"></i> Classifica Generale Fanta-Giocatori
                 </h3>
                 <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/60">
                     <div class="overflow-x-auto">
@@ -237,9 +253,9 @@
                             <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
                                     <th class="px-6 py-4">Pos</th>
-                                    <th class="px-6 py-4">Fanta-Visitatore</th>
-                                    <th class="px-6 py-4">3 Squadre Acquistate</th>
-                                    <th class="px-6 py-4 text-center">Crediti Rimanenti</th>
+                                    <th class="px-6 py-4">Fanta-Giocatore</th>
+                                    <th class="px-6 py-4">3 Squadre Acquistate (F1, F2, F3)</th>
+                                    <th class="px-6 py-4 text-center">Spesa Crediti</th>
                                     <th class="px-6 py-4 text-right">Punti Totali</th>
                                     <th class="px-6 py-4 text-right">Azione</th>
                                 </tr>
@@ -253,7 +269,7 @@
             <!-- Schede Dettaglio Individuali per ogni Visitatore -->
             <div class="space-y-4 pt-4">
                 <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
-                    <i class="fa-solid fa-id-badge"></i> Schede di Dettaglio per Singolo Visitatore
+                    <i class="fa-solid fa-id-badge"></i> Schede di Dettaglio per Singolo Fanta-Giocatore
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fanta-individual-cards"></div>
             </div>
@@ -473,7 +489,7 @@
         <section id="section-teams" class="hidden space-y-6">
             <div class="flex justify-between items-center flex-wrap gap-4 border-b border-slate-800 pb-4">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre &amp; Loghi
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre, Fasce &amp; Loghi
                 </h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="teams-grid-container"></div>
@@ -488,7 +504,6 @@
                     </h2>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
-                    <!-- RESET COMPLETO DI TUTTI I PUNTEGGI (AZZERA PARTITE, VITTORIE, SCONFITTE, GOL, BONUS E MALUS) -->
                     <button id="btn-reset-all-matches" onclick="resetAllScoresToZero()" class="px-3 py-2 bg-rose-950/60 hover:bg-rose-900 text-rose-200 rounded-xl text-xs font-bold border border-rose-800 flex items-center gap-1.5 transition-colors shadow">
                         <i class="fa-solid fa-trash-can text-rose-400"></i> Resetta Tutti i Punteggi (0 Partite)
                     </button>
@@ -537,31 +552,38 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v11';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v11';
-        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v11';
-        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v11';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v12';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v12';
+        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v12';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v12';
 
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
 
-        const TEAM_COST = 3; 
-        const TOTAL_BUDGET = 10; 
-        const MAX_TEAMS_ALLOWED = 3;
+        const TOTAL_BUDGET = 100; // Budget totale 100 crediti
 
         let currentRole = null;
-        let selectedTeams = []; 
+        
+        // Selezione delle 3 squadre per fascia
+        let selectedTier1 = null; // Costo: 55 cr
+        let selectedTier2 = null; // Costo: 30 cr
+        let selectedTier3 = null; // Costo: 15 cr
 
+        // Configurazione delle 8 squadre suddivise per FASCIA e PREZZO
         const defaultTeams = [
-            { id: 'team_a1', group: 'A', name: 'RIELLO TEAM', logo: null },
-            { id: 'team_a2', group: 'A', name: 'MALEDETTI ANZIANI', logo: null },
-            { id: 'team_a3', group: 'A', name: 'I SENATORI', logo: null },
-            { id: 'team_a4', group: 'A', name: '84 TEAM', logo: null },
-            
-            { id: 'team_b1', group: 'B', name: 'ATLETICO VALMONTONE', logo: null },
-            { id: 'team_b2', group: 'B', name: 'FC QUADRELLE', logo: null },
-            { id: 'team_b3', group: 'B', name: 'AVANTI TUTTA', logo: null },
-            { id: 'team_b4', group: 'B', name: 'HELLAS TAVERNELLO', logo: null }
+            // FASCIA 1 (55 Crediti)
+            { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
+            { id: 'team_a4', group: 'A', tier: 1, cost: 55, name: '84 TEAM', logo: null },
+
+            // FASCIA 2 (30 Crediti)
+            { id: 'team_a3', group: 'A', tier: 2, cost: 30, name: 'I SENATORI', logo: null },
+            { id: 'team_a2', group: 'A', tier: 2, cost: 30, name: 'MALEDETTI ANZIANI', logo: null },
+            { id: 'team_b1', group: 'B', tier: 2, cost: 30, name: 'ATLETICO VALMONTONE', logo: null },
+
+            // FASCIA 3 (15 Crediti)
+            { id: 'team_b2', group: 'B', tier: 3, cost: 15, name: 'FC QUADRELLE', logo: null },
+            { id: 'team_b3', group: 'B', tier: 3, cost: 15, name: 'AVANTI TUTTA', logo: null },
+            { id: 'team_a1', group: 'A', tier: 3, cost: 15, name: 'RIELLO TEAM', logo: null }
         ];
 
         function calcPoints(esito, gf, gs, amm, esp, rp, rs, sch) {
@@ -577,9 +599,9 @@
             loadFromStorage();
             checkAuth();
             populateTeamDropdowns();
-            populateFantaDropdowns();
+            populateTierDropdowns();
             renderTeamsConfig();
-            renderTeamSelectionCards();
+            renderTierSelectionCards();
             calculateLive();
             renderStandings();
             renderFantaStandings();
@@ -634,7 +656,7 @@
                 warnForm.classList.add('hidden');
             } else {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
-                badge.innerHTML = '<i class="fa-solid fa-cart-shopping text-emerald-400 mr-1"></i> Fanta-Visitatore';
+                badge.innerHTML = '<i class="fa-solid fa-cart-shopping text-emerald-400 mr-1"></i> Fanta-Giocatore';
                 if (submitMatchBtn) submitMatchBtn.disabled = true;
                 if (resetBtnBM) resetBtnBM.classList.add('hidden');
                 if (resetBtnAll) resetBtnAll.classList.add('hidden');
@@ -692,60 +714,56 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        function populateFantaDropdowns() {
-            const s1 = document.getElementById('select-team-1');
-            const s2 = document.getElementById('select-team-2');
-            const s3 = document.getElementById('select-team-3');
+        // POPOLA I 3 MENU A TENDINA PER FASCIA
+        function populateTierDropdowns() {
+            const s1 = document.getElementById('select-tier-1');
+            const s2 = document.getElementById('select-tier-2');
+            const s3 = document.getElementById('select-tier-3');
             if (!s1 || !s2 || !s3) return;
 
-            let optionsHTML = '<option value="" disabled selected>Seleziona squadra...</option>';
+            s1.innerHTML = '<option value="" disabled selected>Scegli da Fascia 1 (55 cr)...</option>' + 
+                teamsList.filter(t => t.tier === 1).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group}) - 55 cr</option>`).join('');
 
-            ['A', 'B'].forEach(group => {
-                optionsHTML += `<optgroup label="GIRONE ${group}">`;
-                teamsList.filter(t => t.group === group).forEach(t => {
-                    optionsHTML += `<option value="${t.id}">${t.name} (Gir. ${group})</option>`;
-                });
-                optionsHTML += `</optgroup>`;
-            });
+            s2.innerHTML = '<option value="" disabled selected>Scegli da Fascia 2 (30 cr)...</option>' + 
+                teamsList.filter(t => t.tier === 2).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group}) - 30 cr</option>`).join('');
 
-            s1.innerHTML = optionsHTML;
-            s2.innerHTML = optionsHTML;
-            s3.innerHTML = optionsHTML;
+            s3.innerHTML = '<option value="" disabled selected>Scegli da Fascia 3 (15 cr)...</option>' + 
+                teamsList.filter(t => t.tier === 3).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group}) - 15 cr</option>`).join('');
         }
 
         function syncFromDropdowns() {
-            const v1 = document.getElementById('select-team-1').value;
-            const v2 = document.getElementById('select-team-2').value;
-            const v3 = document.getElementById('select-team-3').value;
-
-            selectedTeams = [];
-            if (v1) selectedTeams.push(v1);
-            if (v2 && !selectedTeams.includes(v2)) selectedTeams.push(v2);
-            if (v3 && !selectedTeams.includes(v3)) selectedTeams.push(v3);
+            selectedTier1 = document.getElementById('select-tier-1').value || null;
+            selectedTier2 = document.getElementById('select-tier-2').value || null;
+            selectedTier3 = document.getElementById('select-tier-3').value || null;
 
             updateFantaSummary();
-            renderTeamSelectionCards();
+            renderTierSelectionCards();
         }
 
         function syncToDropdowns() {
-            const s1 = document.getElementById('select-team-1');
-            const s2 = document.getElementById('select-team-2');
-            const s3 = document.getElementById('select-team-3');
+            const s1 = document.getElementById('select-tier-1');
+            const s2 = document.getElementById('select-tier-2');
+            const s3 = document.getElementById('select-tier-3');
 
-            if (s1) s1.value = selectedTeams[0] || '';
-            if (s2) s2.value = selectedTeams[1] || '';
-            if (s3) s3.value = selectedTeams[2] || '';
+            if (s1) s1.value = selectedTier1 || '';
+            if (s2) s2.value = selectedTier2 || '';
+            if (s3) s3.value = selectedTier3 || '';
         }
 
-        function renderTeamSelectionCards() {
-            const containerA = document.getElementById('grid-girone-a');
-            const containerB = document.getElementById('grid-girone-b');
-            if (!containerA || !containerB) return;
+        // RENDER DELLE SCHEDE INTERATTIVE DIVISE PER FASCIA
+        function renderTierSelectionCards() {
+            const grid1 = document.getElementById('grid-tier-1');
+            const grid2 = document.getElementById('grid-tier-2');
+            const grid3 = document.getElementById('grid-tier-3');
+            if (!grid1 || !grid2 || !grid3) return;
 
             const renderCard = (t) => {
-                const isSelected = selectedTeams.includes(t.id);
+                const isSelected = (t.tier === 1 && selectedTier1 === t.id) || 
+                                   (t.tier === 2 && selectedTier2 === t.id) || 
+                                   (t.tier === 3 && selectedTier3 === t.id);
+
                 return `
-                    <div onclick="toggleTeamSelection('${t.id}')" id="team-card-${t.id}" class="team-btn-select glass-card rounded-2xl p-4 border border-slate-700 flex items-center justify-between cursor-pointer ${isSelected ? 'active' : ''}">
+                    <div onclick="selectTeamForTier(${t.tier}, '${t.id}')" class="team-btn-select glass-card rounded-2xl p-4 border border-slate-700 flex items-center justify-between cursor-pointer ${isSelected ? 'active' : ''}">
                         <div class="flex items-center gap-3">
                             ${getTeamLogoHTML(t, "w-10 h-10")}
                             <div>
@@ -754,44 +772,42 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs font-black text-amber-400 block">3 crediti</span>
-                            <span class="text-[10px] font-bold ${isSelected ? 'text-emerald-400' : 'text-slate-500'}">${isSelected ? '<i class="fa-solid fa-check"></i> Scelta' : '+ Scegli'}</span>
+                            <span class="text-xs font-black text-amber-400 block">${t.cost} crediti</span>
+                            <span class="text-[10px] font-bold ${isSelected ? 'text-emerald-400' : 'text-slate-500'}">${isSelected ? '<i class="fa-solid fa-check"></i> Scelta' : '+ Seleziona'}</span>
                         </div>
                     </div>
                 `;
             };
 
-            const teamsA = teamsList.filter(t => t.group === 'A');
-            const teamsB = teamsList.filter(t => t.group === 'B');
-
-            containerA.innerHTML = teamsA.map(renderCard).join('');
-            containerB.innerHTML = teamsB.map(renderCard).join('');
+            grid1.innerHTML = teamsList.filter(t => t.tier === 1).map(renderCard).join('');
+            grid2.innerHTML = teamsList.filter(t => t.tier === 2).map(renderCard).join('');
+            grid3.innerHTML = teamsList.filter(t => t.tier === 3).map(renderCard).join('');
         }
 
-        function toggleTeamSelection(teamId) {
-            const index = selectedTeams.indexOf(teamId);
-            if (index > -1) {
-                selectedTeams.splice(index, 1);
-            } else {
-                if (selectedTeams.length >= MAX_TEAMS_ALLOWED) {
-                    alert("Hai già selezionato il massimo di 3 squadre!");
-                    return;
-                }
-                selectedTeams.push(teamId);
+        function selectTeamForTier(tier, teamId) {
+            if (tier === 1) {
+                selectedTier1 = (selectedTier1 === teamId) ? null : teamId;
+            } else if (tier === 2) {
+                selectedTier2 = (selectedTier2 === teamId) ? null : teamId;
+            } else if (tier === 3) {
+                selectedTier3 = (selectedTier3 === teamId) ? null : teamId;
             }
 
             syncToDropdowns();
             updateFantaSummary();
-            renderTeamSelectionCards();
+            renderTierSelectionCards();
         }
 
         function updateFantaSummary() {
-            const count = selectedTeams.length;
-            const spent = count * TEAM_COST;
-            const remaining = TOTAL_BUDGET - spent;
+            let count = 0;
+            let spent = 0;
 
-            document.getElementById('live-credits').innerText = `${remaining} / ${TOTAL_BUDGET}`;
-            document.getElementById('live-selected-count').innerText = `${count} / ${MAX_TEAMS_ALLOWED}`;
+            if (selectedTier1) { count++; spent += 55; }
+            if (selectedTier2) { count++; spent += 30; }
+            if (selectedTier3) { count++; spent += 15; }
+
+            document.getElementById('live-credits-spent').innerText = `${spent} / ${TOTAL_BUDGET}`;
+            document.getElementById('live-selected-count').innerText = `${count} / 3`;
         }
 
         function handleFantaSubmit(e) {
@@ -803,20 +819,24 @@
                 return;
             }
 
-            if (selectedTeams.length !== MAX_TEAMS_ALLOWED) {
-                alert("Devi selezionare esattamente 3 squadre diverse tra le 8 disponibili per completare la tua scelta!");
+            if (!selectedTier1 || !selectedTier2 || !selectedTier3) {
+                alert("Devi obbligatoriamente selezionare 1 squadra da Fascia 1 (55 cr), 1 da Fascia 2 (30 cr) e 1 da Fascia 3 (15 cr)!");
                 return;
             }
 
-            const chosenTeams = selectedTeams.map(id => teamsList.find(t => t.id === id));
-            const spentCredits = selectedTeams.length * TEAM_COST;
-            const remainingCredits = TOTAL_BUDGET - spentCredits;
+            const t1 = teamsList.find(t => t.id === selectedTier1);
+            const t2 = teamsList.find(t => t.id === selectedTier2);
+            const t3 = teamsList.find(t => t.id === selectedTier3);
 
             const newFantaUser = {
                 id: Date.now(),
                 username,
-                teams: chosenTeams.map(t => ({ id: t.id, name: t.name, group: t.group })),
-                remainingCredits,
+                teams: [
+                    { id: t1.id, name: t1.name, group: t1.group, tier: 1, cost: 55 },
+                    { id: t2.id, name: t2.name, group: t2.group, tier: 2, cost: 30 },
+                    { id: t3.id, name: t3.name, group: t3.group, tier: 3, cost: 15 }
+                ],
+                totalSpent: 100,
                 date: new Date().toLocaleDateString('it-IT')
             };
 
@@ -824,13 +844,15 @@
             saveToStorage();
 
             document.getElementById('fanta-username').value = '';
-            selectedTeams = [];
+            selectedTier1 = null;
+            selectedTier2 = null;
+            selectedTier3 = null;
             syncToDropdowns();
             updateFantaSummary();
-            renderTeamSelectionCards();
+            renderTierSelectionCards();
             renderFantaStandings();
 
-            alert(`Acquisto completato per ${username}! Le tue 3 squadre sono state salvate con successo.`);
+            alert(`Acquisto confermato per ${username}! Le tue 3 squadre sono state registrate con successo.`);
             switchTab('fanta-standings');
         }
 
@@ -846,8 +868,8 @@
             document.getElementById('user-count').innerText = fantaUsersList.length;
 
             if (fantaUsersList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessun fanta-visitatore registrato finora.</td></tr>`;
-                individualContainer.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-xs">Nessuna scheda visitatore disponibile.</div>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessun fanta-giocatore registrato finora.</td></tr>`;
+                individualContainer.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-xs">Nessuna scheda fanta-giocatore disponibile.</div>`;
                 return;
             }
 
@@ -863,7 +885,7 @@
                     id: user.id,
                     username: user.username,
                     teams: teamsWithScores,
-                    remainingCredits: user.remainingCredits,
+                    totalSpent: user.totalSpent || 100,
                     totalScore
                 };
             });
@@ -874,10 +896,12 @@
             tbody.innerHTML = standings.map((item, idx) => {
                 const teamsBadges = item.teams.map(t => {
                     const teamObj = teamsList.find(tm => tm.id === t.id);
+                    let tierColor = t.tier === 1 ? 'border-amber-500/40 text-amber-300' : (t.tier === 2 ? 'border-blue-500/40 text-blue-300' : 'border-emerald-500/40 text-emerald-300');
                     return `
-                        <span class="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-semibold text-white">
+                        <span class="inline-flex items-center gap-1.5 bg-slate-900 border ${tierColor} px-2.5 py-1 rounded-lg text-xs font-semibold text-white">
                             ${getTeamLogoHTML(teamObj, "w-4 h-4")}
-                            ${t.name} <span class="text-amber-400 font-bold">(${t.pts} pt)</span>
+                            <span>${t.name}</span>
+                            <span class="text-amber-400 font-bold ml-1">(${t.pts} pt)</span>
                         </span>
                     `;
                 }).join(' ');
@@ -895,7 +919,7 @@
                                 ${teamsBadges}
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-center font-bold text-slate-400">${item.remainingCredits} pt</td>
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">${item.totalSpent} / 100 cr</td>
                         <td class="px-6 py-4 text-right font-black text-lg text-emerald-400">${item.totalScore} pt</td>
                         <td class="px-6 py-4 text-right">
                             ${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}
@@ -912,7 +936,10 @@
                         <div class="flex items-center justify-between p-2.5 bg-slate-900/60 rounded-xl border border-slate-800 text-xs">
                             <div class="flex items-center gap-2">
                                 ${getTeamLogoHTML(teamObj, "w-6 h-6")}
-                                <span class="font-bold text-slate-200">${t.name}</span>
+                                <div>
+                                    <span class="font-bold text-slate-200 block">${t.name}</span>
+                                    <span class="text-[10px] text-slate-400">Fascia ${t.tier} (${t.cost} cr)</span>
+                                </div>
                             </div>
                             <span class="font-black text-amber-400 text-sm">${t.pts} pt</span>
                         </div>
@@ -928,7 +955,7 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-xl font-black text-emerald-400 block">${item.totalScore} <span class="text-xs font-normal text-slate-400">pt</span></span>
-                                <span class="text-[10px] text-slate-400">Crediti: ${item.remainingCredits}</span>
+                                <span class="text-[10px] text-slate-400">Spesi: ${item.totalSpent} cr</span>
                             </div>
                         </div>
 
@@ -950,14 +977,13 @@
             }
         }
 
-        // RESET COMPLETO DI TUTTI I PUNTEGGI (AZZERA PARTITE, VITTORIE, SCONFITTE, GOL, BONUS E MALUS)
         function resetAllScoresToZero() {
             if (currentRole !== 'admin') {
                 alert("Azione bloccata: solo l'amministratore può resettare i punteggi!");
                 return;
             }
 
-            if (!confirm("ATTENZIONE: Vuoi eliminare TUTTI i punteggi e le partite registrate? Il tabellone e le classifiche torneranno a 0 punti. (Squadre e visitatori rimarranno invariati)")) {
+            if (!confirm("ATTENZIONE: Vuoi eliminare TUTTI i punteggi e le partite registrate? Il tabellone e le classifiche torneranno a 0 punti.")) {
                 return;
             }
 
@@ -967,10 +993,9 @@
             renderFantaStandings();
             renderLogTable();
 
-            alert("Tutti i punteggi sono stati azzerati con successo! Il tabellone riparte da 0 partite.");
+            alert("Tutti i punteggi sono stati azzerati con successo!");
         }
 
-        // RESETTA SOLO BONUS/MALUS
         function resetAllBonusMalusOnly() {
             if (currentRole !== 'admin') {
                 alert("Azione bloccata: solo l'amministratore può eseguire il reset dei bonus/malus!");
@@ -1105,6 +1130,7 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded ${t.group === 'A' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-blue-950 text-blue-400 border border-blue-800'}">GIRONE ${t.group}</span>
+                            <span class="text-[10px] font-bold text-amber-400 px-2 py-0.5 rounded bg-slate-900 border border-slate-700">Fascia ${t.tier} (${t.cost} cr)</span>
                             <div class="flex items-center gap-2">
                                 ${getTeamLogoHTML(t, "w-8 h-8")}
                                 ${isAdmin ? `
@@ -1138,7 +1164,7 @@
                     team.logo = e.target.result;
                     saveToStorage();
                     renderTeamsConfig();
-                    renderTeamSelectionCards();
+                    renderTierSelectionCards();
                     renderStandings();
                     renderFantaStandings();
                     renderLogTable();
@@ -1154,7 +1180,7 @@
                 team.logo = null;
                 saveToStorage();
                 renderTeamsConfig();
-                renderTeamSelectionCards();
+                renderTierSelectionCards();
                 renderStandings();
                 renderFantaStandings();
                 renderLogTable();
@@ -1168,8 +1194,8 @@
                 team[field] = val;
                 saveToStorage();
                 populateTeamDropdowns();
-                populateFantaDropdowns();
-                renderTeamSelectionCards();
+                populateTierDropdowns();
+                renderTierSelectionCards();
                 renderStandings();
                 renderFantaStandings();
             }
@@ -1312,16 +1338,16 @@
 
         /* --- CONDIVISIONE SOCIAL, WHATSAPP & EMAIL --- */
         function generateShareText(type = 'fanta') {
-            let text = `🏆 *JO PALLO' DE NA 'OTA* 🏆\n\n`;
+            let text = `🏆 *FANTA-JO PALLO' DE NA 'OTA* 🏆\n\n`;
 
             if (type === 'fanta') {
-                text += `📊 *Classifica Fanta-Visitatori:*\n`;
+                text += `📊 *Classifica Fanta-Giocatori:*\n`;
                 const standings = fantaUsersList.map(user => {
                     let totalScore = user.teams.reduce((sum, t) => sum + getTeamTotalPoints(t.id), 0);
                     return { username: user.username, totalScore };
                 }).sort((a, b) => b.totalScore - a.totalScore);
 
-                if (standings.length === 0) return text + "Nessun visitatore registrato.";
+                if (standings.length === 0) return text + "Nessun fanta-giocatore registrato.";
 
                 standings.forEach((u, i) => {
                     let medal = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `${i + 1}.`));
@@ -1356,7 +1382,7 @@
         }
 
         function shareViaEmail(type) {
-            const subject = encodeURIComponent("Classifica Ufficiale - JO PALLO' DE NA 'OTA");
+            const subject = encodeURIComponent("Classifica Ufficiale - FANTA-JO PALLO' DE NA 'OTA");
             const body = encodeURIComponent(generateShareText(type));
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
         }
@@ -1364,7 +1390,7 @@
         function copyResultsToClipboard(type) {
             const text = generateShareText(type);
             navigator.clipboard.writeText(text).then(() => {
-                alert("Classifica copiata negli appunti! Puoi incollarla ovunque.");
+                alert("Classifica copiata negli appunti! Puoi incollarla su qualsiasi social.");
             }).catch(() => {
                 alert("Errore durante la copia.");
             });
