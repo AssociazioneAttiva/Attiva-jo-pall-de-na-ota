@@ -26,11 +26,17 @@
         }
         .team-select-card {
             transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .team-select-card:hover {
+            border-color: #10b981;
+            transform: translateY(-2px);
         }
         .team-select-card.selected {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.18);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+            border-color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.2) !important;
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.35);
         }
     </style>
 </head>
@@ -149,7 +155,7 @@
                     <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-shield-halved"></i> Squadre Girone A (Costo: 3 crediti cad.)
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-girone-a"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 min-h-[90px]" id="grid-girone-a"></div>
                 </div>
 
                 <!-- GIRONE B -->
@@ -157,7 +163,7 @@
                     <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider border-b border-slate-800 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-shield-halved"></i> Squadre Girone B (Costo: 3 crediti cad.)
                     </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="grid-girone-b"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 min-h-[90px]" id="grid-girone-b"></div>
                 </div>
 
                 <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2 text-base">
@@ -204,9 +210,7 @@
                 <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
                     <i class="fa-solid fa-id-badge"></i> Schede di Dettaglio per Singolo Visitatore
                 </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fanta-individual-cards">
-                    <!-- Popolato dinamicamente da JS con la scheda di ciascun visitatore -->
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="fanta-individual-cards"></div>
             </div>
         </section>
 
@@ -451,10 +455,10 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v6';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v6';
-        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v6';
-        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v6';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v7';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v7';
+        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v7';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v7';
 
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
@@ -634,9 +638,39 @@
             const storedMatches = localStorage.getItem(STORAGE_KEY_MATCHES);
             const storedUsers = localStorage.getItem(STORAGE_KEY_USERS);
 
-            teamsList = storedTeams ? JSON.parse(storedTeams) : defaultTeams;
-            matchesList = storedMatches ? JSON.parse(storedMatches) : defaultMatches;
-            fantaUsersList = storedUsers ? JSON.parse(storedUsers) : [];
+            // Controllo e ripristino sicuro delle 8 squadre
+            if (storedTeams) {
+                try {
+                    teamsList = JSON.parse(storedTeams);
+                    if (!Array.isArray(teamsList) || teamsList.length === 0) teamsList = defaultTeams;
+                } catch(e) {
+                    teamsList = defaultTeams;
+                }
+            } else {
+                teamsList = defaultTeams;
+            }
+
+            if (storedMatches) {
+                try {
+                    matchesList = JSON.parse(storedMatches);
+                    if (!Array.isArray(matchesList)) matchesList = defaultMatches;
+                } catch(e) {
+                    matchesList = defaultMatches;
+                }
+            } else {
+                matchesList = defaultMatches;
+            }
+
+            if (storedUsers) {
+                try {
+                    fantaUsersList = JSON.parse(storedUsers);
+                    if (!Array.isArray(fantaUsersList)) fantaUsersList = [];
+                } catch(e) {
+                    fantaUsersList = [];
+                }
+            } else {
+                fantaUsersList = [];
+            }
         }
 
         function saveToStorage() {
@@ -652,15 +686,16 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        // RENDER DELLE 8 SQUADRE DIVISE NEI GIRONI A E B
+        // RENDER ROBUSTO DELLE SQUADRE PER LA SELEZIONE
         function renderTeamSelectionCards() {
             const containerA = document.getElementById('grid-girone-a');
             const containerB = document.getElementById('grid-girone-b');
+            if (!containerA || !containerB) return;
 
             const renderCard = (t) => {
                 const isSelected = selectedTeams.includes(t.id);
                 return `
-                    <div onclick="toggleTeamSelection('${t.id}')" id="team-card-${t.id}" class="team-select-card glass-card rounded-2xl p-4 border border-slate-700 cursor-pointer flex items-center justify-between ${isSelected ? 'selected' : ''}">
+                    <div onclick="toggleTeamSelection('${t.id}')" id="team-card-${t.id}" class="team-select-card glass-card rounded-2xl p-4 border border-slate-700 flex items-center justify-between ${isSelected ? 'selected' : ''}">
                         <div class="flex items-center gap-3">
                             ${getTeamLogoHTML(t, "w-10 h-10")}
                             <div>
@@ -676,8 +711,11 @@
                 `;
             };
 
-            containerA.innerHTML = teamsList.filter(t => t.group === 'A').map(renderCard).join('');
-            containerB.innerHTML = teamsList.filter(t => t.group === 'B').map(renderCard).join('');
+            const teamsA = teamsList.filter(t => t.group === 'A');
+            const teamsB = teamsList.filter(t => t.group === 'B');
+
+            containerA.innerHTML = teamsA.map(renderCard).join('');
+            containerB.innerHTML = teamsB.map(renderCard).join('');
         }
 
         function toggleTeamSelection(teamId) {
