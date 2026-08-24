@@ -58,10 +58,10 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- SCHERMATA DI CARICAMENTO RAPIDA -->
+    <!-- SCHERMATA DI CARICAMENTO -->
     <div id="app-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950">
         <div class="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full animate-spin mb-4 shadow-lg shadow-emerald-500/20"></div>
-        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Avvio Fanta-Torneo...</p>
+        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Sincronizzazione Cloud...</p>
     </div>
 
     <!-- CONTENITORE NOTIFICHE TOAST -->
@@ -123,7 +123,7 @@
             </button>
         </div>
 
-        <!-- NAVIGAZIONE DESKTOP (Invisibile su Mobile) -->
+        <!-- NAVIGAZIONE DESKTOP -->
         <div class="hidden sm:block border-t border-slate-800/50 bg-slate-900/50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
                 <nav class="flex items-center gap-2">
@@ -174,13 +174,11 @@
             </div>
 
             <form id="fanta-user-form" onsubmit="handleFantaSubmit(event)" class="space-y-6">
-                <!-- Nome Fanta-Giocatore -->
                 <div class="glass-card rounded-2xl p-5 sm:p-6 border border-slate-700/60">
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Il tuo Nome e Cognome *</label>
                     <input type="text" id="fanta-username" required placeholder="Es. Mario Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
 
-                <!-- SELEZIONE A SCHEDE -->
                 <div class="space-y-6">
                     <div class="space-y-2">
                         <span class="text-[11px] font-bold text-amber-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-crown"></i> FASCIA 1 (Valore: 55 Crediti) - Seleziona 1</span>
@@ -208,7 +206,6 @@
                 <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 uppercase">
                     <i class="fa-solid fa-ranking-star text-amber-400"></i> Fanta-Giocatori
                 </h2>
-                <!-- Condivisione -->
                 <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1.5 rounded-xl shadow-sm">
                     <button onclick="shareOnWhatsApp('fanta')" class="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-transform active:scale-90 shadow"><i class="fa-brands fa-whatsapp"></i></button>
                     <button onclick="shareOnTelegram('fanta')" class="p-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg transition-transform active:scale-90 shadow"><i class="fa-brands fa-telegram"></i></button>
@@ -216,7 +213,6 @@
                 </div>
             </div>
 
-            <!-- Tabella Generale Fanta -->
             <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/60 shadow-lg">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-300 min-w-[600px]">
@@ -234,7 +230,6 @@
                 </div>
             </div>
 
-            <!-- Schede Dettaglio -->
             <div class="space-y-3 pt-2">
                 <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
                     <i class="fa-solid fa-id-badge"></i> Dettaglio Punteggi
@@ -249,7 +244,6 @@
                 <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 uppercase">
                     <i class="fa-solid fa-trophy text-amber-400"></i> Squadre Reali
                 </h2>
-                <!-- Condivisione -->
                 <div class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1.5 rounded-xl shadow-sm">
                     <button onclick="shareOnWhatsApp('teams')" class="p-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-transform active:scale-90 shadow"><i class="fa-brands fa-whatsapp"></i></button>
                     <button onclick="shareOnTelegram('teams')" class="p-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg transition-transform active:scale-90 shadow"><i class="fa-brands fa-telegram"></i></button>
@@ -442,12 +436,19 @@
             </div>
         </section>
 
-        <!-- TAB 5: GESTIONE SQUADRE -->
+        <!-- TAB 5: GESTIONE SQUADRE (CON PULSANTE DI RESET DATI) -->
         <section id="section-teams" class="hidden space-y-6 animate-fade-in">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-4">
                 <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre &amp; Reset Torneo
                 </h2>
+                
+                <!-- Pulsante Reset Dati (Visibile solo se Admin) -->
+                <div class="admin-only hidden">
+                    <button onclick="fullResetTournamentData()" class="px-3 py-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl text-xs font-bold border border-rose-800 flex items-center gap-2 transition-colors shadow">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Resetta Dati e Torneo (Nuova Stagione)
+                    </button>
+                </div>
             </div>
             
             <div class="space-y-4">
@@ -540,7 +541,8 @@
             projectId: "attivajopallo",
             storageBucket: "attivajopallo.firebasestorage.app",
             messagingSenderId: "288574357603",
-            appId: "1:288574357603:web:58548a0f17117e8f43b856"
+            appId: "1:288574357603:web:58548a0f17117e8f43b856",
+            measurementId: "G-SPLP6QPXE6"
         };
 
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -558,7 +560,6 @@
         let selectedTier1 = null, selectedTier2 = null, selectedTier3 = null; 
         let isFirstLoad = true; 
 
-        // Le 8 squadre con fasce, girone e prezzo bloccati e corretti
         const defaultTeams = [
             { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
             { id: 'team_a4', group: 'A', tier: 1, cost: 55, name: '84 TEAM', logo: null },
@@ -574,7 +575,6 @@
         let matchesList = [];
         let fantaUsersList = [];
 
-        // Questa funzione salva l'interfaccia: unisce i nomi/loghi di Firebase ma forza le Fasce corrette
         function mergeTeamsWithDefaults(loadedTeams) {
             if (!Array.isArray(loadedTeams) || loadedTeams.length === 0) return defaultTeams;
             return defaultTeams.map(dt => {
@@ -584,14 +584,9 @@
             });
         }
 
-        // --- AVVIO APP ---
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
-            
-            // PRIMO RENDER IMMEDIATO: Assicura che le squadre appaiano subito, senza aspettare la rete!
             renderAllSections();
-            
-            // Poi ci colleghiamo a Firebase per scaricare in background
             initRealtimeDB();
             
             const lastTab = sessionStorage.getItem(STORAGE_KEY_TAB) || 'fanta';
@@ -614,10 +609,10 @@
         }
 
         function hideLoader() {
-            document.getElementById('app-loader').classList.add('hidden-loader');
+            const loader = document.getElementById('app-loader');
+            if(loader) loader.classList.add('hidden-loader');
         }
 
-        // FIREBASE SYNC
         function initRealtimeDB() {
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -629,10 +624,9 @@
                     teamsList = defaultTeams; matchesList = []; fantaUsersList = [];
                 }
 
-                // Ridisegna tutto con i dati aggiornati
                 renderAllSections();
-
-                document.getElementById('badge-online').classList.remove('hidden');
+                const onlineBadge = document.getElementById('badge-online');
+                if(onlineBadge) onlineBadge.classList.remove('hidden');
                 
                 if(isFirstLoad) {
                     hideLoader();
@@ -640,7 +634,7 @@
                 }
             }, (error) => {
                 hideLoader();
-                showToast("Sei offline o c'è un errore Firebase.", "error");
+                showToast("Errore di connessione Firebase.", "error");
             });
         }
 
@@ -650,8 +644,43 @@
             });
         }
 
+        // --- FUNZIONE DI RESET COMPLETO DEL TORNEO ---
+        function fullResetTournamentData() {
+            if (currentRole !== 'admin') {
+                showToast("Accesso negato: solo l'amministratore può resettare il torneo.", "error");
+                return;
+            }
+
+            if (!confirm("ATTENZIONE CRITICA: Vuoi azzerare completamente il torneo? Verranno eliminate tutte le partite registrate, tutti i fanta-giocatori iscritti e resettati i loghi/nomi delle squadre allo stato iniziale.")) {
+                return;
+            }
+
+            // Resetta le variabili locali ai valori puliti
+            teamsList = JSON.parse(JSON.stringify(defaultTeams));
+            matchesList = [];
+            fantaUsersList = [];
+            selectedTier1 = null;
+            selectedTier2 = null;
+            selectedTier3 = null;
+
+            // Invia i dati puliti su Firebase (aggiorna tutti i dispositivi collegati in tempo reale)
+            dbRef.set({
+                teams: teamsList,
+                matches: matchesList,
+                users: fantaUsersList
+            }).then(() => {
+                renderAllSections();
+                syncToDropdowns();
+                updateFantaSummary();
+                showToast("Torneo resettato con successo! Pronto per una nuova stagione.", "success");
+            }).catch(() => {
+                showToast("Errore durante il reset sul cloud.", "error");
+            });
+        }
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
+            if(!container) return;
             const toast = document.createElement('div');
             const bgClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-blue-600');
             const icon = type === 'success' ? 'fa-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-info-circle');
@@ -671,10 +700,14 @@
             const savedRole = sessionStorage.getItem(STORAGE_KEY_AUTH);
             if (savedRole === 'admin' || savedRole === 'guest') {
                 setRole(savedRole);
-                document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
+                const modal = document.getElementById('login-modal');
+                if(modal) {
+                    modal.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(() => modal.classList.add('hidden'), 300);
+                }
             } else {
-                document.getElementById('login-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+                const modal = document.getElementById('login-modal');
+                if(modal) modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
             }
         }
 
@@ -686,8 +719,9 @@
             if (u === ADMIN_USER && p === ADMIN_PASS) {
                 setRole('admin');
                 document.getElementById('login-error').classList.add('hidden');
-                document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
+                const modal = document.getElementById('login-modal');
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => modal.classList.add('hidden'), 300);
                 showToast('Amministratore online!');
             } else {
                 document.getElementById('login-error').classList.remove('hidden');
@@ -696,8 +730,9 @@
 
         function loginAsGuest() {
             setRole('guest');
-            document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
-            setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
+            const modal = document.getElementById('login-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => modal.classList.add('hidden'), 300);
             showToast('Benvenuto nel Mercato!', 'info');
         }
 
@@ -708,29 +743,40 @@
             const adminOnlyEls = document.querySelectorAll('.admin-only');
 
             if (role === 'admin') {
-                badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700 transition-colors";
-                badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Admin';
+                if(badge) {
+                    badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700 transition-colors";
+                    badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Admin';
+                }
                 adminOnlyEls.forEach(el => el.classList.remove('hidden'));
-                document.getElementById('admin-lock-warning-form').classList.add('hidden');
-                if(document.getElementById('btn-submit-match')) document.getElementById('btn-submit-match').disabled = false;
+                const warn = document.getElementById('admin-lock-warning-form');
+                if(warn) warn.classList.add('hidden');
+                const subBtn = document.getElementById('btn-submit-match');
+                if(subBtn) subBtn.disabled = false;
             } else {
-                badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 transition-colors";
-                badge.innerHTML = '<i class="fa-solid fa-user mr-1"></i> Visitatore';
+                if(badge) {
+                    badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 transition-colors";
+                    badge.innerHTML = '<i class="fa-solid fa-user mr-1"></i> Visitatore';
+                }
                 adminOnlyEls.forEach(el => {
                     if(el.tagName === 'BUTTON' && el.id.startsWith('mob-')) el.classList.replace('flex', 'hidden'); 
                     else el.classList.add('hidden');
                 });
-                document.getElementById('admin-lock-warning-form').classList.remove('hidden');
-                if(document.getElementById('btn-submit-match')) document.getElementById('btn-submit-match').disabled = true;
+                const warn = document.getElementById('admin-lock-warning-form');
+                if(warn) warn.classList.remove('hidden');
+                const subBtn = document.getElementById('btn-submit-match');
+                if(subBtn) subBtn.disabled = true;
             }
         }
 
         function logout() {
             sessionStorage.removeItem(STORAGE_KEY_AUTH);
             sessionStorage.removeItem(STORAGE_KEY_TAB);
-            document.getElementById('login-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-            document.getElementById('login-form').reset();
-            document.getElementById('login-error').classList.add('hidden');
+            const modal = document.getElementById('login-modal');
+            if(modal) modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+            const frm = document.getElementById('login-form');
+            if(frm) frm.reset();
+            const err = document.getElementById('login-error');
+            if(err) err.classList.add('hidden');
             showToast('Hai effettuato il logout', 'info');
         }
 
@@ -789,7 +835,6 @@
             if(document.getElementById('grid-tier-2')) document.getElementById('grid-tier-2').innerHTML = teamsList.filter(t => t.tier === 2).map(renderCard).join('');
             if(document.getElementById('grid-tier-3')) document.getElementById('grid-tier-3').innerHTML = teamsList.filter(t => t.tier === 3).map(renderCard).join('');
             
-            // Popolamento select
             const s1 = document.getElementById('select-tier-1'), s2 = document.getElementById('select-tier-2'), s3 = document.getElementById('select-tier-3');
             if (s1) s1.innerHTML = '<option value="" disabled selected>Fascia 1 (55 cr)...</option>' + teamsList.filter(t => t.tier === 1).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
             if (s2) s2.innerHTML = '<option value="" disabled selected>Fascia 2 (30 cr)...</option>' + teamsList.filter(t => t.tier === 2).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
@@ -841,7 +886,8 @@
         function renderFantaStandings() {
             const tbody = document.getElementById('fanta-standings-body'), individualContainer = document.getElementById('fanta-individual-cards');
             if(!tbody || !individualContainer) return;
-            document.getElementById('user-count').innerText = fantaUsersList.length;
+            const countUser = document.getElementById('user-count');
+            if(countUser) countUser.innerText = fantaUsersList.length;
 
             if (fantaUsersList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuno.</td></tr>`;
@@ -867,7 +913,6 @@
                         <td class="px-4 py-3 font-bold text-slate-400"><span class="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] ${idx === 0 ? 'bg-amber-500 text-slate-950' : (idx === 1 ? 'bg-slate-300 text-slate-950' : (idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-800'))}">${idx + 1}</span></td>
                         <td class="px-4 py-3 font-bold text-white text-xs">${item.username}</td>
                         <td class="px-4 py-3"><div class="flex flex-col sm:flex-row flex-wrap gap-1.5">${teamsBadges}</div></td>
-                        <td class="px-4 py-3 text-center text-xs text-slate-400 hidden sm:table-cell">${item.totalSpent}</td>
                         <td class="px-4 py-3 text-right font-black text-sm text-emerald-400">${item.totalScore}</td>
                         <td class="px-4 py-3 text-right">${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}</td>
                     </tr>
@@ -1053,7 +1098,7 @@
             const rigoriParati = parseInt(document.getElementById('num-rigori-parati').value) || 0;
             const rigoriSbagliati = parseInt(document.getElementById('num-rigori-sbagliati').value) || 0;
             const schieramento = document.getElementById('check-schieramento').checked ? 1 : 0;
-            const total = ptsEsito + (golFatti * 1) - (golSubiti * 1) - (ammonizioni * 0.5) - (espulsioni * 1) + (rigoriParati * 2) - (rigoriSbagliati * 1) + (schieramento * 3);
+            const total = ptsEsito + (golFatti * 1) - (golSubiti * 1) - (amm * 0.5) - (esp * 1) + (rigoriParati * 2) - (rigoriSbagliati * 1) + (schieramento * 3);
             
             const displayEl = document.getElementById('live-total-display');
             if(displayEl) {
