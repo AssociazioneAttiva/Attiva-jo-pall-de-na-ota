@@ -316,7 +316,7 @@
             </div>
         </section>
 
-        <!-- TAB 4 -->
+        <!-- TAB 4: INSERIMENTO PARTITA AGGIORNATO CON I NUOVI BONUS/MALUS -->
         <section id="section-form" class="hidden space-y-6 animate-fade-in">
             <div id="admin-lock-warning-form" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Area riservata all'Amministratore.
@@ -347,29 +347,31 @@
                             </div>
                         </div>
 
+                        <!-- 1. ESITO -->
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">1. Esito</label>
+                            <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">1. Esito Partita</label>
                             <div class="grid grid-cols-3 gap-2">
                                 <label class="flex flex-col items-center p-2.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500">
                                     <input type="radio" name="esito" value="vittoria" checked onchange="calculateLive()" class="accent-emerald-500 mb-1">
-                                    <span class="text-[10px] font-bold text-emerald-400">Vittoria</span>
+                                    <span class="text-[10px] font-bold text-emerald-400">Vittoria (+3)</span>
                                 </label>
                                 <label class="flex flex-col items-center p-2.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-amber-500">
                                     <input type="radio" name="esito" value="pareggio" onchange="calculateLive()" class="accent-amber-500 mb-1">
-                                    <span class="text-[10px] font-bold text-amber-400">Pareggio</span>
+                                    <span class="text-[10px] font-bold text-amber-400">Pareggio (+1)</span>
                                 </label>
                                 <label class="flex flex-col items-center p-2.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-rose-500">
                                     <input type="radio" name="esito" value="sconfitta" onchange="calculateLive()" class="accent-rose-500 mb-1">
-                                    <span class="text-[10px] font-bold text-rose-400">Sconfitta</span>
+                                    <span class="text-[10px] font-bold text-rose-400">Sconfitta (0)</span>
                                 </label>
                             </div>
                         </div>
 
+                        <!-- 2. GOL FATTI E SUBITI -->
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">2. Gol</label>
                             <div class="grid grid-cols-2 gap-3">
                                 <div class="bg-slate-900/60 p-2 sm:p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-                                    <span class="text-[10px] font-semibold text-emerald-400">Fatti (+1)</span>
+                                    <span class="text-[10px] font-semibold text-emerald-400">Gol Segnati (+3 cad)</span>
                                     <div class="flex items-center gap-1 sm:gap-2">
                                         <button type="button" onclick="adjustCount('num-gol-fatti', -1)" class="w-7 h-7 bg-slate-800 rounded text-white">-</button>
                                         <input type="number" id="num-gol-fatti" min="0" value="0" oninput="calculateLive()" class="w-8 sm:w-10 text-center bg-transparent text-white font-bold">
@@ -377,7 +379,7 @@
                                     </div>
                                 </div>
                                 <div class="bg-slate-900/60 p-2 sm:p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-                                    <span class="text-[10px] font-semibold text-rose-400">Subiti (-1)</span>
+                                    <span class="text-[10px] font-semibold text-rose-400">Gol Subiti (-1 cad)</span>
                                     <div class="flex items-center gap-1 sm:gap-2">
                                         <button type="button" onclick="adjustCount('num-gol-subiti', -1)" class="w-7 h-7 bg-slate-800 rounded text-white">-</button>
                                         <input type="number" id="num-gol-subiti" min="0" value="0" oninput="calculateLive()" class="w-8 sm:w-10 text-center bg-transparent text-white font-bold">
@@ -387,33 +389,65 @@
                             </div>
                         </div>
 
+                        <!-- 3. DISCIPLINA & EXTRA -->
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">3. Disciplina</label>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">3. Disciplina &amp; Malus</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800 flex flex-col items-center">
-                                    <label class="text-[9px] text-yellow-400 mb-1">Amm. (-0.5)</label>
+                                    <label class="text-[9px] text-yellow-400 mb-1">Ammonizione (-1)</label>
                                     <input type="number" id="num-ammonizioni" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white text-xs">
                                 </div>
                                 <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800 flex flex-col items-center">
-                                    <label class="text-[9px] text-rose-400 mb-1">Esp. (-1)</label>
+                                    <label class="text-[9px] text-rose-400 mb-1">Espulsione Dir. (-2)</label>
                                     <input type="number" id="num-espulsioni" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white text-xs">
                                 </div>
                                 <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800 flex flex-col items-center">
-                                    <label class="text-[9px] text-emerald-400 mb-1">Rig. P (+2)</label>
-                                    <input type="number" id="num-rigori-parati" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white text-xs">
-                                </div>
-                                <div class="bg-slate-900/60 p-2 rounded-xl border border-slate-800 flex flex-col items-center">
-                                    <label class="text-[9px] text-rose-400 mb-1">Rig. S (-1)</label>
-                                    <input type="number" id="num-rigori-sbagliati" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white text-xs">
+                                    <label class="text-[9px] text-rose-400 mb-1">Autogol (-1)</label>
+                                    <input type="number" id="num-autogol" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded py-1 text-white text-xs">
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="flex items-center justify-between p-3 bg-emerald-950/30 rounded-xl border border-emerald-500/40 cursor-pointer hover:bg-emerald-900/30 transition-colors">
-                                <span class="text-[11px] font-bold text-white">Schieramento 100% (+3 pt)</span>
-                                <input type="checkbox" id="check-schieramento" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
-                            </label>
+                        <!-- 4. BONUS SPECIFICI -->
+                        <div class="space-y-2 pt-1">
+                            <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">4. Altri Bonus Partita</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <label class="flex items-center justify-between p-3 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500">
+                                    <span class="text-[11px] font-semibold text-white">Vittoria ai Rigori (+2)</span>
+                                    <input type="checkbox" id="check-rigori" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500">
+                                    <span class="text-[11px] font-semibold text-white">Clean Sheet / Porta Inviolata (+2)</span>
+                                    <input type="checkbox" id="check-cleansheet" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500">
+                                    <span class="text-[11px] font-semibold text-white">Vittoria &gt;= 3 Gol Scarto (+3)</span>
+                                    <input type="checkbox" id="check-scarto" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500">
+                                    <span class="text-[11px] font-semibold text-white">Tutti i Giocatori in Rosa (+5)</span>
+                                    <input type="checkbox" id="check-schieramento" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500 sm:col-span-2">
+                                    <span class="text-[11px] font-semibold text-white">Squadra con Miglior Giocatore Partita (+1)</span>
+                                    <input type="checkbox" id="check-mvp" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 5. OBIETTIVI TORNEO -->
+                        <div class="space-y-2 pt-1">
+                            <label class="block text-xs font-bold text-amber-400 uppercase border-b border-slate-800 pb-1">5. Obiettivi Torneo (Straordinari)</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <label class="flex items-center justify-between p-3 bg-amber-950/20 rounded-xl border border-amber-500/30 cursor-pointer">
+                                    <span class="text-[11px] font-bold text-amber-300">Passaggio Turno (+5)</span>
+                                    <input type="checkbox" id="check-turno" onchange="calculateLive()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-amber-950/20 rounded-xl border border-amber-500/30 cursor-pointer">
+                                    <span class="text-[11px] font-bold text-amber-300">Vittoria Torneo (+10)</span>
+                                    <input type="checkbox" id="check-torneo" onchange="calculateLive()" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
+                                </label>
+                            </div>
                         </div>
 
                         <button type="submit" id="btn-submit-match" class="w-full py-3.5 rounded-xl accent-gradient font-bold text-white shadow hover:scale-[1.02] transition-transform text-sm">
@@ -527,7 +561,7 @@
         </button>
     </nav>
 
-    <!-- SCRIPT LOGICA AGGIORNATA -->
+    <!-- LOGICA SCRIPT CON NUOVI BONUS E MALUS -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCiXh1n-6NfdwjriDLUllBRISvo1rDd-Xk",
@@ -749,9 +783,22 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        function calcPoints(esito, gf, gs, amm, esp, rp, rs, sch) {
+        // CALCOLO PUNTI AGGIORNATO CON I NUOVI PARAMETRI
+        function calcPoints(esito, gf, gs, amm, esp, aut, rig, clean, scarto, sch, mvp, turno, torneo) {
             let ptsEsito = esito === 'vittoria' ? 3 : (esito === 'pareggio' ? 1 : 0);
-            return ptsEsito + (gf * 1) - (gs * 1) - (amm * 0.5) - (esp * 1) + (rp * 2) - (rs * 1) + (sch ? 3 : 0);
+            return ptsEsito + 
+                   (gf * 3) - 
+                   (gs * 1) - 
+                   (amm * 1) - 
+                   (esp * 2) - 
+                   (aut * 1) + 
+                   (rig ? 2 : 0) + 
+                   (clean ? 2 : 0) + 
+                   (scarto ? 3 : 0) + 
+                   (sch ? 5 : 0) + 
+                   (mvp ? 1 : 0) + 
+                   (turno ? 5 : 0) + 
+                   (torneo ? 10 : 0);
         }
 
         function renderFormHtml(formArray) {
@@ -854,7 +901,7 @@
             if(countUser) countUser.innerText = fantaUsersList.length;
 
             if (fantaUsersList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuno.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuno.</td></tr>`;
                 individualContainer.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-xs">Nessuna scheda.</div>`;
                 return;
             }
@@ -874,11 +921,11 @@
 
                 return `
                     <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="px-4 py-3 font-bold text-slate-400"><span class="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] ${idx === 0 ? 'bg-amber-500 text-slate-950' : (idx === 1 ? 'bg-slate-300 text-slate-950' : (idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-800'))}">${idx + 1}</span></td>
-                        <td class="px-4 py-3 font-bold text-white text-xs">${item.username}</td>
-                        <td class="px-4 py-3"><div class="flex flex-col sm:flex-row flex-wrap gap-1.5">${teamsBadges}</div></td>
-                        <td class="px-4 py-3 text-right font-black text-sm text-emerald-400">${item.totalScore}</td>
-                        <td class="px-4 py-3 text-right">${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}</td>
+                        <td class="px-4 sm:px-6 py-3 font-bold text-slate-400"><span class="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] ${idx === 0 ? 'bg-amber-500 text-slate-950' : (idx === 1 ? 'bg-slate-300 text-slate-950' : (idx === 2 ? 'bg-amber-700 text-white' : 'bg-slate-800'))}">${idx + 1}</span></td>
+                        <td class="px-4 sm:px-6 py-3 font-bold text-white text-xs">${item.username}</td>
+                        <td class="px-4 sm:px-6 py-3"><div class="flex flex-col sm:flex-row flex-wrap gap-1.5">${teamsBadges}</div></td>
+                        <td class="px-4 sm:px-6 py-3 text-right font-black text-sm text-emerald-400">${item.totalScore}</td>
+                        <td class="px-4 sm:px-6 py-3 text-right">${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}</td>
                     </tr>
                 `;
             }).join('');
@@ -910,8 +957,8 @@
             if (currentRole !== 'admin') return showToast("Azione bloccata!", "error");
             if (!confirm("Azzerare tutti i bonus/malus mantenendo esiti e gol?")) return;
             matchesList.forEach(m => {
-                m.ammonizioni = 0; m.espulsioni = 0; m.rigoriParati = 0; m.rigoriSbagliati = 0; m.schieramento = false;
-                m.totalePunti = calcPoints(m.esito, m.golFatti, m.golSubiti, 0, 0, 0, 0, false);
+                m.ammonizioni = 0; m.espulsioni = 0; m.autogol = 0; m.rigori = false; m.cleansheet = false; m.scarto = false; m.schieramento = false; m.mvp = false; m.turno = false; m.torneo = false;
+                m.totalePunti = calcPoints(m.esito, m.golFatti, m.golSubiti, 0, 0, 0, false, false, false, false, false, false, false);
             });
             saveToStorage(); showToast("Bonus e malus azzerati!");
         }
@@ -928,7 +975,8 @@
                     teamMatches.forEach(m => {
                         if (m.esito === 'vittoria') vittorie++; else if (m.esito === 'pareggio') pareggi++; else if (m.esito === 'sconfitta') sconfitte++;
                         gf += m.golFatti; gs += m.golSubiti;
-                        bonusMalusTot += (m.ammonizioni * -0.5) + (m.espulsioni * -1) + (m.rigoriParati * 2) + (m.rigoriSbagliati * -1) + (m.schieramento ? 3 : 0);
+                        const bm = (m.ammonizioni * -1) + (m.espulsioni * -2) + (m.autogol * -1) + (m.rigori ? 2 : 0) + (m.cleansheet ? 2 : 0) + (m.scarto ? 3 : 0) + (m.schieramento ? 5 : 0) + (m.mvp ? 1 : 0) + (m.turno ? 5 : 0) + (m.torneo ? 10 : 0);
+                        bonusMalusTot += bm; 
                         puntiTotali += m.totalePunti;
                     });
                     return { id: t.id, squadraObj: t, squadra: t.name, group: t.group, partite: teamMatches.length, vittorie, pareggi, sconfitte, gf, gs, bonusMalusTot, puntiTotali, formArray };
@@ -945,7 +993,7 @@
                         <td class="px-4 py-3 font-semibold text-white whitespace-nowrap"><div class="flex items-center gap-2">${getTeamLogoHTML(item.squadraObj, "w-5 h-5")}<span>${item.squadra}</span></div></td>
                         <td class="px-4 py-3 text-center"><span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${item.group === 'A' ? 'bg-emerald-950 text-emerald-400' : 'bg-blue-950 text-blue-400'}">${item.group}</span></td>
                         <td class="px-2 py-3 text-center text-slate-300">${item.partite}</td>
-                        <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">${item.vittorie}-${item.pareggi}-${item.sconfitte}</td>
+                        <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">${item.vittorie}-${item.pareggio}-${item.sconfitte}</td>
                         <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">${item.gf}/${item.gs}</td>
                         <td class="px-4 py-3 text-center">${renderFormHtml(item.formArray)}</td>
                         <td class="px-4 py-3 text-right font-black text-sm text-white">${item.puntiTotali}</td>
@@ -1049,29 +1097,34 @@
             const input = document.getElementById(id);
             let val = parseInt(input.value) || 0;
             input.value = Math.max(0, val + delta);
-            calculateLive(); // AGGIORNATO: Ora ricalcola istantaneamente anche usando i tasti + e -
+            calculateLive();
         }
 
+        // RICALCOLO LIVE AGGIORNATO AL 100% CON I NUOVI PARAMETRI
         function calculateLive() {
             const esito = document.querySelector('input[name="esito"]:checked')?.value || 'vittoria';
-            let ptsEsito = esito === 'vittoria' ? 3 : (esito === 'pareggio' ? 1 : 0);
-            
             const golFatti = parseInt(document.getElementById('num-gol-fatti')?.value) || 0;
             const golSubiti = parseInt(document.getElementById('num-gol-subiti')?.value) || 0;
             const ammonizioni = parseInt(document.getElementById('num-ammonizioni')?.value) || 0;
             const espulsioni = parseInt(document.getElementById('num-espulsioni')?.value) || 0;
-            const rigoriParati = parseInt(document.getElementById('num-rigori-parati')?.value) || 0;
-            const rigoriSbagliati = parseInt(document.getElementById('num-rigori-sbagliati')?.value) || 0;
-            const schieramento = document.getElementById('check-schieramento')?.checked ? 1 : 0;
+            const autogol = parseInt(document.getElementById('num-autogol')?.value) || 0;
             
-            const total = ptsEsito + (golFatti * 1) - (golSubiti * 1) - (ammonizioni * 0.5) - (espulsioni * 1) + (rigoriParati * 2) - (rigoriSbagliati * 1) + (schieramento * 3);
+            const rigori = document.getElementById('check-rigori')?.checked || false;
+            const cleansheet = document.getElementById('check-cleansheet')?.checked || false;
+            const scarto = document.getElementById('check-scarto')?.checked || false;
+            const schieramento = document.getElementById('check-schieramento')?.checked || false;
+            const mvp = document.getElementById('check-mvp')?.checked || false;
+            const turno = document.getElementById('check-turno')?.checked || false;
+            const torneo = document.getElementById('check-torneo')?.checked || false;
+
+            const total = calcPoints(esito, golFatti, golSubiti, ammonizioni, espulsioni, autogol, rigori, cleansheet, scarto, schieramento, mvp, turno, torneo);
             
             const displayEl = document.getElementById('live-total-display');
             if(displayEl) {
                 displayEl.innerText = total >= 0 ? `+${total}` : total;
                 displayEl.className = total >= 0 ? 'text-5xl font-black text-emerald-400' : 'text-5xl font-black text-rose-500';
             }
-            return { total, esito, ptsEsito, golFatti, golSubiti, ammonizioni, espulsioni, rigoriParati, rigoriSbagliati, schieramento: schieramento === 1 };
+            return { total, esito, golFatti, golSubiti, ammonizioni, espulsioni, autogol, rigori, cleansheet, scarto, schieramento, mvp, turno, torneo };
         }
 
         function handleFormSubmit(e) {
@@ -1084,9 +1137,10 @@
 
             const calc = calculateLive();
             matchesList.unshift({
-                id: Date.now(), squadraId: teamId, squadraNome: team.name, group: team.group, giornata, esito: calc.esito, ptsEsito: calc.ptsEsito,
-                golFatti: calc.golFatti, golSubiti: calc.golSubiti, ammonizioni: calc.ammonizioni, espulsioni: calc.espulsioni, rigoriParati: calc.rigoriParati,
-                rigoriSbagliati: calc.rigoriSbagliati, schieramento: calc.schieramento, totalePunti: calc.total
+                id: Date.now(), squadraId: teamId, squadraNome: team.name, group: team.group, giornata, esito: calc.esito,
+                golFatti: calc.golFatti, golSubiti: calc.golSubiti, ammonizioni: calc.ammonizioni, espulsioni: calc.espulsioni, autogol: calc.autogol,
+                rigori: calc.rigori, cleansheet: calc.cleansheet, scarto: calc.scarto, schieramento: calc.schieramento, mvp: calc.mvp, turno: calc.turno, torneo: calc.torneo,
+                totalePunti: calc.total
             });
             saveToStorage(); resetForm(); showToast(`Punteggio salvato! (+${calc.total} pt)`);
         }
@@ -1094,12 +1148,12 @@
         function resetForm() {
             const frm = document.getElementById('partita-form');
             if(frm) frm.reset();
-            const gf = document.getElementById('num-gol-fatti'); if(gf) gf.value = 0;
-            const gs = document.getElementById('num-gol-subiti'); if(gs) gs.value = 0;
-            const am = document.getElementById('num-ammonizioni'); if(am) am.value = 0;
-            const es = document.getElementById('num-espulsioni'); if(es) es.value = 0;
-            const rp = document.getElementById('num-rigori-parati'); if(rp) rp.value = 0;
-            const rs = document.getElementById('num-rigori-sbagliati'); if(rs) rs.value = 0;
+            ['num-gol-fatti', 'num-gol-subiti', 'num-ammonizioni', 'num-espulsioni', 'num-autogol'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.value = 0;
+            });
+            ['check-rigori', 'check-cleansheet', 'check-scarto', 'check-schieramento', 'check-mvp', 'check-turno', 'check-torneo'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.checked = false;
+            });
             calculateLive();
         }
 
@@ -1134,11 +1188,16 @@
                         <td class="px-3 py-2">${esitoBadge}</td>
                         <td class="px-3 py-2 text-center text-slate-200 font-semibold whitespace-nowrap">${item.golFatti}-${item.golSubiti}</td>
                         <td class="px-3 py-2 text-center text-[9px] sm:text-[10px] space-x-1 whitespace-nowrap">
-                            ${item.ammonizioni > 0 ? `<span class="text-yellow-400">-${item.ammonizioni * 0.5}A</span>` : ''}
-                            ${item.espulsioni > 0 ? `<span class="text-rose-400">-${item.espulsioni}E</span>` : ''}
-                            ${item.rigoriParati > 0 ? `<span class="text-emerald-400">+${item.rigoriParati * 2}RP</span>` : ''}
-                            ${item.rigoriSbagliati > 0 ? `<span class="text-rose-400">-${item.rigoriSbagliati}RS</span>` : ''}
-                            ${item.schieramento ? `<span class="text-blue-400">+3Rosa</span>` : ''}
+                            ${item.ammonizioni > 0 ? `<span class="text-yellow-400">-${item.ammonizioni}A</span>` : ''}
+                            ${item.espulsioni > 0 ? `<span class="text-rose-400">-${item.espulsioni * 2}E</span>` : ''}
+                            ${item.autogol > 0 ? `<span class="text-rose-400">-${item.autogol}Aut</span>` : ''}
+                            ${item.rigori ? `<span class="text-emerald-400">+2Rig</span>` : ''}
+                            ${item.cleansheet ? `<span class="text-emerald-400">+2CS</span>` : ''}
+                            ${item.scarto ? `<span class="text-emerald-400">+3Scarto</span>` : ''}
+                            ${item.schieramento ? `<span class="text-blue-400">+5Rosa</span>` : ''}
+                            ${item.mvp ? `<span class="text-amber-400">+1MVP</span>` : ''}
+                            ${item.turno ? `<span class="text-amber-300">+5Turno</span>` : ''}
+                            ${item.torneo ? `<span class="text-amber-400 font-bold">+10Torneo</span>` : ''}
                         </td>
                         <td class="px-3 py-2 text-center font-bold ${item.totalePunti >= 0 ? 'text-emerald-400' : 'text-rose-500'}">${item.totalePunti >= 0 ? `+${item.totalePunti}` : item.totalePunti}</td>
                         <td class="px-3 py-2 text-right">${isAdmin ? `<button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>` : `<i class="fa-solid fa-lock text-[10px] text-slate-600"></i>`}</td>
@@ -1191,8 +1250,8 @@
         }
         function exportToCSV() {
             if (matchesList.length === 0) return showToast("Nessun dato!", "error");
-            let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,Ammonizioni,Espulsioni,RigoriParati,RigoriSbagliati,Rosa100,TotalePunti\n";
-            matchesList.forEach(r => csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.ammonizioni},${r.espulsioni},${r.rigoriParati},${r.rigoriSbagliati},${r.schieramento ? 1 : 0},${r.totalePunti}\n`);
+            let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,Ammonizioni,Espulsioni,Autogol,TotalePunti\n";
+            matchesList.forEach(r => csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.ammonizioni},${r.espulsioni},${r.autogol},${r.totalePunti}\n`);
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'jopallo_partite.csv'; a.click(); URL.revokeObjectURL(url);
         }
