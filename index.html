@@ -527,7 +527,7 @@
         </button>
     </nav>
 
-    <!-- LOGICA SCRIPT CORRETTA E SICURA -->
+    <!-- SCRIPT LOGICA AGGIORNATA -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCiXh1n-6NfdwjriDLUllBRISvo1rDd-Xk",
@@ -583,11 +583,9 @@
                 checkAuth();
                 renderAllSections();
                 
-                // Rimuove immediatamente il loader per evitare qualsiasi blocco visivo
                 const loader = document.getElementById('app-loader');
                 if(loader) loader.classList.add('hidden-loader');
 
-                // Connessione asincrona a Firebase in background
                 dbRef.on('value', (snapshot) => {
                     const data = snapshot.val();
                     if (data) {
@@ -1051,20 +1049,22 @@
             const input = document.getElementById(id);
             let val = parseInt(input.value) || 0;
             input.value = Math.max(0, val + delta);
-            calculateLive();
+            calculateLive(); // AGGIORNATO: Ora ricalcola istantaneamente anche usando i tasti + e -
         }
 
         function calculateLive() {
             const esito = document.querySelector('input[name="esito"]:checked')?.value || 'vittoria';
             let ptsEsito = esito === 'vittoria' ? 3 : (esito === 'pareggio' ? 1 : 0);
-            const golFatti = parseInt(document.getElementById('num-gol-fatti').value) || 0;
-            const golSubiti = parseInt(document.getElementById('num-gol-subiti').value) || 0;
-            const ammonizioni = parseInt(document.getElementById('num-ammonizioni').value) || 0;
-            const espulsioni = parseInt(document.getElementById('num-espulsioni').value) || 0;
-            const rigoriParati = parseInt(document.getElementById('num-rigori-parati').value) || 0;
-            const rigoriSbagliati = parseInt(document.getElementById('num-rigori-sbagliati').value) || 0;
-            const schieramento = document.getElementById('check-schieramento').checked ? 1 : 0;
-            const total = ptsEsito + (golFatti * 1) - (golSubiti * 1) - (amm * 0.5) - (esp * 1) + (rigoriParati * 2) - (rigoriSbagliati * 1) + (schieramento * 3);
+            
+            const golFatti = parseInt(document.getElementById('num-gol-fatti')?.value) || 0;
+            const golSubiti = parseInt(document.getElementById('num-gol-subiti')?.value) || 0;
+            const ammonizioni = parseInt(document.getElementById('num-ammonizioni')?.value) || 0;
+            const espulsioni = parseInt(document.getElementById('num-espulsioni')?.value) || 0;
+            const rigoriParati = parseInt(document.getElementById('num-rigori-parati')?.value) || 0;
+            const rigoriSbagliati = parseInt(document.getElementById('num-rigori-sbagliati')?.value) || 0;
+            const schieramento = document.getElementById('check-schieramento')?.checked ? 1 : 0;
+            
+            const total = ptsEsito + (golFatti * 1) - (golSubiti * 1) - (ammonizioni * 0.5) - (espulsioni * 1) + (rigoriParati * 2) - (rigoriSbagliati * 1) + (schieramento * 3);
             
             const displayEl = document.getElementById('live-total-display');
             if(displayEl) {
@@ -1094,9 +1094,12 @@
         function resetForm() {
             const frm = document.getElementById('partita-form');
             if(frm) frm.reset();
-            document.getElementById('num-gol-fatti').value = 0; document.getElementById('num-gol-subiti').value = 0;
-            document.getElementById('num-ammonizioni').value = 0; document.getElementById('num-espulsioni').value = 0;
-            document.getElementById('num-rigori-parati').value = 0; document.getElementById('num-rigori-sbagliati').value = 0;
+            const gf = document.getElementById('num-gol-fatti'); if(gf) gf.value = 0;
+            const gs = document.getElementById('num-gol-subiti'); if(gs) gs.value = 0;
+            const am = document.getElementById('num-ammonizioni'); if(am) am.value = 0;
+            const es = document.getElementById('num-espulsioni'); if(es) es.value = 0;
+            const rp = document.getElementById('num-rigori-parati'); if(rp) rp.value = 0;
+            const rs = document.getElementById('num-rigori-sbagliati'); if(rs) rs.value = 0;
             calculateLive();
         }
 
