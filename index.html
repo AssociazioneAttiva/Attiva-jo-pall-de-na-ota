@@ -58,10 +58,10 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- SCHERMATA DI CARICAMENTO -->
+    <!-- SCHERMATA DI CARICAMENTO RAPIDA -->
     <div id="app-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950">
         <div class="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full animate-spin mb-4 shadow-lg shadow-emerald-500/20"></div>
-        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Sincronizzazione Cloud...</p>
+        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Caricamento Fanta-Torneo...</p>
     </div>
 
     <!-- CONTENITORE NOTIFICHE TOAST -->
@@ -436,17 +436,15 @@
             </div>
         </section>
 
-        <!-- TAB 5: GESTIONE SQUADRE (CON PULSANTE DI RESET DATI) -->
+        <!-- TAB 5: GESTIONE SQUADRE -->
         <section id="section-teams" class="hidden space-y-6 animate-fade-in">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-4">
                 <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre &amp; Reset Torneo
                 </h2>
-                
-                <!-- Pulsante Reset Dati (Visibile solo se Admin) -->
                 <div class="admin-only hidden">
                     <button onclick="fullResetTournamentData()" class="px-3 py-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl text-xs font-bold border border-rose-800 flex items-center gap-2 transition-colors shadow">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Resetta Dati e Torneo (Nuova Stagione)
+                        <i class="fa-solid fa-triangle-exclamation"></i> Resetta Dati e Torneo
                     </button>
                 </div>
             </div>
@@ -508,7 +506,7 @@
 
     </main>
 
-    <!-- NAVIGAZIONE MOBILE (BOTTOM BAR) -->
+    <!-- NAVIGAZIONE MOBILE -->
     <nav class="sm:hidden fixed bottom-0 left-0 right-0 bg-slate-950/95 backdrop-blur-lg border-t border-slate-800 z-50 flex justify-around items-end pb-safe px-1 h-14 sm:h-16 shadow-2xl">
         <button onclick="switchTab('fanta')" id="mob-tab-fanta" class="mob-tab flex-1 flex flex-col items-center justify-center h-full gap-0.5 pb-1 transition-colors text-slate-500">
             <i class="fa-solid fa-cart-shopping text-lg"></i>
@@ -532,7 +530,7 @@
         </button>
     </nav>
 
-    <!-- LOGICA FIREBASE E SCRIPT APP -->
+    <!-- LOGICA SCRIPT CON PROTEZIONE ANTI-BLOCCO -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCiXh1n-6NfdwjriDLUllBRISvo1rDd-Xk",
@@ -587,15 +585,38 @@
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
             renderAllSections();
-            initRealtimeDB();
+            
+            // TIMEOUT DI SICUREZZA ANTIBLOCCO (Massimo 1.5 secondi di attesa per Firebase, poi sblocca la UI)
+            const safetyTimer = setTimeout(() => {
+                if(isFirstLoad) {
+                    hideLoader();
+                    isFirstLoad = false;
+                }
+            }, 1500);
+
+            dbRef.once('value').then((snapshot) => {
+                clearTimeout(safetyTimer);
+                const data = snapshot.val();
+                if (data) {
+                    teamsList = mergeTeamsWithDefaults(data.teams);
+                    matchesList = data.matches || [];
+                    fantaUsersList = data.users || [];
+                }
+                renderAllSections();
+                const onlineBadge = document.getElementById('badge-online');
+                if(onlineBadge) onlineBadge.classList.remove('hidden');
+                hideLoader();
+                isFirstLoad = false;
+                initRealtimeDB();
+            }).catch(() => {
+                clearTimeout(safetyTimer);
+                hideLoader();
+                isFirstLoad = false;
+                initRealtimeDB();
+            });
             
             const lastTab = sessionStorage.getItem(STORAGE_KEY_TAB) || 'fanta';
             switchTab(lastTab);
-            
-            setTimeout(() => {
-                const loader = document.getElementById('app-loader');
-                if(loader && !loader.classList.contains('hidden-loader')) hideLoader();
-            }, 3000); 
         });
 
         function renderAllSections() {
@@ -616,66 +637,36 @@
         function initRealtimeDB() {
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
+                if (data && !isFirstLoad) {
                     teamsList = mergeTeamsWithDefaults(data.teams);
                     matchesList = data.matches || [];
                     fantaUsersList = data.users || [];
-                } else {
-                    teamsList = defaultTeams; matchesList = []; fantaUsersList = [];
+                    renderAllSections();
                 }
-
-                renderAllSections();
-                const onlineBadge = document.getElementById('badge-online');
-                if(onlineBadge) onlineBadge.classList.remove('hidden');
-                
-                if(isFirstLoad) {
-                    hideLoader();
-                    isFirstLoad = false;
-                }
-            }, (error) => {
-                hideLoader();
-                showToast("Errore di connessione Firebase.", "error");
             });
         }
 
         function saveToStorage() {
             dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).catch(() => {
-                showToast("Salvataggio fallito: controlla la connessione.", "error");
+                showToast("Salvataggio cloud non riuscito.", "error");
             });
         }
 
-        // --- FUNZIONE DI RESET COMPLETO DEL TORNEO ---
         function fullResetTournamentData() {
-            if (currentRole !== 'admin') {
-                showToast("Accesso negato: solo l'amministratore può resettare il torneo.", "error");
-                return;
-            }
+            if (currentRole !== 'admin') return showToast("Accesso negato.", "error");
+            if (!confirm("ATTENZIONE: Azzerare tutto il torneo? Partite, iscrizioni e modifiche saranno cancellate.")) return;
 
-            if (!confirm("ATTENZIONE CRITICA: Vuoi azzerare completamente il torneo? Verranno eliminate tutte le partite registrate, tutti i fanta-giocatori iscritti e resettati i loghi/nomi delle squadre allo stato iniziale.")) {
-                return;
-            }
-
-            // Resetta le variabili locali ai valori puliti
             teamsList = JSON.parse(JSON.stringify(defaultTeams));
             matchesList = [];
             fantaUsersList = [];
-            selectedTier1 = null;
-            selectedTier2 = null;
-            selectedTier3 = null;
+            selectedTier1 = null; selectedTier2 = null; selectedTier3 = null;
 
-            // Invia i dati puliti su Firebase (aggiorna tutti i dispositivi collegati in tempo reale)
-            dbRef.set({
-                teams: teamsList,
-                matches: matchesList,
-                users: fantaUsersList
-            }).then(() => {
+            dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).then(() => {
                 renderAllSections();
                 syncToDropdowns();
                 updateFantaSummary();
-                showToast("Torneo resettato con successo! Pronto per una nuova stagione.", "success");
-            }).catch(() => {
-                showToast("Errore durante il reset sul cloud.", "error");
-            });
+                showToast("Torneo resettato con successo!");
+            }).catch(() => showToast("Errore di reset sul cloud.", "error"));
         }
 
         function showToast(message, type = 'success') {
