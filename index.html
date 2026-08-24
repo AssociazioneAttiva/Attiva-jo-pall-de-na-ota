@@ -27,18 +27,27 @@
         .team-btn-select {
             transition: all 0.2s ease;
         }
+        .team-btn-select:hover {
+            transform: translateY(-2px);
+        }
         .team-btn-select.active {
             border-color: #10b981 !important;
             background: rgba(16, 185, 129, 0.2) !important;
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
+        /* Hide scrollbar for cleaner tables */
+        .overflow-x-auto::-webkit-scrollbar { height: 6px; }
+        .overflow-x-auto::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-12">
 
+    <!-- CONTENITORE NOTIFICHE TOAST -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[60] flex flex-col gap-2 pointer-events-none"></div>
+
     <!-- MODALE DI AUTENTICAZIONE (LOGIN) -->
-    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4">
-        <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-slate-700 shadow-2xl space-y-6">
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4 transition-opacity duration-300">
+        <div class="glass-card w-full max-w-md p-8 rounded-3xl border border-slate-700 shadow-2xl space-y-6 transform transition-all scale-100">
             <div class="text-center space-y-2">
                 <div class="w-14 h-14 rounded-2xl accent-gradient flex items-center justify-center text-white text-2xl mx-auto shadow-lg shadow-emerald-900/40">
                     <i class="fa-solid fa-football"></i>
@@ -50,15 +59,15 @@
             <form id="login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Username Admin</label>
-                    <input type="text" id="admin-user" placeholder="Es. admin" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                    <input type="text" id="admin-user" placeholder="Es. admin" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Password</label>
-                    <input type="password" id="admin-pass" placeholder="••••••••" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                    <input type="password" id="admin-pass" placeholder="••••••••" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
 
-                <p id="login-error" class="text-xs text-rose-400 text-center hidden font-semibold">Credenziali non valide!</p>
+                <p id="login-error" class="text-xs text-rose-400 text-center hidden font-semibold animate-pulse">Credenziali non valide!</p>
 
                 <button type="submit" class="w-full py-3.5 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all text-sm flex items-center justify-center gap-2">
                     <i class="fa-solid fa-lock-open"></i> Accedi come Amministratore
@@ -81,31 +90,31 @@
                     <i class="fa-solid fa-football text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-xl tracking-tight text-white uppercase">FANTA-JO PALLO' DE NA 'OTA</h1>
+                    <h1 class="font-bold text-xl tracking-tight text-white uppercase">FANTA-JO PALLO'</h1>
                     <div class="flex items-center gap-2">
-                        <span id="badge-role" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Accesso Visitatore</span>
+                        <span id="badge-role" class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 transition-colors">Accesso Visitatore</span>
                     </div>
                 </div>
             </div>
 
             <!-- Tabs Navigazione -->
-            <nav class="flex flex-wrap items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/50 gap-1">
-                <button onclick="switchTab('fanta')" id="tab-fanta" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow">
+            <nav class="flex flex-wrap items-center bg-slate-800/80 p-1 rounded-xl border border-slate-700/50 gap-1 overflow-x-auto">
+                <button onclick="switchTab('fanta')" id="tab-fanta" class="whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-cart-shopping"></i> Acquista 3 Squadre
                 </button>
-                <button onclick="switchTab('fanta-standings')" id="tab-fanta-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('fanta-standings')" id="tab-fanta-standings" class="whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifica Fanta (<span id="user-count">0</span>)
                 </button>
-                <button onclick="switchTab('standings')" id="tab-standings" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('standings')" id="tab-standings" class="whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-trophy"></i> Tabellone Reale
                 </button>
-                <button onclick="switchTab('form')" id="tab-form" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('form')" id="tab-form" class="whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-pen-to-square"></i> Inserisci Partita
                 </button>
-                <button onclick="switchTab('teams')" id="tab-teams" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('teams')" id="tab-teams" class="whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-shield-halved"></i> Squadre &amp; Loghi
                 </button>
-                <button onclick="switchTab('log')" id="tab-log" class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white">
+                <button onclick="switchTab('log')" id="tab-log" class="whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                     <i class="fa-solid fa-list-check"></i> Registro Partite (<span id="log-count">0</span>)
                 </button>
                 <button onclick="logout()" class="flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-950/40 transition-colors ml-1" title="Disconnetti">
@@ -118,7 +127,7 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full">
 
         <!-- TAB 1: ACQUISTO 3 SQUADRE SU 8 CON FASCE DI PREZZO -->
-        <section id="section-fanta" class="space-y-6">
+        <section id="section-fanta" class="space-y-6 hidden">
             <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 flex flex-wrap justify-between items-center gap-4">
                 <div>
                     <h2 class="text-xl font-bold text-white flex items-center gap-2">
@@ -129,11 +138,11 @@
                     </p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
+                    <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center shadow-inner">
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Crediti Spesi</span>
                         <span id="live-credits-spent" class="text-xl font-black text-amber-400">0 / 100</span>
                     </div>
-                    <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center">
+                    <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center shadow-inner">
                         <span class="text-[10px] uppercase font-bold text-slate-400 block">Squadre Scelte</span>
                         <span id="live-selected-count" class="text-xl font-black text-emerald-400">0 / 3</span>
                     </div>
@@ -144,7 +153,7 @@
                 <!-- Nome Visitatore -->
                 <div class="glass-card rounded-2xl p-6 border border-slate-700/60">
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Nome e Cognome Fanta-Giocatore *</label>
-                    <input type="text" id="fanta-username" required placeholder="Es. Mario Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                    <input type="text" id="fanta-username" required placeholder="Es. Mario Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
 
                 <!-- SELEZIONE GUIDATA TRAMITE DROP-DOWN -->
@@ -155,19 +164,19 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-amber-400 mb-1">Fascia 1 (55 Crediti) *</label>
-                            <select id="select-tier-1" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <select id="select-tier-1" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors">
                                 <option value="" disabled selected>Scegli da Fascia 1...</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-blue-400 mb-1">Fascia 2 (30 Crediti) *</label>
-                            <select id="select-tier-2" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500">
+                            <select id="select-tier-2" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors">
                                 <option value="" disabled selected>Scegli da Fascia 2...</option>
                             </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-emerald-400 mb-1">Fascia 3 (15 Crediti) *</label>
-                            <select id="select-tier-3" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                            <select id="select-tier-3" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                                 <option value="" disabled selected>Scegli da Fascia 3...</option>
                             </select>
                         </div>
@@ -207,7 +216,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2 text-base">
+                <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2 text-base transform hover:scale-[1.01]">
                     <i class="fa-solid fa-check"></i> Conferma Acquisto &amp; Salva Formazione
                 </button>
             </form>
@@ -223,20 +232,20 @@
                     <p class="text-xs text-slate-400 mt-1">Classifica generale e dettaglio del punteggio accumulato da ciascun fanta-allenatore</p>
                 </div>
                 <!-- CONDIVISIONE SOCIAL/WHATSAPP/EMAIL -->
-                <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl">
+                <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl shadow-sm">
                     <span class="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1.5 pl-2">
                         <i class="fa-solid fa-share-nodes text-emerald-400"></i> Condividi:
                     </span>
-                    <button onclick="shareOnWhatsApp('fanta')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                    <button onclick="shareOnWhatsApp('fanta')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-transform hover:scale-105 shadow">
                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                     </button>
-                    <button onclick="shareOnTelegram('fanta')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                    <button onclick="shareOnTelegram('fanta')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-transform hover:scale-105 shadow">
                         <i class="fa-brands fa-telegram text-sm"></i> Telegram
                     </button>
-                    <button onclick="shareViaEmail('fanta')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors">
+                    <button onclick="shareViaEmail('fanta')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-transform hover:scale-105">
                         <i class="fa-solid fa-envelope text-xs"></i> Email
                     </button>
-                    <button onclick="copyResultsToClipboard('fanta')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors" title="Copia Testo">
+                    <button onclick="copyResultsToClipboard('fanta')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-transform hover:scale-105" title="Copia Testo">
                         <i class="fa-solid fa-copy text-xs"></i> Copia
                     </button>
                 </div>
@@ -247,14 +256,14 @@
                 <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/30 pb-2">
                     <i class="fa-solid fa-list-ol"></i> Classifica Generale Fanta-Giocatori
                 </h3>
-                <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/60">
-                    <div class="overflow-x-auto">
+                <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/60 shadow-lg">
+                    <div class="overflow-x-auto pb-2">
                         <table class="w-full text-left text-sm text-slate-300">
                             <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
                                     <th class="px-6 py-4">Pos</th>
                                     <th class="px-6 py-4">Fanta-Giocatore</th>
-                                    <th class="px-6 py-4">3 Squadre Acquistate (F1, F2, F3)</th>
+                                    <th class="px-6 py-4 min-w-[250px]">3 Squadre Acquistate (F1, F2, F3)</th>
                                     <th class="px-6 py-4 text-center">Spesa Crediti</th>
                                     <th class="px-6 py-4 text-right">Punti Totali</th>
                                     <th class="px-6 py-4 text-right">Azione</th>
@@ -285,17 +294,17 @@
                     <p class="text-xs text-slate-400 mt-1">Punteggi ottenuti sul campo dalle 8 squadre</p>
                 </div>
                 <!-- CONDIVISIONE TABELLONE SQUADRE -->
-                <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl">
+                <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl shadow-sm">
                     <span class="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1.5 pl-2">
                         <i class="fa-solid fa-share-nodes text-emerald-400"></i> Condividi:
                     </span>
-                    <button onclick="shareOnWhatsApp('teams')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                    <button onclick="shareOnWhatsApp('teams')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-transform hover:scale-105 shadow">
                         <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
                     </button>
-                    <button onclick="shareOnTelegram('teams')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                    <button onclick="shareOnTelegram('teams')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-transform hover:scale-105 shadow">
                         <i class="fa-brands fa-telegram text-sm"></i> Telegram
                     </button>
-                    <button onclick="shareViaEmail('teams')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors">
+                    <button onclick="shareViaEmail('teams')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-transform hover:scale-105">
                         <i class="fa-solid fa-envelope text-xs"></i> Email
                     </button>
                 </div>
@@ -305,8 +314,8 @@
                 <h3 class="text-lg font-bold text-amber-400 flex items-center gap-2 border-b border-amber-500/30 pb-2">
                     <i class="fa-solid fa-globe"></i> CLASSIFICA GENERALE (GIRONE A + B)
                 </h3>
-                <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/20">
-                    <div class="overflow-x-auto">
+                <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/20 shadow-lg">
+                    <div class="overflow-x-auto pb-2">
                         <table class="w-full text-left text-sm text-slate-300">
                             <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
@@ -332,15 +341,15 @@
                     <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/30 pb-2">
                         <i class="fa-solid fa-shield-halved"></i> GIRONE A
                     </h3>
-                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
+                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg">
+                        <div class="overflow-x-auto pb-2">
                             <table class="w-full text-left text-sm text-slate-300">
                                 <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                     <tr>
                                         <th class="px-4 py-3">Pos</th>
-                                        <th class="px-4 py-3">Squadra</th>
+                                        <th class="px-4 py-3 min-w-[150px]">Squadra</th>
                                         <th class="px-4 py-3 text-center">Partite</th>
-                                        <th class="px-4 py-3 text-center">GF / GS</th>
+                                        <th class="px-4 py-3 text-center min-w-[80px]">GF / GS</th>
                                         <th class="px-4 py-3 text-right">Punti</th>
                                     </tr>
                                 </thead>
@@ -355,15 +364,15 @@
                     <h3 class="text-lg font-bold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
                         <i class="fa-solid fa-shield-halved"></i> GIRONE B
                     </h3>
-                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
-                        <div class="overflow-x-auto">
+                    <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg">
+                        <div class="overflow-x-auto pb-2">
                             <table class="w-full text-left text-sm text-slate-300">
                                 <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                     <tr>
                                         <th class="px-4 py-3">Pos</th>
-                                        <th class="px-4 py-3">Squadra</th>
+                                        <th class="px-4 py-3 min-w-[150px]">Squadra</th>
                                         <th class="px-4 py-3 text-center">Partite</th>
-                                        <th class="px-4 py-3 text-center">GF / GS</th>
+                                        <th class="px-4 py-3 text-center min-w-[80px]">GF / GS</th>
                                         <th class="px-4 py-3 text-right">Punti</th>
                                     </tr>
                                 </thead>
@@ -377,17 +386,17 @@
 
         <!-- TAB 4: INSERIMENTO PARTITA -->
         <section id="section-form" class="hidden space-y-6">
-            <div id="admin-lock-warning-form" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2">
+            <div id="admin-lock-warning-form" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Modalità Visitatore attiva: l'inserimento partite è riservato all'Amministratore.
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-8 glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+                <div class="lg:col-span-8 glass-card rounded-2xl p-6 sm:p-8 space-y-6 shadow-lg">
                     <div class="border-b border-slate-700/60 pb-4 flex justify-between items-center">
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-file-signature text-emerald-400"></i> Inserimento Nuova Partita
                         </h2>
-                        <button type="button" onclick="resetForm()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1">
+                        <button type="button" onclick="resetForm()" class="text-xs text-slate-400 hover:text-emerald-400 flex items-center gap-1 transition-colors">
                             <i class="fa-solid fa-rotate-left"></i> Pulisci
                         </button>
                     </div>
@@ -396,13 +405,13 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Squadra *</label>
-                                <select id="input-squadra" onchange="calculateLive()" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <select id="input-squadra" onchange="calculateLive()" required class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                                     <option value="" disabled selected>Seleziona Squadra...</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Giornata / Turno</label>
-                                <input type="number" id="input-giornata" min="1" value="1" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                                <input type="number" id="input-giornata" min="1" value="1" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                             </div>
                         </div>
 
@@ -411,15 +420,15 @@
                             <div class="grid grid-cols-3 gap-3">
                                 <label class="flex flex-col items-center justify-center p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-emerald-500 transition-all text-center">
                                     <input type="radio" name="esito" value="vittoria" checked onchange="calculateLive()" class="accent-emerald-500 mb-1">
-                                    <span class="text-xs font-bold text-emerald-400">Vittoria (+3 pt)</span>
+                                    <span class="text-xs font-bold text-emerald-400">Vittoria (+3)</span>
                                 </label>
                                 <label class="flex flex-col items-center justify-center p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-amber-500 transition-all text-center">
                                     <input type="radio" name="esito" value="pareggio" onchange="calculateLive()" class="accent-amber-500 mb-1">
-                                    <span class="text-xs font-bold text-amber-400">Pareggio (+1 pt)</span>
+                                    <span class="text-xs font-bold text-amber-400">Pareggio (+1)</span>
                                 </label>
                                 <label class="flex flex-col items-center justify-center p-3.5 bg-slate-900/50 rounded-xl border border-slate-800 cursor-pointer hover:border-rose-500 transition-all text-center">
                                     <input type="radio" name="esito" value="sconfitta" onchange="calculateLive()" class="accent-rose-500 mb-1">
-                                    <span class="text-xs font-bold text-rose-400">Sconfitta (0 pt)</span>
+                                    <span class="text-xs font-bold text-rose-400">Sconfitta (0)</span>
                                 </label>
                             </div>
                         </div>
@@ -429,11 +438,19 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                                     <label class="block text-xs font-semibold text-emerald-400 mb-2">Gol Fatti (+1 pt)</label>
-                                    <input type="number" id="num-gol-fatti" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="adjustCount('num-gol-fatti', -1)" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold border border-slate-700 transition-colors">-</button>
+                                        <input type="number" id="num-gol-fatti" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold focus:outline-none focus:border-emerald-500">
+                                        <button type="button" onclick="adjustCount('num-gol-fatti', 1)" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold border border-slate-700 transition-colors">+</button>
+                                    </div>
                                 </div>
                                 <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                                     <label class="block text-xs font-semibold text-rose-400 mb-2">Gol Subiti (-1 pt)</label>
-                                    <input type="number" id="num-gol-subiti" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" onclick="adjustCount('num-gol-subiti', -1)" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold border border-slate-700 transition-colors">-</button>
+                                        <input type="number" id="num-gol-subiti" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-white font-bold focus:outline-none focus:border-rose-500">
+                                        <button type="button" onclick="adjustCount('num-gol-subiti', 1)" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold border border-slate-700 transition-colors">+</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -443,40 +460,40 @@
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                 <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                                     <label class="block text-[11px] font-semibold text-yellow-400 mb-1">Ammonizioni (-0.5)</label>
-                                    <input type="number" id="num-ammonizioni" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm">
+                                    <input type="number" id="num-ammonizioni" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm focus:outline-none focus:border-yellow-500">
                                 </div>
                                 <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                                     <label class="block text-[11px] font-semibold text-rose-400 mb-1">Espulsioni (-1)</label>
-                                    <input type="number" id="num-espulsioni" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm">
+                                    <input type="number" id="num-espulsioni" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm focus:outline-none focus:border-rose-500">
                                 </div>
                                 <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                                     <label class="block text-[11px] font-semibold text-emerald-400 mb-1">Rigori Parati (+2)</label>
-                                    <input type="number" id="num-rigori-parati" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm">
+                                    <input type="number" id="num-rigori-parati" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm focus:outline-none focus:border-emerald-500">
                                 </div>
                                 <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
                                     <label class="block text-[11px] font-semibold text-rose-400 mb-1">Rigori Sbagliati (-1)</label>
-                                    <input type="number" id="num-rigori-sbagliati" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm">
+                                    <input type="number" id="num-rigori-sbagliati" min="0" value="0" oninput="calculateLive()" class="w-full text-center bg-slate-950 border border-slate-700 rounded-lg py-1 text-white font-bold text-sm focus:outline-none focus:border-rose-500">
                                 </div>
                             </div>
                         </div>
 
                         <div class="pt-2">
-                            <label class="flex items-center justify-between p-4 bg-emerald-950/30 rounded-xl border border-emerald-500/40 cursor-pointer">
+                            <label class="flex items-center justify-between p-4 bg-emerald-950/30 rounded-xl border border-emerald-500/40 cursor-pointer hover:bg-emerald-900/30 transition-colors">
                                 <span class="text-xs font-bold text-white">Schieramento 100% della Rosa (+3 pt)</span>
-                                <input type="checkbox" id="check-schieramento" onchange="calculateLive()" class="w-5 h-5 accent-emerald-500 rounded">
+                                <input type="checkbox" id="check-schieramento" onchange="calculateLive()" class="w-5 h-5 accent-emerald-500 rounded cursor-pointer">
                             </label>
                         </div>
 
-                        <button type="submit" id="btn-submit-match" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-all flex items-center justify-center gap-2">
+                        <button type="submit" id="btn-submit-match" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
                             <i class="fa-solid fa-floppy-disk"></i> Salva Punti Partita
                         </button>
                     </form>
                 </div>
 
                 <div class="lg:col-span-4 space-y-6">
-                    <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 sticky top-24">
+                    <div class="glass-card rounded-2xl p-6 border border-emerald-500/30 sticky top-24 shadow-lg">
                         <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Punti Partita Live</span>
-                        <div class="mt-4 mb-6 text-center py-6 bg-slate-900/80 rounded-xl border border-slate-800">
+                        <div class="mt-4 mb-6 text-center py-6 bg-slate-900/80 rounded-xl border border-slate-800 shadow-inner">
                             <span id="live-total-display" class="text-6xl font-black text-white">+3</span>
                             <span class="block text-xs text-slate-400 mt-1 uppercase tracking-widest">Punti Assegnati</span>
                         </div>
@@ -505,40 +522,40 @@
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
                     <button id="btn-reset-all-matches" onclick="resetAllScoresToZero()" class="px-3 py-2 bg-rose-950/60 hover:bg-rose-900 text-rose-200 rounded-xl text-xs font-bold border border-rose-800 flex items-center gap-1.5 transition-colors shadow">
-                        <i class="fa-solid fa-trash-can text-rose-400"></i> Resetta Tutti i Punteggi (0 Partite)
+                        <i class="fa-solid fa-trash-can text-rose-400"></i> Resetta Tutti i Punteggi
                     </button>
                     <button id="btn-reset-bm-top" onclick="resetAllBonusMalusOnly()" class="px-3 py-2 bg-amber-950/50 hover:bg-amber-900/60 text-amber-300 rounded-xl text-xs font-semibold border border-amber-800/50 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-eraser text-amber-400"></i> Resetta Solo Bonus/Malus
                     </button>
-                    <button onclick="exportJSONData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
+                    <button onclick="exportJSONData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-download text-blue-400"></i> Backup JSON
                     </button>
-                    <button onclick="exportToCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
+                    <button onclick="exportToCSV()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-file-csv text-emerald-400"></i> Esporta CSV
                     </button>
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg">
                 <div class="p-4 border-b border-slate-800 flex flex-wrap gap-4 justify-between items-center">
                     <div class="relative w-full sm:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
-                        <input type="text" id="log-search" oninput="renderLogTable()" placeholder="Cerca squadra..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <input type="text" id="log-search" oninput="renderLogTable()" placeholder="Cerca squadra..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors">
                     </div>
-                    <select id="log-filter-team" onchange="renderLogTable()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    <select id="log-filter-team" onchange="renderLogTable()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors">
                         <option value="ALL">Tutte le Squadre</option>
                     </select>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto pb-2">
                     <table class="w-full text-left text-sm text-slate-300">
                         <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
                             <tr>
                                 <th class="px-4 py-3">G.ta</th>
-                                <th class="px-4 py-3">Squadra</th>
+                                <th class="px-4 py-3 min-w-[150px]">Squadra</th>
                                 <th class="px-4 py-3">Esito</th>
-                                <th class="px-4 py-3 text-center">GF / GS</th>
-                                <th class="px-4 py-3 text-center">Dettagli Bonus/Malus</th>
+                                <th class="px-4 py-3 text-center min-w-[80px]">GF / GS</th>
+                                <th class="px-4 py-3 text-center min-w-[150px]">Dettagli Bonus/Malus</th>
                                 <th class="px-4 py-3 text-center">Totale</th>
                                 <th class="px-4 py-3 text-right">Azione</th>
                             </tr>
@@ -552,35 +569,28 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v12';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v12';
-        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v12';
-        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v12';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v13';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v13';
+        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v13';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v13';
+        const STORAGE_KEY_TAB = 'jopallo_active_tab_v13';
 
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
 
-        const TOTAL_BUDGET = 100; // Budget totale 100 crediti
+        const TOTAL_BUDGET = 100;
 
         let currentRole = null;
-        
-        // Selezione delle 3 squadre per fascia
-        let selectedTier1 = null; // Costo: 55 cr
-        let selectedTier2 = null; // Costo: 30 cr
-        let selectedTier3 = null; // Costo: 15 cr
+        let selectedTier1 = null; 
+        let selectedTier2 = null; 
+        let selectedTier3 = null; 
 
-        // Configurazione delle 8 squadre suddivise per FASCIA e PREZZO
         const defaultTeams = [
-            // FASCIA 1 (55 Crediti)
             { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
             { id: 'team_a4', group: 'A', tier: 1, cost: 55, name: '84 TEAM', logo: null },
-
-            // FASCIA 2 (30 Crediti)
             { id: 'team_a3', group: 'A', tier: 2, cost: 30, name: 'I SENATORI', logo: null },
             { id: 'team_a2', group: 'A', tier: 2, cost: 30, name: 'MALEDETTI ANZIANI', logo: null },
             { id: 'team_b1', group: 'B', tier: 2, cost: 30, name: 'ATLETICO VALMONTONE', logo: null },
-
-            // FASCIA 3 (15 Crediti)
             { id: 'team_b2', group: 'B', tier: 3, cost: 15, name: 'FC QUADRELLE', logo: null },
             { id: 'team_b3', group: 'B', tier: 3, cost: 15, name: 'AVANTI TUTTA', logo: null },
             { id: 'team_a1', group: 'A', tier: 3, cost: 15, name: 'RIELLO TEAM', logo: null }
@@ -606,15 +616,39 @@
             renderStandings();
             renderFantaStandings();
             renderLogTable();
+            
+            // Restore last active tab
+            const lastTab = sessionStorage.getItem(STORAGE_KEY_TAB) || 'fanta';
+            switchTab(lastTab);
         });
+
+        // --- SISTEMA DI NOTIFICHE TOAST ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : 'bg-blue-600');
+            const icon = type === 'success' ? 'fa-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-info-circle');
+            
+            toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform transition-all duration-300 translate-y-10 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="text-sm font-medium">${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.classList.remove('translate-y-10', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
 
         function checkAuth() {
             const savedRole = sessionStorage.getItem(STORAGE_KEY_AUTH);
             if (savedRole === 'admin' || savedRole === 'guest') {
                 setRole(savedRole);
-                document.getElementById('login-modal').classList.add('hidden');
+                document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
             } else {
-                document.getElementById('login-modal').classList.remove('hidden');
+                document.getElementById('login-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
             }
         }
 
@@ -625,8 +659,10 @@
 
             if (u === ADMIN_USER && p === ADMIN_PASS) {
                 setRole('admin');
-                document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('login-error').classList.add('hidden');
+                document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
+                showToast('Accesso Amministratore effettuato con successo!');
             } else {
                 document.getElementById('login-error').classList.remove('hidden');
             }
@@ -634,7 +670,9 @@
 
         function loginAsGuest() {
             setRole('guest');
-            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
+            showToast('Accesso Visitatore. Benvenuto nel Fanta-Mercato!', 'info');
         }
 
         function setRole(role) {
@@ -648,14 +686,14 @@
             const resetBtnAll = document.getElementById('btn-reset-all-matches');
 
             if (role === 'admin') {
-                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700";
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700 transition-colors";
                 badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Amministratore';
                 if (submitMatchBtn) submitMatchBtn.disabled = false;
                 if (resetBtnBM) resetBtnBM.classList.remove('hidden');
                 if (resetBtnAll) resetBtnAll.classList.remove('hidden');
                 warnForm.classList.add('hidden');
             } else {
-                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
+                badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 transition-colors";
                 badge.innerHTML = '<i class="fa-solid fa-cart-shopping text-emerald-400 mr-1"></i> Fanta-Giocatore';
                 if (submitMatchBtn) submitMatchBtn.disabled = true;
                 if (resetBtnBM) resetBtnBM.classList.add('hidden');
@@ -669,9 +707,11 @@
 
         function logout() {
             sessionStorage.removeItem(STORAGE_KEY_AUTH);
-            document.getElementById('login-modal').classList.remove('hidden');
+            sessionStorage.removeItem(STORAGE_KEY_TAB);
+            document.getElementById('login-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
             document.getElementById('login-form').reset();
             document.getElementById('login-error').classList.add('hidden');
+            showToast('Disconnessione effettuata', 'info');
         }
 
         function loadFromStorage() {
@@ -714,7 +754,6 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        // POPOLA I 3 MENU A TENDINA PER FASCIA
         function populateTierDropdowns() {
             const s1 = document.getElementById('select-tier-1');
             const s2 = document.getElementById('select-tier-2');
@@ -722,13 +761,13 @@
             if (!s1 || !s2 || !s3) return;
 
             s1.innerHTML = '<option value="" disabled selected>Scegli da Fascia 1 (55 cr)...</option>' + 
-                teamsList.filter(t => t.tier === 1).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group}) - 55 cr</option>`).join('');
+                teamsList.filter(t => t.tier === 1).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
 
             s2.innerHTML = '<option value="" disabled selected>Scegli da Fascia 2 (30 cr)...</option>' + 
-                teamsList.filter(t => t.tier === 2).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group}) - 30 cr</option>`).join('');
+                teamsList.filter(t => t.tier === 2).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
 
             s3.innerHTML = '<option value="" disabled selected>Scegli da Fascia 3 (15 cr)...</option>' + 
-                teamsList.filter(t => t.tier === 3).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group}) - 15 cr</option>`).join('');
+                teamsList.filter(t => t.tier === 3).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
         }
 
         function syncFromDropdowns() {
@@ -750,7 +789,6 @@
             if (s3) s3.value = selectedTier3 || '';
         }
 
-        // RENDER DELLE SCHEDE INTERATTIVE DIVISE PER FASCIA
         function renderTierSelectionCards() {
             const grid1 = document.getElementById('grid-tier-1');
             const grid2 = document.getElementById('grid-tier-2');
@@ -815,12 +853,12 @@
             const username = document.getElementById('fanta-username').value.trim();
 
             if (!username) {
-                alert("Inserisci il tuo nome e cognome!");
+                showToast("Inserisci il tuo nome e cognome!", 'error');
                 return;
             }
 
             if (!selectedTier1 || !selectedTier2 || !selectedTier3) {
-                alert("Devi obbligatoriamente selezionare 1 squadra da Fascia 1 (55 cr), 1 da Fascia 2 (30 cr) e 1 da Fascia 3 (15 cr)!");
+                showToast("Devi obbligatoriamente selezionare 1 squadra per ogni fascia!", 'error');
                 return;
             }
 
@@ -852,7 +890,7 @@
             renderTierSelectionCards();
             renderFantaStandings();
 
-            alert(`Acquisto confermato per ${username}! Le tue 3 squadre sono state registrate con successo.`);
+            showToast(`Formazione salvata con successo per ${username}!`);
             switchTab('fanta-standings');
         }
 
@@ -892,13 +930,12 @@
 
             standings.sort((a, b) => b.totalScore - a.totalScore);
 
-            // Tabella Generale
             tbody.innerHTML = standings.map((item, idx) => {
                 const teamsBadges = item.teams.map(t => {
                     const teamObj = teamsList.find(tm => tm.id === t.id);
                     let tierColor = t.tier === 1 ? 'border-amber-500/40 text-amber-300' : (t.tier === 2 ? 'border-blue-500/40 text-blue-300' : 'border-emerald-500/40 text-emerald-300');
                     return `
-                        <span class="inline-flex items-center gap-1.5 bg-slate-900 border ${tierColor} px-2.5 py-1 rounded-lg text-xs font-semibold text-white">
+                        <span class="inline-flex items-center gap-1.5 bg-slate-900 border ${tierColor} px-2.5 py-1 rounded-lg text-xs font-semibold text-white whitespace-nowrap">
                             ${getTeamLogoHTML(teamObj, "w-4 h-4")}
                             <span>${t.name}</span>
                             <span class="text-amber-400 font-bold ml-1">(${t.pts} pt)</span>
@@ -909,7 +946,7 @@
                 return `
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="px-6 py-4 font-bold text-slate-400">
-                            <span class="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs ${idx === 0 ? 'bg-amber-500 text-slate-950 font-black' : (idx === 1 ? 'bg-slate-300 text-slate-950 font-bold' : (idx === 2 ? 'bg-amber-700 text-white font-bold' : 'bg-slate-800 text-slate-400'))}">
+                            <span class="w-6 h-6 rounded-full inline-flex items-center justify-center text-xs ${idx === 0 ? 'bg-amber-500 text-slate-950 font-black shadow-lg shadow-amber-500/40' : (idx === 1 ? 'bg-slate-300 text-slate-950 font-bold shadow-lg' : (idx === 2 ? 'bg-amber-700 text-white font-bold shadow-lg' : 'bg-slate-800 text-slate-400'))}">
                                 ${idx + 1}
                             </span>
                         </td>
@@ -922,13 +959,12 @@
                         <td class="px-6 py-4 text-center font-bold text-slate-400">${item.totalSpent} / 100 cr</td>
                         <td class="px-6 py-4 text-right font-black text-lg text-emerald-400">${item.totalScore} pt</td>
                         <td class="px-6 py-4 text-right">
-                            ${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}
+                            ${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400 transition-colors"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}
                         </td>
                     </tr>
                 `;
             }).join('');
 
-            // Schede Individuali
             individualContainer.innerHTML = standings.map((item, idx) => {
                 const teamRows = item.teams.map(t => {
                     const teamObj = teamsList.find(tm => tm.id === t.id);
@@ -947,7 +983,7 @@
                 }).join('');
 
                 return `
-                    <div class="glass-card rounded-2xl p-5 border border-slate-700/60 space-y-4 relative overflow-hidden">
+                    <div class="glass-card rounded-2xl p-5 border border-slate-700/60 space-y-4 relative overflow-hidden transition-all hover:border-emerald-500/30">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                             <div>
                                 <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">#${idx + 1} Classifica</span>
@@ -955,10 +991,8 @@
                             </div>
                             <div class="text-right">
                                 <span class="text-xl font-black text-emerald-400 block">${item.totalScore} <span class="text-xs font-normal text-slate-400">pt</span></span>
-                                <span class="text-[10px] text-slate-400">Spesi: ${item.totalSpent} cr</span>
                             </div>
                         </div>
-
                         <div class="space-y-2">
                             <span class="text-[10px] text-slate-400 font-semibold uppercase block">Punteggio 3 Squadre Scelte</span>
                             ${teamRows}
@@ -974,16 +1008,17 @@
                 fantaUsersList = fantaUsersList.filter(u => u.id !== id);
                 saveToStorage();
                 renderFantaStandings();
+                showToast("Fanta-Giocatore eliminato", "info");
             }
         }
 
         function resetAllScoresToZero() {
             if (currentRole !== 'admin') {
-                alert("Azione bloccata: solo l'amministratore può resettare i punteggi!");
+                showToast("Azione bloccata: riservata all'Amministratore!", "error");
                 return;
             }
 
-            if (!confirm("ATTENZIONE: Vuoi eliminare TUTTI i punteggi e le partite registrate? Il tabellone e le classifiche torneranno a 0 punti.")) {
+            if (!confirm("ATTENZIONE: Vuoi eliminare TUTTI i punteggi e le partite registrate? Il tabellone e le classifiche torneranno a 0 punti. (Squadre e visitatori rimarranno invariati)")) {
                 return;
             }
 
@@ -993,12 +1028,12 @@
             renderFantaStandings();
             renderLogTable();
 
-            alert("Tutti i punteggi sono stati azzerati con successo!");
+            showToast("Tutti i punteggi sono stati azzerati con successo!");
         }
 
         function resetAllBonusMalusOnly() {
             if (currentRole !== 'admin') {
-                alert("Azione bloccata: solo l'amministratore può eseguire il reset dei bonus/malus!");
+                showToast("Azione bloccata: riservata all'Amministratore!", "error");
                 return;
             }
 
@@ -1020,7 +1055,7 @@
             renderFantaStandings();
             renderLogTable();
 
-            alert("Tutti i bonus e malus sono stati azzerati!");
+            showToast("Tutti i bonus e malus sono stati azzerati!");
         }
 
         function renderStandings() {
@@ -1061,7 +1096,7 @@
             document.getElementById('standings-general-all').innerHTML = allStats.map((item, idx) => `
                 <tr class="hover:bg-slate-800/40 transition-colors">
                     <td class="px-6 py-4 font-bold text-slate-400">#${idx + 1}</td>
-                    <td class="px-6 py-4 font-semibold text-white">
+                    <td class="px-6 py-4 font-semibold text-white whitespace-nowrap">
                         <div class="flex items-center gap-2">
                             ${getTeamLogoHTML(item.squadraObj, "w-6 h-6")}
                             <span>${item.squadra}</span>
@@ -1069,8 +1104,8 @@
                     </td>
                     <td class="px-6 py-4"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${item.group === 'A' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-blue-950 text-blue-400 border border-blue-800'}">GIRONE ${item.group}</span></td>
                     <td class="px-6 py-4 text-center text-slate-300 font-medium">${item.partite}</td>
-                    <td class="px-6 py-4 text-center text-xs text-slate-400">${item.vittorie} / ${item.pareggi} / ${item.sconfitte}</td>
-                    <td class="px-6 py-4 text-center text-xs text-slate-300">${item.gf} / ${item.gs}</td>
+                    <td class="px-6 py-4 text-center text-xs text-slate-400 whitespace-nowrap">${item.vittorie} / ${item.pareggi} / ${item.sconfitte}</td>
+                    <td class="px-6 py-4 text-center text-xs text-slate-300 whitespace-nowrap">${item.gf} / ${item.gs}</td>
                     <td class="px-6 py-4 text-center font-bold text-xs ${item.bonusMalusTot >= 0 ? 'text-amber-400' : 'text-rose-400'}">
                         ${item.bonusMalusTot > 0 ? `+${item.bonusMalusTot}` : item.bonusMalusTot} pt
                     </td>
@@ -1083,14 +1118,14 @@
                 return stats.map((item, idx) => `
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="px-4 py-3 font-bold text-slate-400">#${idx + 1}</td>
-                        <td class="px-4 py-3 font-semibold text-white">
+                        <td class="px-4 py-3 font-semibold text-white whitespace-nowrap">
                             <div class="flex items-center gap-2">
                                 ${getTeamLogoHTML(item.squadraObj, "w-5 h-5")}
                                 <span>${item.squadra}</span>
                             </div>
                         </td>
                         <td class="px-4 py-3 text-center text-slate-300 text-xs">${item.partite}</td>
-                        <td class="px-4 py-3 text-center text-slate-400 text-xs">${item.gf} / ${item.gs}</td>
+                        <td class="px-4 py-3 text-center text-slate-400 text-xs whitespace-nowrap">${item.gf} / ${item.gs}</td>
                         <td class="px-4 py-3 text-right font-bold text-white text-sm">${item.puntiTotali} pt</td>
                     </tr>
                 `).join('');
@@ -1134,18 +1169,18 @@
                             <div class="flex items-center gap-2">
                                 ${getTeamLogoHTML(t, "w-8 h-8")}
                                 ${isAdmin ? `
-                                <label class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700 flex items-center gap-1" title="Carica Logo">
+                                <label class="cursor-pointer text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded border border-slate-700 flex items-center gap-1 transition-colors" title="Carica Logo">
                                     <i class="fa-solid fa-camera"></i>
                                     <input type="file" accept="image/*" class="hidden" onchange="uploadTeamLogo('${t.id}', event)">
                                 </label>
-                                ${t.logo ? `<button onclick="removeTeamLogo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                                ${t.logo ? `<button onclick="removeTeamLogo('${t.id}')" class="text-slate-500 hover:text-rose-400 text-xs transition-colors"><i class="fa-solid fa-trash-can"></i></button>` : ''}
                                 ` : ''}
                             </div>
                         </div>
 
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase">Nome Squadra</label>
-                            <input type="text" value="${t.name}" ${isAdmin ? `onchange="updateTeamInfo('${t.id}', 'name', this.value)"` : 'disabled'} class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500 disabled:opacity-60">
+                            <input type="text" value="${t.name}" ${isAdmin ? `onchange="updateTeamInfo('${t.id}', 'name', this.value)"` : 'disabled'} class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-bold text-white focus:outline-none focus:border-emerald-500 disabled:opacity-60 transition-colors">
                         </div>
                     </div>
                 </div>
@@ -1168,6 +1203,7 @@
                     renderStandings();
                     renderFantaStandings();
                     renderLogTable();
+                    showToast("Logo aggiornato con successo!");
                 }
             };
             reader.readAsDataURL(file);
@@ -1184,6 +1220,7 @@
                 renderStandings();
                 renderFantaStandings();
                 renderLogTable();
+                showToast("Logo rimosso.", "info");
             }
         }
 
@@ -1198,7 +1235,15 @@
                 renderTierSelectionCards();
                 renderStandings();
                 renderFantaStandings();
+                showToast("Nome squadra aggiornato!");
             }
+        }
+
+        function adjustCount(id, delta) {
+            const input = document.getElementById(id);
+            let val = parseInt(input.value) || 0;
+            input.value = Math.max(0, val + delta);
+            calculateLive();
         }
 
         function calculateLive() {
@@ -1225,7 +1270,7 @@
         function handleFormSubmit(e) {
             e.preventDefault();
             if (currentRole !== 'admin') {
-                alert("Azione bloccata: solo l'amministratore può salvare o modificare le partite!");
+                showToast("Solo l'amministratore può salvare o modificare le partite!", "error");
                 return;
             }
             
@@ -1233,7 +1278,10 @@
             const giornata = parseInt(document.getElementById('input-giornata').value) || 1;
             const team = teamsList.find(t => t.id === teamId);
 
-            if (!team) return alert("Seleziona una squadra!");
+            if (!team) {
+                showToast("Seleziona una squadra!", "error");
+                return;
+            }
 
             const calc = calculateLive();
 
@@ -1262,7 +1310,7 @@
             renderFantaStandings();
             renderLogTable();
 
-            alert(`Punteggio salvato per ${team.name}! (Totale: ${record.totalePunti} pt)`);
+            showToast(`Punteggio salvato per ${team.name}! (+${record.totalePunti} pt)`);
         }
 
         function resetForm() {
@@ -1299,27 +1347,27 @@
                 return `
                 <tr class="hover:bg-slate-800/40 transition-colors text-xs">
                     <td class="px-4 py-3 text-slate-400 font-semibold">G${item.giornata}</td>
-                    <td class="px-4 py-3 font-medium text-white">
+                    <td class="px-4 py-3 font-medium text-white whitespace-nowrap">
                         <div class="flex items-center gap-1.5">
                             ${getTeamLogoHTML(teamObj, "w-4 h-4")}
                             <span>${item.squadraNome}</span> 
                         </div>
                     </td>
                     <td class="px-4 py-3">${esitoBadge}</td>
-                    <td class="px-4 py-3 text-center text-slate-200 font-semibold">${item.golFatti} - ${item.golSubiti}</td>
-                    <td class="px-4 py-3 text-center space-x-1">
-                        ${item.ammonizioni > 0 ? `<span class="bg-yellow-950 text-yellow-400 px-1 py-0.5 rounded text-[10px]">-${item.ammonizioni * 0.5} Amm</span>` : ''}
-                        ${item.espulsioni > 0 ? `<span class="bg-rose-950 text-rose-400 px-1 py-0.5 rounded text-[10px]">-${item.espulsioni} Esp</span>` : ''}
-                        ${item.rigoriParati > 0 ? `<span class="bg-emerald-950 text-emerald-400 px-1 py-0.5 rounded text-[10px]">+${item.rigoriParati * 2} Rig.P</span>` : ''}
-                        ${item.rigoriSbagliati > 0 ? `<span class="bg-rose-950 text-rose-400 px-1 py-0.5 rounded text-[10px]">-${item.rigoriSbagliati} Rig.S</span>` : ''}
-                        ${item.schieramento ? `<span class="bg-blue-950 text-blue-400 px-1 py-0.5 rounded text-[10px]">+3 Rosa</span>` : ''}
+                    <td class="px-4 py-3 text-center text-slate-200 font-semibold whitespace-nowrap">${item.golFatti} - ${item.golSubiti}</td>
+                    <td class="px-4 py-3 text-center space-x-1 whitespace-nowrap">
+                        ${item.ammonizioni > 0 ? `<span class="bg-yellow-950 text-yellow-400 px-1 py-0.5 rounded text-[10px] inline-block mb-1">-${item.ammonizioni * 0.5} Amm</span>` : ''}
+                        ${item.espulsioni > 0 ? `<span class="bg-rose-950 text-rose-400 px-1 py-0.5 rounded text-[10px] inline-block mb-1">-${item.espulsioni} Esp</span>` : ''}
+                        ${item.rigoriParati > 0 ? `<span class="bg-emerald-950 text-emerald-400 px-1 py-0.5 rounded text-[10px] inline-block mb-1">+${item.rigoriParati * 2} Rig.P</span>` : ''}
+                        ${item.rigoriSbagliati > 0 ? `<span class="bg-rose-950 text-rose-400 px-1 py-0.5 rounded text-[10px] inline-block mb-1">-${item.rigoriSbagliati} Rig.S</span>` : ''}
+                        ${item.schieramento ? `<span class="bg-blue-950 text-blue-400 px-1 py-0.5 rounded text-[10px] inline-block mb-1">+3 Rosa</span>` : ''}
                         ${item.ammonizioni === 0 && item.espulsioni === 0 && item.rigoriParati === 0 && item.rigoriSbagliati === 0 && !item.schieramento ? `<span class="text-slate-500 italic text-[11px]">Nessun bonus/malus</span>` : ''}
                     </td>
                     <td class="px-4 py-3 text-center font-bold ${item.totalePunti >= 0 ? 'text-emerald-400' : 'text-rose-500'}">
                         ${item.totalePunti >= 0 ? `+${item.totalePunti}` : item.totalePunti} pt
                     </td>
                     <td class="px-4 py-3 text-right">
-                        ${isAdmin ? `<button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}
+                        ${isAdmin ? `<button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 transition-colors"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}
                     </td>
                 </tr>
             `}).join('');
@@ -1327,16 +1375,16 @@
 
         function deleteRecord(id) {
             if (currentRole !== 'admin') return;
-            if (confirm("Eliminare questa partita?")) {
+            if (confirm("Eliminare questa partita dal registro?")) {
                 matchesList = matchesList.filter(item => item.id !== id);
                 saveToStorage();
                 renderStandings();
                 renderFantaStandings();
                 renderLogTable();
+                showToast("Partita eliminata.", "info");
             }
         }
 
-        /* --- CONDIVISIONE SOCIAL, WHATSAPP & EMAIL --- */
         function generateShareText(type = 'fanta') {
             let text = `🏆 *FANTA-JO PALLO' DE NA 'OTA* 🏆\n\n`;
 
@@ -1354,7 +1402,7 @@
                     text += `${medal} ${u.username}: *${u.totalScore} pt*\n`;
                 });
             } else {
-                text += `⚽ *Classifica Tabellone Squadre Reali:*\n`;
+                text += `⚽ *Classifica Squadre Reali:*\n`;
                 const stats = teamsList.map(t => {
                     const teamMatches = matchesList.filter(m => m.squadraId === t.id);
                     const pts = teamMatches.reduce((sum, m) => sum + m.totalePunti, 0);
@@ -1390,9 +1438,9 @@
         function copyResultsToClipboard(type) {
             const text = generateShareText(type);
             navigator.clipboard.writeText(text).then(() => {
-                alert("Classifica copiata negli appunti! Puoi incollarla su qualsiasi social.");
+                showToast("Classifica copiata negli appunti! Puoi incollarla ovunque.");
             }).catch(() => {
-                alert("Errore durante la copia.");
+                showToast("Errore durante la copia.", "error");
             });
         }
 
@@ -1407,7 +1455,10 @@
         }
 
         function exportToCSV() {
-            if (matchesList.length === 0) return alert("Nessun dato da esportare!");
+            if (matchesList.length === 0) {
+                showToast("Nessun dato da esportare!", "error");
+                return;
+            }
             let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,Ammonizioni,Espulsioni,RigoriParati,RigoriSbagliati,Rosa100,TotalePunti\n";
             matchesList.forEach(r => {
                 csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.ammonizioni},${r.espulsioni},${r.rigoriParati},${r.rigoriSbagliati},${r.schieramento ? 1 : 0},${r.totalePunti}\n`;
@@ -1426,13 +1477,15 @@
                 const sec = document.getElementById(`section-${t}`);
                 const btn = document.getElementById(`tab-${t}`);
                 if (sec) sec.classList.add('hidden');
-                if (btn) btn.className = 'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white';
+                if (btn) btn.className = 'whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors';
             });
 
             const currentSec = document.getElementById(`section-${tab}`);
             const currentBtn = document.getElementById(`tab-${tab}`);
             if (currentSec) currentSec.classList.remove('hidden');
-            if (currentBtn) currentBtn.className = 'flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow';
+            if (currentBtn) currentBtn.className = 'whitespace-nowrap flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500 text-white shadow';
+
+            sessionStorage.setItem(STORAGE_KEY_TAB, tab);
         }
     </script>
 </body>
