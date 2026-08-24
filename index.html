@@ -145,7 +145,7 @@
                     <input type="text" id="fanta-username" required placeholder="Es. Mario Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                 </div>
 
-                <!-- METODO 1: SELEZIONE RAPIDA TRAMITE MENU A TENDINA -->
+                <!-- SELEZIONE GUIDATA DROP-DOWN -->
                 <div class="glass-card rounded-2xl p-6 border border-slate-700/60 space-y-4">
                     <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
                         <i class="fa-solid fa-list-check"></i> Selezione Guidata delle 3 Squadre
@@ -172,7 +172,7 @@
                     </div>
                 </div>
 
-                <!-- METODO 2: SELEZIONE VISIVA A SCHEDE -->
+                <!-- SELEZIONE VISIVA A SCHEDE -->
                 <div class="space-y-4">
                     <div>
                         <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
@@ -199,11 +199,31 @@
 
         <!-- TAB 2: CLASSIFICA GENERALE & SCHEDE INDIVIDUALI VISITATORI -->
         <section id="section-fanta-standings" class="hidden space-y-10">
-            <div>
-                <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
-                    <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifiche Fanta-Visitatori
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">Classifica generale e dettaglio del punteggio accumulato da ciascun visitatore con le sue 3 squadre</p>
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
+                        <i class="fa-solid fa-ranking-star text-amber-400"></i> Classifiche Fanta-Visitatori
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Classifica generale e dettaglio del punteggio accumulato da ciascun visitatore</p>
+                </div>
+                <!-- BOX CONDIVISIONE SOCIAL/WHATSAPP/EMAIL -->
+                <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl">
+                    <span class="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1.5 pl-2">
+                        <i class="fa-solid fa-share-nodes text-emerald-400"></i> Condividi:
+                    </span>
+                    <button onclick="shareOnWhatsApp('fanta')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                    </button>
+                    <button onclick="shareOnTelegram('fanta')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                        <i class="fa-brands fa-telegram text-sm"></i> Telegram
+                    </button>
+                    <button onclick="shareViaEmail('fanta')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-envelope text-xs"></i> Email
+                    </button>
+                    <button onclick="copyResultsToClipboard('fanta')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors" title="Copia Testo">
+                        <i class="fa-solid fa-copy text-xs"></i> Copia
+                    </button>
+                </div>
             </div>
 
             <!-- Tabella Generale -->
@@ -241,11 +261,28 @@
 
         <!-- TAB 3: TABELLONE REALE SQUADRE -->
         <section id="section-standings" class="hidden space-y-10">
-            <div>
-                <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
-                    <i class="fa-solid fa-trophy text-amber-400"></i> Tabellone Punti Squadre Reali
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">Punteggi ottenuti sul campo dalle 8 squadre</p>
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-3 uppercase">
+                        <i class="fa-solid fa-trophy text-amber-400"></i> Tabellone Punti Squadre Reali
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Punteggi ottenuti sul campo dalle 8 squadre</p>
+                </div>
+                <!-- CONDIVISIONE TABELLONE SQUADRE -->
+                <div class="flex items-center gap-2 flex-wrap bg-slate-900/90 border border-slate-800 p-2 rounded-2xl">
+                    <span class="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1.5 pl-2">
+                        <i class="fa-solid fa-share-nodes text-emerald-400"></i> Condividi:
+                    </span>
+                    <button onclick="shareOnWhatsApp('teams')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                    </button>
+                    <button onclick="shareOnTelegram('teams')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow">
+                        <i class="fa-brands fa-telegram text-sm"></i> Telegram
+                    </button>
+                    <button onclick="shareViaEmail('teams')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-envelope text-xs"></i> Email
+                    </button>
+                </div>
             </div>
 
             <div class="space-y-3">
@@ -451,6 +488,10 @@
                     </h2>
                 </div>
                 <div class="flex items-center gap-2 flex-wrap">
+                    <!-- RESET COMPLETO DI TUTTI I PUNTEGGI -->
+                    <button id="btn-reset-all-matches" onclick="resetAllScoresToZero()" class="px-3 py-2 bg-rose-950/60 hover:bg-rose-900 text-rose-200 rounded-xl text-xs font-bold border border-rose-800 flex items-center gap-1.5 transition-colors shadow">
+                        <i class="fa-solid fa-trash-can text-rose-400"></i> Resetta Tutti i Punteggi (0 Partite)
+                    </button>
                     <button id="btn-reset-bm-top" onclick="resetAllBonusMalusOnly()" class="px-3 py-2 bg-amber-950/50 hover:bg-amber-900/60 text-amber-300 rounded-xl text-xs font-semibold border border-amber-800/50 flex items-center gap-1.5 transition-colors">
                         <i class="fa-solid fa-eraser text-amber-400"></i> Resetta Solo Bonus/Malus
                     </button>
@@ -496,10 +537,10 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v9';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v9';
-        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v9';
-        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v9';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v10';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v10';
+        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v10';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v10';
 
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
@@ -528,78 +569,8 @@
             return ptsEsito + (gf * 1) - (gs * 1) - (amm * 0.5) - (esp * 1) + (rp * 2) - (rs * 1) + (sch ? 3 : 0);
         }
 
-        const rawMatches = [
-            // GIRONE A
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 1, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 2, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 5, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 1, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 5, esito: 'vittoria', gf: 6, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 1, esito: 'vittoria', gf: 3, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 3, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 4, esito: 'vittoria', gf: 5, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 1, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 2, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 3, esito: 'sconfitta', gf: 1, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 4, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 5, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 1, esito: 'sconfitta', gf: 1, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 3, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 6, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            // GIRONE B
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 1, esito: 'vittoria', gf: 5, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 4, esito: 'vittoria', gf: 6, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 5, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 1, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 2, esito: 'sconfitta', gf: 1, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 3, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 5, esito: 'vittoria', gf: 5, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 3, esito: 'sconfitta', gf: 1, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 4, esito: 'sconfitta', gf: 2, gs: 6, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 5, esito: 'sconfitta', gf: 3, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false }
-        ];
-
-        const defaultMatches = rawMatches.map((m, idx) => ({
-            id: Date.now() - (idx * 1000),
-            squadraId: m.squadraId,
-            squadraNome: m.squadraNome,
-            group: m.group,
-            giornata: m.giornata,
-            esito: m.esito,
-            ptsEsito: m.esito === 'vittoria' ? 3 : (m.esito === 'pareggio' ? 1 : 0),
-            golFatti: m.gf,
-            golSubiti: m.gs,
-            ammonizioni: 0,
-            espulsioni: 0,
-            rigoriParati: 0,
-            rigoriSbagliati: 0,
-            schieramento: false,
-            totalePunti: calcPoints(m.esito, m.gf, m.gs, 0, 0, 0, 0, false)
-        }));
-
         let teamsList = defaultTeams;
-        let matchesList = defaultMatches;
+        let matchesList = [];
         let fantaUsersList = [];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -651,19 +622,22 @@
             const badge = document.getElementById('badge-role');
             const submitMatchBtn = document.getElementById('btn-submit-match');
             const warnForm = document.getElementById('admin-lock-warning-form');
-            const resetBtn = document.getElementById('btn-reset-bm-top');
+            const resetBtnBM = document.getElementById('btn-reset-bm-top');
+            const resetBtnAll = document.getElementById('btn-reset-all-matches');
 
             if (role === 'admin') {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700";
                 badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Amministratore';
                 if (submitMatchBtn) submitMatchBtn.disabled = false;
-                if (resetBtn) resetBtn.classList.remove('hidden');
+                if (resetBtnBM) resetBtnBM.classList.remove('hidden');
+                if (resetBtnAll) resetBtnAll.classList.remove('hidden');
                 warnForm.classList.add('hidden');
             } else {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
                 badge.innerHTML = '<i class="fa-solid fa-cart-shopping text-emerald-400 mr-1"></i> Fanta-Visitatore';
                 if (submitMatchBtn) submitMatchBtn.disabled = true;
-                if (resetBtn) resetBtn.classList.add('hidden');
+                if (resetBtnBM) resetBtnBM.classList.add('hidden');
+                if (resetBtnAll) resetBtnAll.classList.add('hidden');
                 warnForm.classList.remove('hidden');
             }
 
@@ -693,7 +667,7 @@
             if (storedMatches) {
                 try {
                     const parsed = JSON.parse(storedMatches);
-                    if (Array.isArray(parsed) && parsed.length > 0) matchesList = parsed;
+                    if (Array.isArray(parsed)) matchesList = parsed;
                 } catch(e) {}
             }
 
@@ -718,7 +692,6 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        // POPOLA I 3 MENU A TENDINA PER LA SELEZIONE
         function populateFantaDropdowns() {
             const s1 = document.getElementById('select-team-1');
             const s2 = document.getElementById('select-team-2');
@@ -764,7 +737,6 @@
             if (s3) s3.value = selectedTeams[2] || '';
         }
 
-        // RENDER DELLE 8 SQUADRE DIVISE NEI GIRONI A E B
         function renderTeamSelectionCards() {
             const containerA = document.getElementById('grid-girone-a');
             const containerB = document.getElementById('grid-girone-b');
@@ -898,7 +870,7 @@
 
             standings.sort((a, b) => b.totalScore - a.totalScore);
 
-            // 1. Tabella Generale
+            // Tabella Generale
             tbody.innerHTML = standings.map((item, idx) => {
                 const teamsBadges = item.teams.map(t => {
                     const teamObj = teamsList.find(tm => tm.id === t.id);
@@ -932,7 +904,7 @@
                 `;
             }).join('');
 
-            // 2. Schede Individuali per ciascun visitatore
+            // Schede Individuali
             individualContainer.innerHTML = standings.map((item, idx) => {
                 const teamRows = item.teams.map(t => {
                     const teamObj = teamsList.find(tm => tm.id === t.id);
@@ -978,13 +950,34 @@
             }
         }
 
+        // RESET COMPLETO DI TUTTI I PUNTEGGI (0 PARTITE SALVATE)
+        function resetAllScoresToZero() {
+            if (currentRole !== 'admin') {
+                alert("Azione bloccata: solo l'amministratore può resettare i punteggi!");
+                return;
+            }
+
+            if (!confirm("ATTENZIONE: Vuoi eliminare TUTTI i punteggi e le partite registrate? Il tabellone e le classifiche torneranno a 0 punti.")) {
+                return;
+            }
+
+            matchesList = [];
+            saveToStorage();
+            renderStandings();
+            renderFantaStandings();
+            renderLogTable();
+
+            alert("Tutti i punteggi sono stati azzerati con successo!");
+        }
+
+        // RESETTA SOLO BONUS/MALUS
         function resetAllBonusMalusOnly() {
             if (currentRole !== 'admin') {
                 alert("Azione bloccata: solo l'amministratore può eseguire il reset dei bonus/malus!");
                 return;
             }
 
-            if (!confirm("Vuoi azzerare tutti i bonus e malus (ammonizioni, espulsioni, rigori, schieramento) mantenendo invariati i risultati (vittorie, pareggi, sconfitte) e i gol segnati/subiti?")) {
+            if (!confirm("Vuoi azzerare tutti i bonus e malus mantenendo i gol e gli esiti delle partite registrate?")) {
                 return;
             }
 
@@ -1002,7 +995,7 @@
             renderFantaStandings();
             renderLogTable();
 
-            alert("Tutti i bonus e malus sono stati azzerati con successo!");
+            alert("Tutti i bonus e malus sono stati azzerati!");
         }
 
         function renderStandings() {
@@ -1249,6 +1242,13 @@
         function resetForm() {
             document.getElementById('partita-form').reset();
             document.querySelector('input[name="esito"][value="vittoria"]').checked = true;
+            document.getElementById('num-gol-fatti').value = 0;
+            document.getElementById('num-gol-subiti').value = 0;
+            document.getElementById('num-ammonizioni').value = 0;
+            document.getElementById('num-espulsioni').value = 0;
+            document.getElementById('num-rigori-parati').value = 0;
+            document.getElementById('num-rigori-sbagliati').value = 0;
+            document.getElementById('check-schieramento').checked = false;
             calculateLive();
         }
 
@@ -1310,6 +1310,66 @@
             }
         }
 
+        /* --- CONDIVISIONE SOCIAL, WHATSAPP & EMAIL --- */
+        function generateShareText(type = 'fanta') {
+            let text = `🏆 *JO PALLO' DE NA 'OTA* 🏆\n\n`;
+
+            if (type === 'fanta') {
+                text += `📊 *Classifica Fanta-Visitatori:*\n`;
+                const standings = fantaUsersList.map(user => {
+                    let totalScore = user.teams.reduce((sum, t) => sum + getTeamTotalPoints(t.id), 0);
+                    return { username: user.username, totalScore };
+                }).sort((a, b) => b.totalScore - a.totalScore);
+
+                if (standings.length === 0) return text + "Nessun visitatore registrato.";
+
+                standings.forEach((u, i) => {
+                    let medal = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `${i + 1}.`));
+                    text += `${medal} ${u.username}: *${u.totalScore} pt*\n`;
+                });
+            } else {
+                text += `⚽ *Classifica Tabellone Squadre Reali:*\n`;
+                const stats = teamsList.map(t => {
+                    const teamMatches = matchesList.filter(m => m.squadraId === t.id);
+                    const pts = teamMatches.reduce((sum, m) => sum + m.totalePunti, 0);
+                    return { name: t.name, group: t.group, pts };
+                }).sort((a, b) => b.pts - a.pts);
+
+                stats.forEach((s, i) => {
+                    let medal = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : `${i + 1}.`));
+                    text += `${medal} ${s.name} (Gir. ${s.group}): *${s.pts} pt*\n`;
+                });
+            }
+
+            text += `\nConsulta tutti i dettagli sul portale ufficiale!`;
+            return text;
+        }
+
+        function shareOnWhatsApp(type) {
+            const text = encodeURIComponent(generateShareText(type));
+            window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        }
+
+        function shareOnTelegram(type) {
+            const text = encodeURIComponent(generateShareText(type));
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank');
+        }
+
+        function shareViaEmail(type) {
+            const subject = encodeURIComponent("Classifica Ufficiale - JO PALLO' DE NA 'OTA");
+            const body = encodeURIComponent(generateShareText(type));
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+
+        function copyResultsToClipboard(type) {
+            const text = generateShareText(type);
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Classifica copiata negli appunti! Puoi incollarla ovunque.");
+            }).catch(() => {
+                alert("Errore durante la copia.");
+            });
+        }
+
         function exportJSONData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ teams: teamsList, matches: matchesList, users: fantaUsersList }));
             const downloadAnchor = document.createElement('a');
@@ -1322,9 +1382,9 @@
 
         function exportToCSV() {
             if (matchesList.length === 0) return alert("Nessun dato da esportare!");
-            let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,Ammonizioni,Espulsioni,RigoriParati,RigoriSbagliati,Rosa100,TotalePunti\n";
+            let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,TotalePunti\n";
             matchesList.forEach(r => {
-                csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.ammonizioni},${r.espulsioni},${r.rigoriParati},${r.rigoriSbagliati},${r.schieramento ? 1 : 0},${r.totalePunti}\n`;
+                csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.totalePunti}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
