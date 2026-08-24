@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>JO PALLO' DE NA 'OTA - Fanta Torneo</title>
     
-    <!-- PWA & Mobile Meta Tags -->
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -52,16 +51,16 @@
         .overflow-x-auto::-webkit-scrollbar { height: 6px; }
         .overflow-x-auto::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         
-        #app-loader { transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #app-loader { transition: opacity 0.3s ease, visibility 0.3s ease; }
         #app-loader.hidden-loader { opacity: 0; visibility: hidden; pointer-events: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- SCHERMATA DI CARICAMENTO RAPIDA -->
+    <!-- SCHERMATA DI CARICAMENTO (ORA SICURA AL 100%) -->
     <div id="app-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950">
         <div class="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full animate-spin mb-4 shadow-lg shadow-emerald-500/20"></div>
-        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Caricamento Fanta-Torneo...</p>
+        <p class="text-emerald-500 font-bold tracking-widest text-sm uppercase">Caricamento Fanta-Torneo...</p>
     </div>
 
     <!-- CONTENITORE NOTIFICHE TOAST -->
@@ -117,13 +116,11 @@
                 </div>
             </div>
 
-            <!-- Tasto Disconnetti Desktop -->
             <button onclick="logout()" class="hidden sm:flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-950/40 transition-colors border border-rose-900/50" title="Disconnetti">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> Esci
             </button>
         </div>
 
-        <!-- NAVIGAZIONE DESKTOP -->
         <div class="hidden sm:block border-t border-slate-800/50 bg-slate-900/50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
                 <nav class="flex items-center gap-2">
@@ -152,7 +149,7 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full pb-24 sm:pb-12">
 
-        <!-- TAB 1: ACQUISTO 3 SQUADRE -->
+        <!-- TAB 1 -->
         <section id="section-fanta" class="space-y-6 hidden animate-fade-in">
             <div class="glass-card rounded-2xl p-4 sm:p-6 border border-emerald-500/30 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
@@ -200,7 +197,7 @@
             </form>
         </section>
 
-        <!-- TAB 2: CLASSIFICA FANTA -->
+        <!-- TAB 2 -->
         <section id="section-fanta-standings" class="hidden space-y-6 animate-fade-in">
             <div class="flex justify-between items-center flex-wrap gap-4">
                 <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 uppercase">
@@ -238,7 +235,7 @@
             </div>
         </section>
 
-        <!-- TAB 3: TABELLONE REALE SQUADRE -->
+        <!-- TAB 3 -->
         <section id="section-standings" class="hidden space-y-8 animate-fade-in">
             <div class="flex justify-between items-center flex-wrap gap-4">
                 <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-3 uppercase">
@@ -319,7 +316,7 @@
             </div>
         </section>
 
-        <!-- TAB 4: INSERIMENTO PARTITA -->
+        <!-- TAB 4 -->
         <section id="section-form" class="hidden space-y-6 animate-fade-in">
             <div id="admin-lock-warning-form" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2 shadow-sm">
                 <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Area riservata all'Amministratore.
@@ -436,7 +433,7 @@
             </div>
         </section>
 
-        <!-- TAB 5: GESTIONE SQUADRE -->
+        <!-- TAB 5 -->
         <section id="section-teams" class="hidden space-y-6 animate-fade-in">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-4">
                 <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
@@ -461,7 +458,7 @@
             </div>
         </section>
 
-        <!-- TAB 6: REGISTRO PARTITE -->
+        <!-- TAB 6 -->
         <section id="section-log" class="hidden space-y-6 animate-fade-in">
             <div class="flex justify-between items-center flex-wrap gap-4">
                 <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
@@ -530,7 +527,7 @@
         </button>
     </nav>
 
-    <!-- LOGICA SCRIPT CON PROTEZIONE ANTI-BLOCCO -->
+    <!-- LOGICA SCRIPT SICURA ANTIBLOCCO -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCiXh1n-6NfdwjriDLUllBRISvo1rDd-Xk",
@@ -556,7 +553,6 @@
 
         let currentRole = null;
         let selectedTier1 = null, selectedTier2 = null, selectedTier3 = null; 
-        let isFirstLoad = true; 
 
         const defaultTeams = [
             { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
@@ -586,32 +582,21 @@
             checkAuth();
             renderAllSections();
             
-            // TIMEOUT DI SICUREZZA ANTIBLOCCO (Massimo 1.5 secondi di attesa per Firebase, poi sblocca la UI)
-            const safetyTimer = setTimeout(() => {
-                if(isFirstLoad) {
-                    hideLoader();
-                    isFirstLoad = false;
-                }
-            }, 1500);
+            // SBLOCCO IMMEDIATO: La schermata di caricamento scompare subito, i dati arrivano asincroni
+            hideLoader();
 
             dbRef.once('value').then((snapshot) => {
-                clearTimeout(safetyTimer);
                 const data = snapshot.val();
                 if (data) {
                     teamsList = mergeTeamsWithDefaults(data.teams);
                     matchesList = data.matches || [];
                     fantaUsersList = data.users || [];
+                    renderAllSections();
                 }
-                renderAllSections();
                 const onlineBadge = document.getElementById('badge-online');
                 if(onlineBadge) onlineBadge.classList.remove('hidden');
-                hideLoader();
-                isFirstLoad = false;
                 initRealtimeDB();
             }).catch(() => {
-                clearTimeout(safetyTimer);
-                hideLoader();
-                isFirstLoad = false;
                 initRealtimeDB();
             });
             
@@ -637,7 +622,7 @@
         function initRealtimeDB() {
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data && !isFirstLoad) {
+                if (data) {
                     teamsList = mergeTeamsWithDefaults(data.teams);
                     matchesList = data.matches || [];
                     fantaUsersList = data.users || [];
