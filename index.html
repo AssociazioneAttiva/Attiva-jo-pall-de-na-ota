@@ -420,10 +420,15 @@
         <!-- TAB 6: REGISTRO PARTITE -->
         <section id="section-log" class="hidden space-y-6">
             <div class="flex justify-between items-center flex-wrap gap-4">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-receipt text-blue-400"></i> Registro Partite Inserite
-                </h2>
+                <div class="flex items-center gap-3">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-receipt text-blue-400"></i> Registro Partite Inserite
+                    </h2>
+                </div>
                 <div class="flex items-center gap-2 flex-wrap">
+                    <button id="btn-reset-bm-top" onclick="resetAllBonusMalusOnly()" class="px-3 py-2 bg-amber-950/50 hover:bg-amber-900/60 text-amber-300 rounded-xl text-xs font-semibold border border-amber-800/50 flex items-center gap-1.5 transition-colors">
+                        <i class="fa-solid fa-eraser text-amber-400"></i> Resetta Solo Bonus/Malus
+                    </button>
                     <button onclick="exportJSONData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5">
                         <i class="fa-solid fa-download text-blue-400"></i> Backup JSON
                     </button>
@@ -434,6 +439,16 @@
             </div>
 
             <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50">
+                <div class="p-4 border-b border-slate-800 flex flex-wrap gap-4 justify-between items-center">
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+                        <input type="text" id="log-search" oninput="renderLogTable()" placeholder="Cerca squadra..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <select id="log-filter-team" onchange="renderLogTable()" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        <option value="ALL">Tutte le Squadre</option>
+                    </select>
+                </div>
+
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm text-slate-300">
                         <thead class="bg-slate-900/90 text-xs font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
@@ -442,6 +457,7 @@
                                 <th class="px-4 py-3">Squadra</th>
                                 <th class="px-4 py-3">Esito</th>
                                 <th class="px-4 py-3 text-center">GF / GS</th>
+                                <th class="px-4 py-3 text-center">Dettagli Bonus/Malus</th>
                                 <th class="px-4 py-3 text-center">Totale</th>
                                 <th class="px-4 py-3 text-right">Azione</th>
                             </tr>
@@ -455,10 +471,10 @@
     </main>
 
     <script>
-        const STORAGE_KEY_MATCHES = 'jopallo_matches_v7';
-        const STORAGE_KEY_TEAMS = 'jopallo_teams_v7';
-        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v7';
-        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v7';
+        const STORAGE_KEY_MATCHES = 'jopallo_matches_v8';
+        const STORAGE_KEY_TEAMS = 'jopallo_teams_v8';
+        const STORAGE_KEY_USERS = 'jopallo_fanta_users_v8';
+        const STORAGE_KEY_AUTH = 'jopallo_auth_role_v8';
 
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "admin123";
@@ -487,56 +503,57 @@
             return ptsEsito + (gf * 1) - (gs * 1) - (amm * 0.5) - (esp * 1) + (rp * 2) - (rs * 1) + (sch ? 3 : 0);
         }
 
+        // 40 PARTITE CON BONUS E MALUS AZZERATI A ZERO (0)
         const rawMatches = [
             // GIRONE A
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 1, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 2, esito: 'pareggio', gf: 3, gs: 3, amm: 2, esp: 0, rp: 1, rs: 0, sch: true },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 5, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 1, gs: 3, amm: 2, esp: 1, rp: 0, rs: 1, sch: false },
-            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 5, esito: 'vittoria', gf: 6, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 1, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 2, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 5, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 1, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a1', squadraNome: 'RIELLO TEAM', group: 'A', giornata: 5, esito: 'vittoria', gf: 6, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 1, esito: 'vittoria', gf: 3, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 3, esito: 'pareggio', gf: 2, gs: 2, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 4, esito: 'vittoria', gf: 5, gs: 3, amm: 1, esp: 0, rp: 1, rs: 0, sch: true },
-            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 1, esito: 'vittoria', gf: 3, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 3, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 4, esito: 'vittoria', gf: 5, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a2', squadraNome: 'MALEDETTI ANZIANI', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 1, esito: 'sconfitta', gf: 2, gs: 4, amm: 2, esp: 0, rp: 0, rs: 1, sch: true },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 2, esito: 'pareggio', gf: 2, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 3, esito: 'sconfitta', gf: 1, gs: 5, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 4, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 1, rs: 0, sch: true },
-            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 5, esito: 'pareggio', gf: 3, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 1, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 2, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 3, esito: 'sconfitta', gf: 1, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 4, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a3', squadraNome: 'I SENATORI', group: 'A', giornata: 5, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 1, esito: 'sconfitta', gf: 1, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 2, esp: 1, rp: 0, rs: 1, sch: true },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 3, gs: 5, amm: 1, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 6, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 1, esito: 'sconfitta', gf: 1, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 3, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 4, esito: 'sconfitta', gf: 3, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_a4', squadraNome: '84 TEAM', group: 'A', giornata: 5, esito: 'sconfitta', gf: 2, gs: 6, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
             // GIRONE B
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 1, esito: 'vittoria', gf: 5, gs: 2, amm: 1, esp: 0, rp: 1, rs: 0, sch: true },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 4, esito: 'vittoria', gf: 6, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 5, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 1, esito: 'vittoria', gf: 5, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 4, esito: 'vittoria', gf: 6, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b1', squadraNome: 'ATLETICO VALMONTONE', group: 'B', giornata: 5, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 1, esito: 'vittoria', gf: 3, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 2, esito: 'sconfitta', gf: 1, gs: 4, amm: 2, esp: 0, rp: 0, rs: 1, sch: false },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 3, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 1, rs: 0, sch: true },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 5, esito: 'vittoria', gf: 5, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 1, esito: 'vittoria', gf: 3, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 2, esito: 'sconfitta', gf: 1, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 3, esito: 'vittoria', gf: 4, gs: 1, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b2', squadraNome: 'FC QUADRELLE', group: 'B', giornata: 5, esito: 'vittoria', gf: 5, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 5, amm: 2, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 2, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 1, esp: 1, rp: 0, rs: 0, sch: true },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 2, esito: 'vittoria', gf: 4, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 3, esito: 'pareggio', gf: 3, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 4, esito: 'pareggio', gf: 2, gs: 2, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b3', squadraNome: 'AVANTI TUTTA', group: 'B', giornata: 5, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
 
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 3, amm: 1, esp: 0, rp: 0, rs: 0, sch: true },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 3, esp: 1, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 3, esito: 'sconfitta', gf: 1, gs: 4, amm: 1, esp: 0, rp: 0, rs: 1, sch: true },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 4, esito: 'sconfitta', gf: 2, gs: 6, amm: 2, esp: 0, rp: 0, rs: 0, sch: false },
-            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 5, esito: 'sconfitta', gf: 3, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: true }
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 1, esito: 'sconfitta', gf: 2, gs: 3, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 2, esito: 'sconfitta', gf: 2, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 3, esito: 'sconfitta', gf: 1, gs: 4, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 4, esito: 'sconfitta', gf: 2, gs: 6, amm: 0, esp: 0, rp: 0, rs: 0, sch: false },
+            { squadraId: 'team_b4', squadraNome: 'HELLAS TAVERNELLO', group: 'B', giornata: 5, esito: 'sconfitta', gf: 3, gs: 5, amm: 0, esp: 0, rp: 0, rs: 0, sch: false }
         ];
 
         const defaultMatches = rawMatches.map((m, idx) => ({
@@ -549,12 +566,12 @@
             ptsEsito: m.esito === 'vittoria' ? 3 : (m.esito === 'pareggio' ? 1 : 0),
             golFatti: m.gf,
             golSubiti: m.gs,
-            ammonizioni: m.amm,
-            espulsioni: m.esp,
-            rigoriParati: m.rp,
-            rigoriSbagliati: m.rs,
-            schieramento: m.sch,
-            totalePunti: calcPoints(m.esito, m.gf, m.gs, m.amm, m.esp, m.rp, m.rs, m.sch)
+            ammonizioni: 0,
+            espulsioni: 0,
+            rigoriParati: 0,
+            rigoriSbagliati: 0,
+            schieramento: false,
+            totalePunti: calcPoints(m.esito, m.gf, m.gs, 0, 0, 0, 0, false)
         }));
 
         let teamsList = [];
@@ -609,16 +626,19 @@
             const badge = document.getElementById('badge-role');
             const submitMatchBtn = document.getElementById('btn-submit-match');
             const warnForm = document.getElementById('admin-lock-warning-form');
+            const resetBtn = document.getElementById('btn-reset-bm-top');
 
             if (role === 'admin') {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700";
                 badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Amministratore';
                 if (submitMatchBtn) submitMatchBtn.disabled = false;
+                if (resetBtn) resetBtn.classList.remove('hidden');
                 warnForm.classList.add('hidden');
             } else {
                 badge.className = "text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
                 badge.innerHTML = '<i class="fa-solid fa-cart-shopping text-emerald-400 mr-1"></i> Fanta-Visitatore';
                 if (submitMatchBtn) submitMatchBtn.disabled = true;
+                if (resetBtn) resetBtn.classList.add('hidden');
                 warnForm.classList.remove('hidden');
             }
 
@@ -638,7 +658,6 @@
             const storedMatches = localStorage.getItem(STORAGE_KEY_MATCHES);
             const storedUsers = localStorage.getItem(STORAGE_KEY_USERS);
 
-            // Controllo e ripristino sicuro delle 8 squadre
             if (storedTeams) {
                 try {
                     teamsList = JSON.parse(storedTeams);
@@ -686,7 +705,6 @@
             return `<div class="${sizeClass} rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 inline-block"><i class="fa-solid fa-shield-halved text-[10px]"></i></div>`;
         }
 
-        // RENDER ROBUSTO DELLE SQUADRE PER LA SELEZIONE
         function renderTeamSelectionCards() {
             const containerA = document.getElementById('grid-girone-a');
             const containerB = document.getElementById('grid-girone-b');
@@ -896,6 +914,35 @@
                 saveToStorage();
                 renderFantaStandings();
             }
+        }
+
+        // RESETTA ESCLUSIVAMENTE I PUNTI DI BONUS E MALUS (DISCIPLINA, RIGORI, ROSA)
+        function resetAllBonusMalusOnly() {
+            if (currentRole !== 'admin') {
+                alert("Azione bloccata: solo l'amministratore può eseguire il reset dei bonus/malus!");
+                return;
+            }
+
+            if (!confirm("Vuoi azzerare tutti i bonus e malus (ammonizioni, espulsioni, rigori, schieramento) mantenendo invariati i risultati (vittorie, pareggi, sconfitte) e i gol segnati/subiti?")) {
+                return;
+            }
+
+            matchesList.forEach(m => {
+                m.ammonizioni = 0;
+                m.espulsioni = 0;
+                m.rigoriParati = 0;
+                m.rigoriSbagliati = 0;
+                m.schieramento = false;
+                // Ricalcola il totale considerando solo l'esito della partita e la differenza reti
+                m.totalePunti = calcPoints(m.esito, m.golFatti, m.golSubiti, 0, 0, 0, 0, false);
+            });
+
+            saveToStorage();
+            renderStandings();
+            renderFantaStandings();
+            renderLogTable();
+
+            alert("Tutti i bonus e malus sono stati azzerati con successo!");
         }
 
         function renderStandings() {
@@ -1141,6 +1188,13 @@
         function resetForm() {
             document.getElementById('partita-form').reset();
             document.querySelector('input[name="esito"][value="vittoria"]').checked = true;
+            document.getElementById('num-gol-fatti').value = 0;
+            document.getElementById('num-gol-subiti').value = 0;
+            document.getElementById('num-ammonizioni').value = 0;
+            document.getElementById('num-espulsioni').value = 0;
+            document.getElementById('num-rigori-parati').value = 0;
+            document.getElementById('num-rigori-sbagliati').value = 0;
+            document.getElementById('check-schieramento').checked = false;
             calculateLive();
         }
 
@@ -1151,7 +1205,7 @@
             document.getElementById('log-count').innerText = matchesList.length;
 
             if (matchesList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuna partita registrata.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuna partita registrata.</td></tr>`;
                 return;
             }
 
@@ -1173,6 +1227,14 @@
                     </td>
                     <td class="px-4 py-3">${esitoBadge}</td>
                     <td class="px-4 py-3 text-center text-slate-200 font-semibold">${item.golFatti} - ${item.golSubiti}</td>
+                    <td class="px-4 py-3 text-center space-x-1">
+                        ${item.ammonizioni > 0 ? `<span class="bg-yellow-950 text-yellow-400 px-1 py-0.5 rounded text-[10px]">-${item.ammonizioni * 0.5} Amm</span>` : ''}
+                        ${item.espulsioni > 0 ? `<span class="bg-rose-950 text-rose-400 px-1 py-0.5 rounded text-[10px]">-${item.espulsioni} Esp</span>` : ''}
+                        ${item.rigoriParati > 0 ? `<span class="bg-emerald-950 text-emerald-400 px-1 py-0.5 rounded text-[10px]">+${item.rigoriParati * 2} Rig.P</span>` : ''}
+                        ${item.rigoriSbagliati > 0 ? `<span class="bg-rose-950 text-rose-400 px-1 py-0.5 rounded text-[10px]">-${item.rigoriSbagliati} Rig.S</span>` : ''}
+                        ${item.schieramento ? `<span class="bg-blue-950 text-blue-400 px-1 py-0.5 rounded text-[10px]">+3 Rosa</span>` : ''}
+                        ${item.ammonizioni === 0 && item.espulsioni === 0 && item.rigoriParati === 0 && item.rigoriSbagliati === 0 && !item.schieramento ? `<span class="text-slate-500 italic text-[11px]">Nessun bonus/malus</span>` : ''}
+                    </td>
                     <td class="px-4 py-3 text-center font-bold ${item.totalePunti >= 0 ? 'text-emerald-400' : 'text-rose-500'}">
                         ${item.totalePunti >= 0 ? `+${item.totalePunti}` : item.totalePunti} pt
                     </td>
@@ -1206,9 +1268,9 @@
 
         function exportToCSV() {
             if (matchesList.length === 0) return alert("Nessun dato da esportare!");
-            let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,TotalePunti\n";
+            let csv = "ID,Giornata,Girone,Squadra,Esito,GolFatti,GolSubiti,Ammonizioni,Espulsioni,RigoriParati,RigoriSbagliati,Rosa100,TotalePunti\n";
             matchesList.forEach(r => {
-                csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.totalePunti}\n`;
+                csv += `${r.id},${r.giornata},"${r.group}","${r.squadraNome}","${r.esito}",${r.golFatti},${r.golSubiti},${r.ammonizioni},${r.espulsioni},${r.rigoriParati},${r.rigoriSbagliati},${r.schieramento ? 1 : 0},${r.totalePunti}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
