@@ -57,7 +57,7 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- SCHERMATA DI CARICAMENTO (ORA SICURA AL 100%) -->
+    <!-- SCHERMATA DI CARICAMENTO -->
     <div id="app-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950">
         <div class="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full animate-spin mb-4 shadow-lg shadow-emerald-500/20"></div>
         <p class="text-emerald-500 font-bold tracking-widest text-sm uppercase">Caricamento Fanta-Torneo...</p>
@@ -527,7 +527,7 @@
         </button>
     </nav>
 
-    <!-- LOGICA SCRIPT SICURA ANTIBLOCCO -->
+    <!-- LOGICA SCRIPT CORRETTA E SICURA -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCiXh1n-6NfdwjriDLUllBRISvo1rDd-Xk",
@@ -579,29 +579,36 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-            renderAllSections();
-            
-            // SBLOCCO IMMEDIATO: La schermata di caricamento scompare subito, i dati arrivano asincroni
-            hideLoader();
+            try {
+                checkAuth();
+                renderAllSections();
+                
+                // Rimuove immediatamente il loader per evitare qualsiasi blocco visivo
+                const loader = document.getElementById('app-loader');
+                if(loader) loader.classList.add('hidden-loader');
 
-            dbRef.once('value').then((snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    teamsList = mergeTeamsWithDefaults(data.teams);
-                    matchesList = data.matches || [];
-                    fantaUsersList = data.users || [];
-                    renderAllSections();
-                }
-                const onlineBadge = document.getElementById('badge-online');
-                if(onlineBadge) onlineBadge.classList.remove('hidden');
-                initRealtimeDB();
-            }).catch(() => {
-                initRealtimeDB();
-            });
-            
-            const lastTab = sessionStorage.getItem(STORAGE_KEY_TAB) || 'fanta';
-            switchTab(lastTab);
+                // Connessione asincrona a Firebase in background
+                dbRef.on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        teamsList = mergeTeamsWithDefaults(data.teams);
+                        matchesList = data.matches || [];
+                        fantaUsersList = data.users || [];
+                        renderAllSections();
+                    }
+                    const onlineBadge = document.getElementById('badge-online');
+                    if(onlineBadge) onlineBadge.classList.remove('hidden');
+                }, (error) => {
+                    console.error("Firebase sync error:", error);
+                });
+                
+                const lastTab = sessionStorage.getItem(STORAGE_KEY_TAB) || 'fanta';
+                switchTab(lastTab);
+            } catch (err) {
+                console.error("Errore di inizializzazione:", err);
+                const loader = document.getElementById('app-loader');
+                if(loader) loader.classList.add('hidden-loader');
+            }
         });
 
         function renderAllSections() {
@@ -614,25 +621,8 @@
             renderLogTable();
         }
 
-        function hideLoader() {
-            const loader = document.getElementById('app-loader');
-            if(loader) loader.classList.add('hidden-loader');
-        }
-
-        function initRealtimeDB() {
-            dbRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    teamsList = mergeTeamsWithDefaults(data.teams);
-                    matchesList = data.matches || [];
-                    fantaUsersList = data.users || [];
-                    renderAllSections();
-                }
-            });
-        }
-
         function saveToStorage() {
-            dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).catch(() => {
+            dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).catch((err) => {
                 showToast("Salvataggio cloud non riuscito.", "error");
             });
         }
