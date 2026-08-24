@@ -52,23 +52,16 @@
         .overflow-x-auto::-webkit-scrollbar { height: 6px; }
         .overflow-x-auto::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         
-        /* Loader Settings */
-        #app-loader {
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-        #app-loader.hidden-loader {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+        #app-loader { transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #app-loader.hidden-loader { opacity: 0; visibility: hidden; pointer-events: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- SCHERMATA DI CARICAMENTO -->
+    <!-- SCHERMATA DI CARICAMENTO RAPIDA -->
     <div id="app-loader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-slate-950">
         <div class="w-16 h-16 border-4 border-slate-800 border-t-emerald-500 rounded-full animate-spin mb-4 shadow-lg shadow-emerald-500/20"></div>
-        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Sincronizzazione Cloud...</p>
+        <p class="text-emerald-500 font-bold animate-pulse tracking-widest text-sm uppercase">Avvio Fanta-Torneo...</p>
     </div>
 
     <!-- CONTENITORE NOTIFICHE TOAST -->
@@ -108,7 +101,7 @@
         </div>
     </div>
 
-    <!-- HEADER DESKTOP E MOBILE -->
+    <!-- HEADER -->
     <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-40 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
@@ -143,7 +136,6 @@
                     <button onclick="switchTab('standings')" id="tab-standings" class="desk-tab flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                         <i class="fa-solid fa-trophy"></i> Tabellone Reale
                     </button>
-                    <!-- Tabs Admin -->
                     <button onclick="switchTab('form')" id="tab-form" class="desk-tab admin-only hidden items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-colors">
                         <i class="fa-solid fa-pen-to-square"></i> Inserisci Partita
                     </button>
@@ -158,17 +150,16 @@
         </div>
     </header>
 
-    <!-- PADDING BOTTOM EXTRA PER MOBILE NAV -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full pb-24 sm:pb-12">
 
-        <!-- TAB 1: ACQUISTO 3 SQUADRE SU 8 CON FASCE DI PREZZO -->
+        <!-- TAB 1: ACQUISTO 3 SQUADRE -->
         <section id="section-fanta" class="space-y-6 hidden animate-fade-in">
             <div class="glass-card rounded-2xl p-4 sm:p-6 border border-emerald-500/30 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
                     <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-coins text-amber-400"></i> Fanta-Mercato
+                        <i class="fa-solid fa-coins text-amber-400"></i> Fanta-Mercato (100 Crediti)
                     </h2>
-                    <p class="text-xs text-slate-400 mt-1">Acquista <strong>1 squadra per fascia</strong> (55 cr, 30 cr, 15 cr).</p>
+                    <p class="text-xs text-slate-400 mt-1">Scegli <strong>obbligatoriamente</strong> 1 squadra per ogni singola fascia.</p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
                     <div class="bg-slate-900 border border-slate-700 px-4 py-2 rounded-xl text-center flex-1 shadow-inner">
@@ -183,45 +174,24 @@
             </div>
 
             <form id="fanta-user-form" onsubmit="handleFantaSubmit(event)" class="space-y-6">
+                <!-- Nome Fanta-Giocatore -->
                 <div class="glass-card rounded-2xl p-5 sm:p-6 border border-slate-700/60">
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Il tuo Nome (Fanta-Giocatore) *</label>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Il tuo Nome e Cognome *</label>
                     <input type="text" id="fanta-username" required placeholder="Es. Mario Rossi" class="w-full sm:w-96 bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
                 </div>
 
-                <div class="glass-card rounded-2xl p-5 sm:p-6 border border-slate-700/60 space-y-4">
-                    <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
-                        <i class="fa-solid fa-list-check"></i> Menu Rapido
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <select id="select-tier-1" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors">
-                                <option value="" disabled selected>Fascia 1 (55 cr)...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <select id="select-tier-2" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors">
-                                <option value="" disabled selected>Fascia 2 (30 cr)...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <select id="select-tier-3" onchange="syncFromDropdowns()" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors">
-                                <option value="" disabled selected>Fascia 3 (15 cr)...</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- SELEZIONE A SCHEDE -->
                 <div class="space-y-6">
                     <div class="space-y-2">
-                        <span class="text-[11px] font-bold text-amber-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-crown"></i> FASCIA 1 (55 Crediti)</span>
+                        <span class="text-[11px] font-bold text-amber-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-crown"></i> FASCIA 1 (Valore: 55 Crediti) - Seleziona 1</span>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="grid-tier-1"></div>
                     </div>
                     <div class="space-y-2">
-                        <span class="text-[11px] font-bold text-blue-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-shield"></i> FASCIA 2 (30 Crediti)</span>
+                        <span class="text-[11px] font-bold text-blue-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-shield"></i> FASCIA 2 (Valore: 30 Crediti) - Seleziona 1</span>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="grid-tier-2"></div>
                     </div>
                     <div class="space-y-2">
-                        <span class="text-[11px] font-bold text-emerald-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-star"></i> FASCIA 3 (15 Crediti)</span>
+                        <span class="text-[11px] font-bold text-emerald-400 uppercase flex items-center gap-1.5"><i class="fa-solid fa-star"></i> FASCIA 3 (Valore: 15 Crediti) - Seleziona 1</span>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="grid-tier-3"></div>
                     </div>
                 </div>
@@ -254,8 +224,7 @@
                             <tr>
                                 <th class="px-4 sm:px-6 py-3">Pos</th>
                                 <th class="px-4 sm:px-6 py-3">Giocatore</th>
-                                <th class="px-4 sm:px-6 py-3">Rosa (F1, F2, F3)</th>
-                                <th class="px-4 py-3 text-center hidden sm:table-cell">Spesa</th>
+                                <th class="px-4 sm:px-6 py-3">Rosa Scelta (F1, F2, F3)</th>
                                 <th class="px-4 sm:px-6 py-3 text-right">Punti</th>
                                 <th class="px-4 sm:px-6 py-3 text-right">Azioni</th>
                             </tr>
@@ -314,7 +283,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- GIRONE A -->
                 <div class="space-y-3">
                     <h3 class="text-sm font-bold text-emerald-400 border-b border-emerald-500/30 pb-1">GIRONE A</h3>
                     <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg">
@@ -335,7 +303,6 @@
                     </div>
                 </div>
 
-                <!-- GIRONE B -->
                 <div class="space-y-3">
                     <h3 class="text-sm font-bold text-blue-400 border-b border-blue-500/30 pb-1">GIRONE B</h3>
                     <div class="glass-card rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg">
@@ -384,7 +351,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-300 mb-1">Giornata</label>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Giornata / Turno</label>
                                 <input type="number" id="input-giornata" min="1" value="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white text-sm focus:outline-none focus:border-emerald-500">
                             </div>
                         </div>
@@ -409,7 +376,7 @@
 
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-emerald-400 uppercase border-b border-slate-800 pb-1">2. Gol</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-2 gap-3">
                                 <div class="bg-slate-900/60 p-2 sm:p-3 rounded-xl border border-slate-800 flex items-center justify-between">
                                     <span class="text-[10px] font-semibold text-emerald-400">Fatti (+1)</span>
                                     <div class="flex items-center gap-1 sm:gap-2">
@@ -454,12 +421,12 @@
                         <div>
                             <label class="flex items-center justify-between p-3 bg-emerald-950/30 rounded-xl border border-emerald-500/40 cursor-pointer hover:bg-emerald-900/30 transition-colors">
                                 <span class="text-[11px] font-bold text-white">Schieramento 100% (+3 pt)</span>
-                                <input type="checkbox" id="check-schieramento" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500">
+                                <input type="checkbox" id="check-schieramento" onchange="calculateLive()" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
                             </label>
                         </div>
 
                         <button type="submit" id="btn-submit-match" class="w-full py-3.5 rounded-xl accent-gradient font-bold text-white shadow hover:scale-[1.02] transition-transform text-sm">
-                            <i class="fa-solid fa-floppy-disk"></i> Salva
+                            <i class="fa-solid fa-floppy-disk"></i> Salva Punteggio
                         </button>
                     </form>
                 </div>
@@ -484,13 +451,10 @@
             </div>
             
             <div class="space-y-4">
-                <!-- GIRONE A TEAMS -->
                 <div class="space-y-3">
                     <h3 class="text-sm font-bold text-emerald-400 border-b border-emerald-500/30 pb-1 uppercase">Girone A</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="teams-grid-girone-a"></div>
                 </div>
-
-                <!-- GIRONE B TEAMS -->
                 <div class="space-y-3">
                     <h3 class="text-sm font-bold text-blue-400 border-b border-blue-500/30 pb-1 uppercase">Girone B</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="teams-grid-girone-b"></div>
@@ -561,18 +525,14 @@
             <i class="fa-solid fa-list-check text-lg"></i>
             <span class="text-[9px] font-semibold">Registro</span>
         </button>
-        <!-- Icone Admin Mobile -->
         <button onclick="switchTab('form')" id="mob-tab-form" class="mob-tab admin-only hidden flex-1 flex flex-col items-center justify-center h-full gap-0.5 pb-1 transition-colors text-rose-500">
             <i class="fa-solid fa-pen-to-square text-lg"></i>
             <span class="text-[9px] font-semibold">Inserisci</span>
         </button>
     </nav>
 
-    <!-- LOGICA FIREBASE REALTIME DATABASE E SCRIPT APP -->
+    <!-- LOGICA FIREBASE E SCRIPT APP -->
     <script>
-        // =========================================================================
-        // QUESTE SONO LE TUE CHIAVI GIA' INSERITE (NON TOCCARE)
-        // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyCiXh1n-6NfdwjriDLUllBRISvo1rDd-Xk",
             authDomain: "attivajopallo.firebaseapp.com",
@@ -580,14 +540,10 @@
             projectId: "attivajopallo",
             storageBucket: "attivajopallo.firebasestorage.app",
             messagingSenderId: "288574357603",
-            appId: "1:288574357603:web:58548a0f17117e8f43b856",
-            measurementId: "G-SPLP6QPXE6"
+            appId: "1:288574357603:web:58548a0f17117e8f43b856"
         };
-        // =========================================================================
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const dbRef = db.ref('fantajopallo_data');
 
@@ -600,9 +556,9 @@
 
         let currentRole = null;
         let selectedTier1 = null, selectedTier2 = null, selectedTier3 = null; 
-        let isFirstLoad = true; // Gestione spinner iniziale
+        let isFirstLoad = true; 
 
-        // Regole immutabili per ricalcolare sempre fasce e costi dai dati grezzi
+        // Le 8 squadre con fasce, girone e prezzo bloccati e corretti
         const defaultTeams = [
             { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
             { id: 'team_a4', group: 'A', tier: 1, cost: 55, name: '84 TEAM', logo: null },
@@ -618,34 +574,50 @@
         let matchesList = [];
         let fantaUsersList = [];
 
-        // FUSIONE DATI: Prende i nomi/loghi salvati, ma forza il mantenimento dei crediti e delle fasce corrette
+        // Questa funzione salva l'interfaccia: unisce i nomi/loghi di Firebase ma forza le Fasce corrette
         function mergeTeamsWithDefaults(loadedTeams) {
             if (!Array.isArray(loadedTeams) || loadedTeams.length === 0) return defaultTeams;
             return defaultTeams.map(dt => {
                 const loaded = loadedTeams.find(t => t.id === dt.id);
-                if (loaded) {
-                    return { ...dt, name: loaded.name || dt.name, logo: loaded.logo || dt.logo };
-                }
+                if (loaded) return { ...dt, name: loaded.name || dt.name, logo: loaded.logo || dt.logo };
                 return dt;
             });
         }
 
+        // --- AVVIO APP ---
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
+            
+            // PRIMO RENDER IMMEDIATO: Assicura che le squadre appaiano subito, senza aspettare la rete!
+            renderAllSections();
+            
+            // Poi ci colleghiamo a Firebase per scaricare in background
             initRealtimeDB();
+            
             const lastTab = sessionStorage.getItem(STORAGE_KEY_TAB) || 'fanta';
             switchTab(lastTab);
             
             setTimeout(() => {
                 const loader = document.getElementById('app-loader');
-                if(!loader.classList.contains('hidden-loader')) hideLoader();
-            }, 5000); 
+                if(loader && !loader.classList.contains('hidden-loader')) hideLoader();
+            }, 3000); 
         });
+
+        function renderAllSections() {
+            populateTeamDropdowns();
+            renderTeamsConfig();
+            renderTierSelectionCards();
+            calculateLive();
+            renderStandings();
+            renderFantaStandings();
+            renderLogTable();
+        }
 
         function hideLoader() {
             document.getElementById('app-loader').classList.add('hidden-loader');
         }
 
+        // FIREBASE SYNC
         function initRealtimeDB() {
             dbRef.on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -657,15 +629,8 @@
                     teamsList = defaultTeams; matchesList = []; fantaUsersList = [];
                 }
 
-                populateTeamDropdowns();
-                populateTierDropdowns();
-                renderTeamsConfig();
-                syncToDropdowns();
-                renderTierSelectionCards();
-                calculateLive();
-                renderStandings();
-                renderFantaStandings();
-                renderLogTable();
+                // Ridisegna tutto con i dati aggiornati
+                renderAllSections();
 
                 document.getElementById('badge-online').classList.remove('hidden');
                 
@@ -675,13 +640,13 @@
                 }
             }, (error) => {
                 hideLoader();
-                showToast("Errore di connessione Firebase.", "error");
+                showToast("Sei offline o c'è un errore Firebase.", "error");
             });
         }
 
         function saveToStorage() {
             dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).catch(() => {
-                showToast("Errore di connessione: salvataggio fallito.", "error");
+                showToast("Salvataggio fallito: controlla la connessione.", "error");
             });
         }
 
@@ -723,7 +688,7 @@
                 document.getElementById('login-error').classList.add('hidden');
                 document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
-                showToast('Accesso Amministratore effettuato!');
+                showToast('Amministratore online!');
             } else {
                 document.getElementById('login-error').classList.remove('hidden');
             }
@@ -733,7 +698,7 @@
             setRole('guest');
             document.getElementById('login-modal').classList.add('opacity-0', 'pointer-events-none');
             setTimeout(() => document.getElementById('login-modal').classList.add('hidden'), 300);
-            showToast('Benvenuto nel Fanta-Mercato!', 'info');
+            showToast('Benvenuto nel Mercato!', 'info');
         }
 
         function setRole(role) {
@@ -743,20 +708,17 @@
             const adminOnlyEls = document.querySelectorAll('.admin-only');
 
             if (role === 'admin') {
-                badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700";
+                badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-700 transition-colors";
                 badge.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Admin';
                 adminOnlyEls.forEach(el => el.classList.remove('hidden'));
                 document.getElementById('admin-lock-warning-form').classList.add('hidden');
                 if(document.getElementById('btn-submit-match')) document.getElementById('btn-submit-match').disabled = false;
             } else {
-                badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700";
+                badge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 transition-colors";
                 badge.innerHTML = '<i class="fa-solid fa-user mr-1"></i> Visitatore';
                 adminOnlyEls.forEach(el => {
-                    if(el.tagName === 'BUTTON' && el.id.startsWith('mob-')) {
-                        el.classList.replace('flex', 'hidden'); 
-                    } else {
-                        el.classList.add('hidden');
-                    }
+                    if(el.tagName === 'BUTTON' && el.id.startsWith('mob-')) el.classList.replace('flex', 'hidden'); 
+                    else el.classList.add('hidden');
                 });
                 document.getElementById('admin-lock-warning-form').classList.remove('hidden');
                 if(document.getElementById('btn-submit-match')) document.getElementById('btn-submit-match').disabled = true;
@@ -769,7 +731,7 @@
             document.getElementById('login-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
             document.getElementById('login-form').reset();
             document.getElementById('login-error').classList.add('hidden');
-            showToast('Disconnessione effettuata', 'info');
+            showToast('Hai effettuato il logout', 'info');
         }
 
         function getTeamLogoHTML(team, sizeClass = "w-6 h-6") {
@@ -789,14 +751,6 @@
                 if(esito === 'pareggio') return '<span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block shadow-sm" title="Pareggio"></span>';
                 return '<span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-sm" title="Sconfitta"></span>';
             }).join('<span class="w-0.5 inline-block"></span>'); 
-        }
-
-        function populateTierDropdowns() {
-            const s1 = document.getElementById('select-tier-1'), s2 = document.getElementById('select-tier-2'), s3 = document.getElementById('select-tier-3');
-            if (!s1 || !s2 || !s3) return;
-            s1.innerHTML = '<option value="" disabled selected>Fascia 1 (55 cr)...</option>' + teamsList.filter(t => t.tier === 1).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
-            s2.innerHTML = '<option value="" disabled selected>Fascia 2 (30 cr)...</option>' + teamsList.filter(t => t.tier === 2).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
-            s3.innerHTML = '<option value="" disabled selected>Fascia 3 (15 cr)...</option>' + teamsList.filter(t => t.tier === 3).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
         }
 
         function syncFromDropdowns() {
@@ -834,6 +788,13 @@
             if(document.getElementById('grid-tier-1')) document.getElementById('grid-tier-1').innerHTML = teamsList.filter(t => t.tier === 1).map(renderCard).join('');
             if(document.getElementById('grid-tier-2')) document.getElementById('grid-tier-2').innerHTML = teamsList.filter(t => t.tier === 2).map(renderCard).join('');
             if(document.getElementById('grid-tier-3')) document.getElementById('grid-tier-3').innerHTML = teamsList.filter(t => t.tier === 3).map(renderCard).join('');
+            
+            // Popolamento select
+            const s1 = document.getElementById('select-tier-1'), s2 = document.getElementById('select-tier-2'), s3 = document.getElementById('select-tier-3');
+            if (s1) s1.innerHTML = '<option value="" disabled selected>Fascia 1 (55 cr)...</option>' + teamsList.filter(t => t.tier === 1).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
+            if (s2) s2.innerHTML = '<option value="" disabled selected>Fascia 2 (30 cr)...</option>' + teamsList.filter(t => t.tier === 2).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
+            if (s3) s3.innerHTML = '<option value="" disabled selected>Fascia 3 (15 cr)...</option>' + teamsList.filter(t => t.tier === 3).map(t => `<option value="${t.id}">${t.name} (Gir. ${t.group})</option>`).join('');
+            syncToDropdowns();
         }
 
         function selectTeamForTier(tier, teamId) {
@@ -848,8 +809,10 @@
             if (selectedTier1) { count++; spent += 55; }
             if (selectedTier2) { count++; spent += 30; }
             if (selectedTier3) { count++; spent += 15; }
-            document.getElementById('live-credits-spent').innerText = `${spent}/100`;
-            document.getElementById('live-selected-count').innerText = `${count}/3`;
+            const crEl = document.getElementById('live-credits-spent');
+            const cnEl = document.getElementById('live-selected-count');
+            if(crEl) crEl.innerText = `${spent}/100`;
+            if(cnEl) cnEl.innerText = `${count}/3`;
         }
 
         function handleFantaSubmit(e) {
@@ -866,7 +829,7 @@
             fantaUsersList.unshift(newFantaUser); saveToStorage();
             document.getElementById('fanta-username').value = '';
             selectedTier1 = null; selectedTier2 = null; selectedTier3 = null;
-            syncToDropdowns(); updateFantaSummary();
+            syncToDropdowns(); updateFantaSummary(); renderTierSelectionCards();
             showToast(`Rosa salvata per ${username}!`);
             switchTab('fanta-standings');
         }
@@ -877,11 +840,12 @@
 
         function renderFantaStandings() {
             const tbody = document.getElementById('fanta-standings-body'), individualContainer = document.getElementById('fanta-individual-cards');
+            if(!tbody || !individualContainer) return;
             document.getElementById('user-count').innerText = fantaUsersList.length;
 
             if (fantaUsersList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuno.</td></tr>`;
-                individualContainer.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-xs">Nessuna scheda fanta-giocatore disponibile.</div>`;
+                individualContainer.innerHTML = `<div class="col-span-full py-8 text-center text-slate-500 text-xs">Nessuna scheda.</div>`;
                 return;
             }
 
@@ -893,7 +857,7 @@
 
             tbody.innerHTML = standings.map((item, idx) => {
                 const teamsBadges = item.teams.map(t => {
-                    const teamObj = teamsList.find(tm => tm.id === t.id) || t; // Fallback per sicurezza
+                    const teamObj = teamsList.find(tm => tm.id === t.id) || t; 
                     let tierColor = teamObj.tier === 1 ? 'border-amber-500/40 text-amber-300' : (teamObj.tier === 2 ? 'border-blue-500/40 text-blue-300' : 'border-emerald-500/40 text-emerald-300');
                     return `<span class="inline-flex items-center gap-1 bg-slate-900 border ${tierColor} px-2 py-0.5 rounded-lg text-[10px] font-semibold text-white whitespace-nowrap">${getTeamLogoHTML(teamObj, "w-3 h-3")}<span>${teamObj.name}</span><span class="text-amber-400 font-bold ml-1">(${t.pts})</span></span>`;
                 }).join(' ');
@@ -964,18 +928,21 @@
             };
 
             const allStats = getTeamStats(null);
-            document.getElementById('standings-general-all').innerHTML = allStats.map((item, idx) => `
-                <tr class="hover:bg-slate-800/40 transition-colors">
-                    <td class="px-4 py-3 font-bold text-slate-400">#${idx + 1}</td>
-                    <td class="px-4 py-3 font-semibold text-white whitespace-nowrap"><div class="flex items-center gap-2">${getTeamLogoHTML(item.squadraObj, "w-5 h-5")}<span>${item.squadra}</span></div></td>
-                    <td class="px-4 py-3 text-center"><span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${item.group === 'A' ? 'bg-emerald-950 text-emerald-400' : 'bg-blue-950 text-blue-400'}">${item.group}</span></td>
-                    <td class="px-2 py-3 text-center text-slate-300">${item.partite}</td>
-                    <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">${item.vittorie}-${item.pareggi}-${item.sconfitte}</td>
-                    <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">${item.gf}/${item.gs}</td>
-                    <td class="px-4 py-3 text-center">${renderFormHtml(item.formArray)}</td>
-                    <td class="px-4 py-3 text-right font-black text-sm text-white">${item.puntiTotali}</td>
-                </tr>
-            `).join('');
+            const genTab = document.getElementById('standings-general-all');
+            if(genTab) {
+                genTab.innerHTML = allStats.map((item, idx) => `
+                    <tr class="hover:bg-slate-800/40 transition-colors">
+                        <td class="px-4 py-3 font-bold text-slate-400">#${idx + 1}</td>
+                        <td class="px-4 py-3 font-semibold text-white whitespace-nowrap"><div class="flex items-center gap-2">${getTeamLogoHTML(item.squadraObj, "w-5 h-5")}<span>${item.squadra}</span></div></td>
+                        <td class="px-4 py-3 text-center"><span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${item.group === 'A' ? 'bg-emerald-950 text-emerald-400' : 'bg-blue-950 text-blue-400'}">${item.group}</span></td>
+                        <td class="px-2 py-3 text-center text-slate-300">${item.partite}</td>
+                        <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-400 whitespace-nowrap">${item.vittorie}-${item.pareggi}-${item.sconfitte}</td>
+                        <td class="px-2 py-3 text-center text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">${item.gf}/${item.gs}</td>
+                        <td class="px-4 py-3 text-center">${renderFormHtml(item.formArray)}</td>
+                        <td class="px-4 py-3 text-right font-black text-sm text-white">${item.puntiTotali}</td>
+                    </tr>
+                `).join('');
+            }
 
             const renderGroupTable = (group) => {
                 const stats = getTeamStats(group);
@@ -990,8 +957,10 @@
                 `).join('');
             };
 
-            document.getElementById('standings-girone-a').innerHTML = renderGroupTable('A');
-            document.getElementById('standings-girone-b').innerHTML = renderGroupTable('B');
+            const gaTab = document.getElementById('standings-girone-a');
+            const gbTab = document.getElementById('standings-girone-b');
+            if(gaTab) gaTab.innerHTML = renderGroupTable('A');
+            if(gbTab) gbTab.innerHTML = renderGroupTable('B');
         }
 
         function populateTeamDropdowns() {
@@ -1010,12 +979,10 @@
             });
         }
 
-        // AGGIORNATO: Ora renderizza due grid separate (A e B) per la Gestione Squadre
         function renderTeamsConfig() {
             const containerA = document.getElementById('teams-grid-girone-a');
             const containerB = document.getElementById('teams-grid-girone-b');
             const isAdmin = (currentRole === 'admin');
-            
             if(!containerA || !containerB) return;
 
             const renderTeamCard = (t) => `
@@ -1089,8 +1056,10 @@
             const total = ptsEsito + (golFatti * 1) - (golSubiti * 1) - (ammonizioni * 0.5) - (espulsioni * 1) + (rigoriParati * 2) - (rigoriSbagliati * 1) + (schieramento * 3);
             
             const displayEl = document.getElementById('live-total-display');
-            displayEl.innerText = total >= 0 ? `+${total}` : total;
-            displayEl.className = total >= 0 ? 'text-5xl font-black text-emerald-400' : 'text-5xl font-black text-rose-500';
+            if(displayEl) {
+                displayEl.innerText = total >= 0 ? `+${total}` : total;
+                displayEl.className = total >= 0 ? 'text-5xl font-black text-emerald-400' : 'text-5xl font-black text-rose-500';
+            }
             return { total, esito, ptsEsito, golFatti, golSubiti, ammonizioni, espulsioni, rigoriParati, rigoriSbagliati, schieramento: schieramento === 1 };
         }
 
@@ -1112,7 +1081,8 @@
         }
 
         function resetForm() {
-            document.getElementById('partita-form').reset();
+            const frm = document.getElementById('partita-form');
+            if(frm) frm.reset();
             document.getElementById('num-gol-fatti').value = 0; document.getElementById('num-gol-subiti').value = 0;
             document.getElementById('num-ammonizioni').value = 0; document.getElementById('num-espulsioni').value = 0;
             document.getElementById('num-rigori-parati').value = 0; document.getElementById('num-rigori-sbagliati').value = 0;
@@ -1121,42 +1091,46 @@
 
         function renderLogTable() {
             const tbody = document.getElementById('log-table-body');
-            const searchVal = document.getElementById('log-search').value.toLowerCase();
-            const filterTeam = document.getElementById('log-filter-team').value;
+            const searchVal = document.getElementById('log-search') ? document.getElementById('log-search').value.toLowerCase() : '';
+            const filterTeam = document.getElementById('log-filter-team') ? document.getElementById('log-filter-team').value : 'ALL';
             const isAdmin = (currentRole === 'admin');
 
-            document.getElementById('log-count').innerText = matchesList.length;
+            const countEl = document.getElementById('log-count');
+            if(countEl) countEl.innerText = matchesList.length;
+
             const filtered = matchesList.filter(item => (filterTeam === 'ALL' || item.squadraId === filterTeam) && item.squadraNome.toLowerCase().includes(searchVal));
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuna partita.</td></tr>`;
+                if(tbody) tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-slate-500 text-xs">Nessuna partita.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = filtered.map(item => {
-                const teamObj = teamsList.find(t => t.id === item.squadraId);
-                let esitoBadge = '';
-                if (item.esito === 'vittoria') esitoBadge = '<span class="bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800 text-[10px] font-bold">Vittoria</span>';
-                else if (item.esito === 'pareggio') esitoBadge = '<span class="bg-amber-950 text-amber-400 px-2 py-0.5 rounded border border-amber-800 text-[10px] font-bold">Pareggio</span>';
-                else if (item.esito === 'sconfitta') esitoBadge = '<span class="bg-rose-950 text-rose-400 px-2 py-0.5 rounded border border-rose-800 text-[10px] font-bold">Sconfitta</span>';
+            if(tbody) {
+                tbody.innerHTML = filtered.map(item => {
+                    const teamObj = teamsList.find(t => t.id === item.squadraId) || {logo: null};
+                    let esitoBadge = '';
+                    if (item.esito === 'vittoria') esitoBadge = '<span class="bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800 text-[10px] font-bold">Vittoria</span>';
+                    else if (item.esito === 'pareggio') esitoBadge = '<span class="bg-amber-950 text-amber-400 px-2 py-0.5 rounded border border-amber-800 text-[10px] font-bold">Pareggio</span>';
+                    else if (item.esito === 'sconfitta') esitoBadge = '<span class="bg-rose-950 text-rose-400 px-2 py-0.5 rounded border border-rose-800 text-[10px] font-bold">Sconfitta</span>';
 
-                return `
-                <tr class="hover:bg-slate-800/40 transition-colors text-xs border-b border-slate-800/50">
-                    <td class="px-3 py-2 text-slate-400 font-semibold">G${item.giornata}</td>
-                    <td class="px-3 py-2 font-medium text-white whitespace-nowrap"><div class="flex items-center gap-1.5">${getTeamLogoHTML(teamObj, "w-4 h-4")}<span>${item.squadraNome}</span></div></td>
-                    <td class="px-3 py-2">${esitoBadge}</td>
-                    <td class="px-3 py-2 text-center text-slate-200 font-semibold whitespace-nowrap">${item.golFatti}-${item.golSubiti}</td>
-                    <td class="px-3 py-2 text-center text-[9px] sm:text-[10px] space-x-1 whitespace-nowrap">
-                        ${item.ammonizioni > 0 ? `<span class="text-yellow-400">-${item.ammonizioni * 0.5}A</span>` : ''}
-                        ${item.espulsioni > 0 ? `<span class="text-rose-400">-${item.espulsioni}E</span>` : ''}
-                        ${item.rigoriParati > 0 ? `<span class="text-emerald-400">+${item.rigoriParati * 2}RP</span>` : ''}
-                        ${item.rigoriSbagliati > 0 ? `<span class="text-rose-400">-${item.rigoriSbagliati}RS</span>` : ''}
-                        ${item.schieramento ? `<span class="text-blue-400">+3Rosa</span>` : ''}
-                    </td>
-                    <td class="px-3 py-2 text-center font-bold ${item.totalePunti >= 0 ? 'text-emerald-400' : 'text-rose-500'}">${item.totalePunti >= 0 ? `+${item.totalePunti}` : item.totalePunti}</td>
-                    <td class="px-3 py-2 text-right">${isAdmin ? `<button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>` : `<i class="fa-solid fa-lock text-[10px] text-slate-600"></i>`}</td>
-                </tr>
-            `}).join('');
+                    return `
+                    <tr class="hover:bg-slate-800/40 transition-colors text-xs border-b border-slate-800/50">
+                        <td class="px-3 py-2 text-slate-400 font-semibold">G${item.giornata}</td>
+                        <td class="px-3 py-2 font-medium text-white whitespace-nowrap"><div class="flex items-center gap-1.5">${getTeamLogoHTML(teamObj, "w-4 h-4")}<span>${item.squadraNome}</span></div></td>
+                        <td class="px-3 py-2">${esitoBadge}</td>
+                        <td class="px-3 py-2 text-center text-slate-200 font-semibold whitespace-nowrap">${item.golFatti}-${item.golSubiti}</td>
+                        <td class="px-3 py-2 text-center text-[9px] sm:text-[10px] space-x-1 whitespace-nowrap">
+                            ${item.ammonizioni > 0 ? `<span class="text-yellow-400">-${item.ammonizioni * 0.5}A</span>` : ''}
+                            ${item.espulsioni > 0 ? `<span class="text-rose-400">-${item.espulsioni}E</span>` : ''}
+                            ${item.rigoriParati > 0 ? `<span class="text-emerald-400">+${item.rigoriParati * 2}RP</span>` : ''}
+                            ${item.rigoriSbagliati > 0 ? `<span class="text-rose-400">-${item.rigoriSbagliati}RS</span>` : ''}
+                            ${item.schieramento ? `<span class="text-blue-400">+3Rosa</span>` : ''}
+                        </td>
+                        <td class="px-3 py-2 text-center font-bold ${item.totalePunti >= 0 ? 'text-emerald-400' : 'text-rose-500'}">${item.totalePunti >= 0 ? `+${item.totalePunti}` : item.totalePunti}</td>
+                        <td class="px-3 py-2 text-right">${isAdmin ? `<button onclick="deleteRecord(${item.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1"><i class="fa-solid fa-trash-can"></i></button>` : `<i class="fa-solid fa-lock text-[10px] text-slate-600"></i>`}</td>
+                    </tr>
+                `}).join('');
+            }
         }
 
         function deleteRecord(id) {
