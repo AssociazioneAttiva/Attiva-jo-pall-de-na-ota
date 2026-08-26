@@ -149,7 +149,7 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full pb-24 sm:pb-12">
 
-        <!-- TAB 1: ACQUISTO 3 SQUADRE + RIQUADRO REGOLAMENTO + AVVISO BLOCCO -->
+        <!-- TAB 1: ACQUISTO 3 SQUADRE -->
         <section id="section-fanta" class="space-y-6 hidden animate-fade-in">
             <div class="glass-card rounded-2xl p-4 sm:p-6 border border-emerald-500/30 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
@@ -623,7 +623,7 @@
 
         let currentRole = null;
         let selectedTier1 = null, selectedTier2 = null, selectedTier3 = null; 
-        let isMarketLocked = false; // Stato del blocco mercato
+        let isMarketLocked = false; 
 
         const defaultTeams = [
             { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
@@ -711,13 +711,12 @@
             isMarketLocked = locked;
             saveToStorage();
             updateMarketLockUI();
-            showToast(locked ? "Fanta-Mercato bloccato con successo!" : "Fanta-Mercato sbloccato!", "info");
+            showToast(locked ? "Fanta-Mercato bloccato!" : "Fanta-Mercato sbloccato!", "info");
         }
 
         function updateMarketLockUI() {
             const banner = document.getElementById('market-closed-banner');
             const submitBtn = document.getElementById('btn-submit-fanta');
-            const formInputs = document.querySelectorAll('#fanta-user-form input, #fanta-user-form select');
 
             if (isMarketLocked) {
                 if(banner) banner.classList.remove('hidden');
@@ -725,14 +724,12 @@
                     submitBtn.disabled = true;
                     submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 }
-                formInputs.forEach(el => el.disabled = true);
             } else {
                 if(banner) banner.classList.add('hidden');
                 if(submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
-                formInputs.forEach(el => el.disabled = false);
             }
         }
 
@@ -932,7 +929,6 @@
         }
 
         function selectTeamForTier(tier, teamId) {
-            if (isMarketLocked) return showToast("Il mercato è chiuso!", "error");
             if (tier === 1) selectedTier1 = (selectedTier1 === teamId) ? null : teamId;
             else if (tier === 2) selectedTier2 = (selectedTier2 === teamId) ? null : teamId;
             else if (tier === 3) selectedTier3 = (selectedTier3 === teamId) ? null : teamId;
