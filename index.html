@@ -149,7 +149,7 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex-grow w-full pb-24 sm:pb-12">
 
-        <!-- TAB 1: ACQUISTO 3 SQUADRE + RIQUADRO REGOLAMENTO -->
+        <!-- TAB 1: ACQUISTO 3 SQUADRE + RIQUADRO REGOLAMENTO + AVVISO BLOCCO -->
         <section id="section-fanta" class="space-y-6 hidden animate-fade-in">
             <div class="glass-card rounded-2xl p-4 sm:p-6 border border-emerald-500/30 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <div>
@@ -170,72 +170,33 @@
                 </div>
             </div>
 
+            <!-- AVVISO DI MERCATO CHIUSO (DINAMICO) -->
+            <div id="market-closed-banner" class="hidden p-4 rounded-2xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-sm font-bold flex items-center gap-3 shadow-xl animate-pulse">
+                <i class="fa-solid fa-lock text-rose-400 text-xl"></i>
+                <span>FANTA-MERCATO CHIUSO: L'amministratore ha bloccato gli acquisti e le modifiche delle rose con il torneo in corso!</span>
+            </div>
+
             <!-- RIQUADRO INFORMATIVO REGOLAMENTO BONUS/MALUS -->
             <div class="glass-card rounded-2xl p-5 sm:p-6 border border-slate-700/60 space-y-3 bg-slate-900/60 shadow-lg">
                 <h3 class="text-sm font-bold text-amber-400 flex items-center gap-2 uppercase tracking-wide border-b border-slate-800 pb-2">
                     <i class="fa-solid fa-circle-info"></i> Tabella Bonus / Malus Applicata
                 </h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs text-slate-300 pt-1">
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Vittoria</span>
-                        <strong class="text-emerald-400">+3</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Pareggio</span>
-                        <strong class="text-amber-400">+1</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Vittoria rigori</span>
-                        <strong class="text-emerald-400">+2</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Gol segnato</span>
-                        <strong class="text-emerald-400">+3</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Clean sheet</span>
-                        <strong class="text-emerald-400">+2</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Vittoria &gt;=3 gol scarto</span>
-                        <strong class="text-emerald-400">+3</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Schieramento tutti in rosa</span>
-                        <strong class="text-emerald-400">+5</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Squadra con miglior giocatore</span>
-                        <strong class="text-emerald-400">+1</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Passaggio turno</span>
-                        <strong class="text-amber-400">+5</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Vittoria torneo</span>
-                        <strong class="text-amber-400">+10</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Sconfitta</span>
-                        <strong class="text-slate-400">0</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Gol subito</span>
-                        <strong class="text-rose-400">-1</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Espulsione diretta</span>
-                        <strong class="text-rose-400">-2</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Ammonizione</span>
-                        <strong class="text-rose-400">-1</strong>
-                    </div>
-                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center">
-                        <span class="font-medium">Autogol</span>
-                        <strong class="text-rose-400">-1</strong>
-                    </div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Vittoria</span><strong class="text-emerald-400">+3</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Pareggio</span><strong class="text-amber-400">+1</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Vittoria rigori</span><strong class="text-emerald-400">+2</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Gol segnato</span><strong class="text-emerald-400">+3</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Clean sheet</span><strong class="text-emerald-400">+2</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Vittoria &gt;=3 gol scarto</span><strong class="text-emerald-400">+3</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Schieramento tutti in rosa</span><strong class="text-emerald-400">+5</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Squadra con miglior giocatore</span><strong class="text-emerald-400">+1</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Passaggio turno</span><strong class="text-amber-400">+5</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Vittoria torneo</span><strong class="text-amber-400">+10</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Sconfitta</span><strong class="text-slate-400">0</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Gol subito</span><strong class="text-rose-400">-1</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Espulsione diretta</span><strong class="text-rose-400">-2</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Ammonizione</span><strong class="text-rose-400">-1</strong></div>
+                    <div class="p-2.5 bg-slate-950/50 rounded-xl border border-slate-800 flex justify-between items-center"><span class="font-medium">Autogol</span><strong class="text-rose-400">-1</strong></div>
                 </div>
             </div>
 
@@ -260,7 +221,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-transform active:scale-95 flex items-center justify-center gap-2 text-base">
+                <button type="submit" id="btn-submit-fanta" class="w-full py-4 rounded-xl accent-gradient font-bold text-white shadow-lg shadow-emerald-900/30 hover:opacity-95 transition-transform active:scale-95 flex items-center justify-center gap-2 text-base">
                     <i class="fa-solid fa-check"></i> Acquista e Salva Formazione
                 </button>
             </form>
@@ -536,15 +497,21 @@
             </div>
         </section>
 
-        <!-- TAB 5 -->
+        <!-- TAB 5: GESTIONE SQUADRE & COMANDO BLOCCO MERCATO -->
         <section id="section-teams" class="hidden space-y-6 animate-fade-in">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3 flex-wrap gap-4">
                 <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre &amp; Reset Torneo
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Gestione Squadre &amp; Controlli Admin
                 </h2>
-                <div class="admin-only hidden">
+                <div class="admin-only hidden flex items-center gap-3">
+                    <!-- INTERRUTTORE BLOCCO MERCATO -->
+                    <label class="flex items-center gap-2 px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl cursor-pointer text-xs font-semibold text-slate-300 hover:border-emerald-500 transition-colors">
+                        <i class="fa-solid fa-lock text-amber-400"></i> Blocco Fanta-Mercato:
+                        <input type="checkbox" id="admin-market-lock" onchange="toggleMarketLock(this.checked)" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                    </label>
+
                     <button onclick="fullResetTournamentData()" class="px-3 py-2 bg-rose-950 hover:bg-rose-900 text-rose-300 rounded-xl text-xs font-bold border border-rose-800 flex items-center gap-2 transition-colors shadow">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Resetta Dati e Torneo
+                        <i class="fa-solid fa-triangle-exclamation"></i> Resetta Torneo
                     </button>
                 </div>
             </div>
@@ -656,6 +623,7 @@
 
         let currentRole = null;
         let selectedTier1 = null, selectedTier2 = null, selectedTier3 = null; 
+        let isMarketLocked = false; // Stato del blocco mercato
 
         const defaultTeams = [
             { id: 'team_b4', group: 'B', tier: 1, cost: 55, name: 'HELLAS TAVERNELLO', logo: null },
@@ -695,6 +663,11 @@
                         teamsList = mergeTeamsWithDefaults(data.teams);
                         matchesList = data.matches || [];
                         fantaUsersList = data.users || [];
+                        isMarketLocked = data.marketLocked || false;
+                        
+                        const lockCheckbox = document.getElementById('admin-market-lock');
+                        if(lockCheckbox) lockCheckbox.checked = isMarketLocked;
+                        updateMarketLockUI();
                         renderAllSections();
                     }
                     const onlineBadge = document.getElementById('badge-online');
@@ -723,9 +696,44 @@
         }
 
         function saveToStorage() {
-            dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).catch((err) => {
+            dbRef.set({ 
+                teams: teamsList, 
+                matches: matchesList, 
+                users: fantaUsersList,
+                marketLocked: isMarketLocked 
+            }).catch((err) => {
                 showToast("Salvataggio cloud non riuscito.", "error");
             });
+        }
+
+        function toggleMarketLock(locked) {
+            if (currentRole !== 'admin') return;
+            isMarketLocked = locked;
+            saveToStorage();
+            updateMarketLockUI();
+            showToast(locked ? "Fanta-Mercato bloccato con successo!" : "Fanta-Mercato sbloccato!", "info");
+        }
+
+        function updateMarketLockUI() {
+            const banner = document.getElementById('market-closed-banner');
+            const submitBtn = document.getElementById('btn-submit-fanta');
+            const formInputs = document.querySelectorAll('#fanta-user-form input, #fanta-user-form select');
+
+            if (isMarketLocked) {
+                if(banner) banner.classList.remove('hidden');
+                if(submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+                formInputs.forEach(el => el.disabled = true);
+            } else {
+                if(banner) banner.classList.add('hidden');
+                if(submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                formInputs.forEach(el => el.disabled = false);
+            }
         }
 
         function fullResetTournamentData() {
@@ -735,12 +743,14 @@
             teamsList = JSON.parse(JSON.stringify(defaultTeams));
             matchesList = [];
             fantaUsersList = [];
+            isMarketLocked = false;
             selectedTier1 = null; selectedTier2 = null; selectedTier3 = null;
 
-            dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList }).then(() => {
+            dbRef.set({ teams: teamsList, matches: matchesList, users: fantaUsersList, marketLocked: false }).then(() => {
                 renderAllSections();
                 syncToDropdowns();
                 updateFantaSummary();
+                updateMarketLockUI();
                 showToast("Torneo resettato con successo!");
             }).catch(() => showToast("Errore di reset sul cloud.", "error"));
         }
@@ -922,6 +932,7 @@
         }
 
         function selectTeamForTier(tier, teamId) {
+            if (isMarketLocked) return showToast("Il mercato è chiuso!", "error");
             if (tier === 1) selectedTier1 = (selectedTier1 === teamId) ? null : teamId;
             else if (tier === 2) selectedTier2 = (selectedTier2 === teamId) ? null : teamId;
             else if (tier === 3) selectedTier3 = (selectedTier3 === teamId) ? null : teamId;
@@ -941,6 +952,7 @@
 
         function handleFantaSubmit(e) {
             e.preventDefault();
+            if (isMarketLocked) return showToast("Impossibile salvare: il mercato è chiuso!", "error");
             const username = document.getElementById('fanta-username').value.trim();
             if (!username) return showToast("Inserisci il tuo nickname!", 'error');
             if (!selectedTier1 || !selectedTier2 || !selectedTier3) return showToast("Seleziona 1 squadra per ogni fascia!", 'error');
