@@ -859,6 +859,7 @@
                 const subBtn = document.getElementById('btn-submit-match');
                 if(subBtn) subBtn.disabled = true;
             }
+            renderFantaStandings(); // Ridisegna la classifica fanta per aggiornare i permessi di eliminazione
         }
 
         function logout() {
@@ -1007,6 +1008,8 @@
                 return { id: user.id, username: user.username, teams: teamsWithScores, totalSpent: user.totalSpent || 100, totalScore };
             }).sort((a, b) => b.totalScore - a.totalScore);
 
+            const isAdmin = (currentRole === 'admin');
+
             tbody.innerHTML = standings.map((item, idx) => {
                 const teamsBadges = item.teams.map(t => {
                     const teamObj = teamsList.find(tm => tm.id === t.id) || t; 
@@ -1020,7 +1023,7 @@
                         <td class="px-4 sm:px-6 py-3 font-bold text-white text-xs">${item.username}</td>
                         <td class="px-4 sm:px-6 py-3"><div class="flex flex-col sm:flex-row flex-wrap gap-1.5">${teamsBadges}</div></td>
                         <td class="px-4 sm:px-6 py-3 text-right font-black text-sm text-emerald-400">${item.totalScore}</td>
-                        <td class="px-4 sm:px-6 py-3 text-right">${currentRole === 'admin' ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}</td>
+                        <td class="px-4 sm:px-6 py-3 text-right">${isAdmin ? `<button onclick="deleteFantaUser(${item.id})" class="text-slate-500 hover:text-rose-400 cursor-pointer p-1" title="Elimina squadra"><i class="fa-solid fa-trash-can"></i></button>` : `<span class="text-slate-600"><i class="fa-solid fa-lock text-[10px]"></i></span>`}</td>
                     </tr>
                 `;
             }).join('');
@@ -1035,10 +1038,12 @@
         }
 
         function deleteFantaUser(id) {
-            if (currentRole !== 'admin') return;
-            if (confirm("Eliminare questa registrazione?")) {
+            if (currentRole !== 'admin') return showToast("Accesso negato.", "error");
+            if (confirm("Sei sicuro di voler eliminare questa squadra dal fanta-torneo?")) {
                 fantaUsersList = fantaUsersList.filter(u => u.id !== id);
-                saveToStorage(); showToast("Giocatore eliminato", "info");
+                saveToStorage(); 
+                renderFantaStandings();
+                showToast("Squadra eliminata con successo.", "info");
             }
         }
 
